@@ -151,9 +151,9 @@
 }
 
 .gutter {
-  @apply bg-gray-200 dark:bg-gray-800 hover:cursor-col-resize;
+  @apply bg-gray-200 dark:bg-gray-800 hover:brightness-90 hover:dark:brightness-110 hover:cursor-col-resize;
 }
 
-* {
+body {
   font-family: "Poppins";
 }

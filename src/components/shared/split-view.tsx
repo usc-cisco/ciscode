@@ -1,14 +1,16 @@
 'use client';
+import { cn } from '@/lib/utils';
 import Split from 'react-split';
 
 interface SplitViewProps {
     children?: React.ReactNode;
     sizes?: number[];
+    classList?: string;
 }
 
-export default function SplitView({ children, sizes }: SplitViewProps) {
+export default function SplitView({ children, sizes, classList }: SplitViewProps) {
   return (
-    <Split className="flex h-screen" minSize={150} gutterSize={8} sizes={sizes}>
+    <Split className={cn(`flex h-[calc(100vh-3rem)]`, classList)} minSize={150} gutterSize={8} sizes={sizes}>
       {children}
     </Split>
   );
