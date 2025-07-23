@@ -1,19 +1,19 @@
 "use client"
 
 import CodeEditor from "@/components/problem/code-editor";
-import { ThemeToggle } from "@/components/shared/theme-toggle";
-import Image from "next/image";
+import SplitView from "@/components/shared/split-view";
 
 export default function Home() {
   return (
-    <div className="">
+    <div>
       <div>
-        <ThemeToggle />
-      </div>
-      <div>
-        <CodeEditor 
-          handleCodeChange={(value) => console.log(value)}
-        />
+        <SplitView sizes={[25, 50, 25]}>
+          <div>Left</div>
+          <CodeEditor 
+            handleCodeChange={(value) => console.log(value)}
+          />
+          <div>Right</div>
+        </SplitView>
       </div>
     </div>
   );

@@ -37,6 +37,8 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-vscode-dark: var(--vscode-dark);
+  --color-vscode-light: var(--vscode-light);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -45,6 +47,8 @@
 
 :root {
   --radius: 0.625rem;
+  --vscode-dark: #1e1e1e;
+  --vscode-light: #ffffff;
 
   /* Base colors */
   --background: #e6edff; /* soft light blue */
@@ -57,11 +61,11 @@
   --popover-foreground: oklch(0.15 0.01 270);
 
   /* Primary action color (deep blue) */
-  --primary: oklch(0.4 0.1 265); /* strong blue */
+  --primary: #1752F0; /* strong blue */
   --primary-foreground: #ffffff; /* white text on blue */
 
   /* Secondary (soft neutral) */
-  --secondary: oklch(0.96 0.01 260); /* very light grayish-blue */
+  --secondary: #5C83F5;
   --secondary-foreground: oklch(0.25 0.01 270);
 
   /* Muted and accent backgrounds */
@@ -107,12 +111,6 @@
   --popover: oklch(0.29 0.015 265); /* slightly lifted */
   --popover-foreground: var(--foreground);
 
-  --primary: oklch(0.75 0.14 265); /* smooth, soft blue */
-  --primary-foreground: oklch(0.22 0.01 265); /* same as background */
-
-  --secondary: oklch(0.35 0.015 265); /* gentle sidebar/nav items */
-  --secondary-foreground: var(--foreground);
-
   --muted: oklch(0.30 0.005 265); /* barely visible on background */
   --muted-foreground: oklch(0.65 0.01 265); /* muted gray-blue */
 
@@ -150,4 +148,12 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.gutter {
+  @apply bg-gray-200 dark:bg-gray-800 hover:cursor-col-resize;
+}
+
+* {
+  font-family: "Poppins";
 }
