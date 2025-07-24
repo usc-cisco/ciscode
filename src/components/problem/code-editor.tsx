@@ -2,6 +2,8 @@ import { Editor } from '@monaco-editor/react';
 import { useTheme } from 'next-themes';
 import React from 'react'
 import ProblemCard from './problem-card';
+import { CodeXml } from 'lucide-react';
+import { COriginal } from 'devicons-react';
 
 interface CodeEditorProps {
     handleCodeChange: (value: string | undefined) => void;
@@ -13,8 +15,11 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ handleCodeChange, className }) 
 
   return (
     <ProblemCard classList='overflow-hidden'>
-      <div className='px-4 py-3 rounded-t-xl border-b border-gray-200 dark:border-gray-700 flex justify-between items-center'>
-        <p className='text-sm font-semibold hover:underline cursor-pointer'>main.c</p>
+      <div className='px-3 py-2 rounded-t-xl border-b border-gray-200 dark:border-gray-700 flex justify-between items-center'>
+        <div className='py-1 px-2 bg-vscode-light dark:bg-vscode-dark flex items-center gap-1 rounded-md hover:brightness-90 dark:hover:brightness-110 cursor-pointer'>
+          <CodeXml className='size-4 text-primary' />
+          <p className='text-sm font-semibold'>main.c</p>
+        </div>
       </div>
       <Editor
           theme={resolvedTheme === 'dark' ? 'vs-dark' : 'light'}
