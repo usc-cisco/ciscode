@@ -15,8 +15,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ handleCodeChange, className }) 
 
   return (
     <ProblemCard classList='overflow-hidden'>
-      <div className='px-3 py-2 rounded-t-xl border-b border-gray-200 dark:border-gray-700 flex justify-between items-center'>
-        <div className='py-1 px-2 bg-vscode-light dark:bg-vscode-dark flex items-center gap-1 rounded-md hover:brightness-90 dark:hover:brightness-110 cursor-pointer'>
+      <div className='px-2 py-2 rounded-t-xl border-b border-gray-200 dark:border-gray-700 flex justify-between items-center'>
+        <div className='py-1 px-2 bg-vscode-light dark:bg-vscode-dark flex items-center gap-1 rounded-lg hover:brightness-90 dark:hover:brightness-110 cursor-pointer'>
           <CodeXml className='size-4 text-primary' />
           <p className='text-sm font-semibold'>main.c</p>
         </div>
