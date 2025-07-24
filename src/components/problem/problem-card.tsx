@@ -8,7 +8,7 @@ interface ProblemCardProps {
 
 const ProblemCard: React.FC<ProblemCardProps> = ({ children, classList }) => {
   return (
-    <div className='p-1'>
+    <div className='px-1 py-2'>
         <div className={cn(`h-full w-full bg-vscode-light dark:bg-vscode-dark rounded-2xl`, classList)}>
           {children}
         </div>

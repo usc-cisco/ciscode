@@ -10,7 +10,7 @@ interface SplitViewProps {
 
 export default function SplitView({ children, sizes, classList }: SplitViewProps) {
   return (
-    <Split className={cn(`flex h-[calc(100vh-3rem)]`, classList)} minSize={150} gutterSize={8} sizes={sizes}>
+    <Split className={cn(`flex h-[calc(100vh-4rem)]`, classList)} minSize={150} gutterSize={8} sizes={sizes}>
       {children}
     </Split>
   );
