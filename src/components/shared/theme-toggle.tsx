@@ -18,7 +18,7 @@ export function ThemeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="icon" className="bg-primary hover:bg-primary hover:brightness-80 ring-0 hover:ring-0 shadow-none text-primary-foreground hover:text-primary-foreground">
+        <Button size="icon" className="bg-primary hover:bg-primary hover:brightness-80 ring-0 hover:ring-0 shadow-none text-primary-foreground hover:text-primary-foreground cursor-pointer">
           <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
           <span className="sr-only">Toggle theme</span>
