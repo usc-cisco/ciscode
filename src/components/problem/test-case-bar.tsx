@@ -3,7 +3,11 @@ import ProblemCard from './problem-card'
 import { Button } from '../ui/button'
 import TestCase from './test-case'
 
-const TestCaseBar = () => {
+interface TestCaseBarProps {
+  onSubmit?: () => void;
+}
+
+const TestCaseBar: React.FC<TestCaseBarProps> = ({ onSubmit }) => {
   return (
     <ProblemCard classList='relative overflow-hidden'>
         <div className='px-4 py-3 rounded-t-xl border-b border-gray-200 dark:border-gray-700'>
@@ -31,7 +35,7 @@ const TestCaseBar = () => {
         </div>
 
         <div className='px-4 h-14 absolute bottom-0 w-full border-t border-gray-200 dark:border-gray-700 flex justify-center items-center bg-vscode-light dark:bg-vscode-dark'>
-          <Button className='w-full bg-primary py-2 rounded-lg cursor-pointer'>Submit</Button>
+          <Button className='w-full bg-primary py-2 rounded-lg cursor-pointer' onClick={onSubmit}>Submit</Button>
         </div>
     </ProblemCard>
   )
