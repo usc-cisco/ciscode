@@ -36,7 +36,7 @@ const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, status, isHidden })
             )}
         </div>
 
-        <button className={`relative rounded-full flex items-center justify-center border border-primary size-6 ${isHidden || ' hover:bg-background cursor-pointer'}`}>
+        <button className={`relative rounded-full flex items-center justify-center border border-primary size-6 ${isHidden || ' hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer transition-colors'}`}>
             <FaPlay className='size-2 text-primary absolute left-2' />
         </button>
     </div>
