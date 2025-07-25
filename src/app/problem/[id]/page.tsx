@@ -4,10 +4,20 @@ import CodeEditor from "@/components/problem/code-editor";
 import ProblemBar from "@/components/problem/problem-bar";
 import TestCaseBar from "@/components/problem/test-case-bar";
 import SplitView from "@/components/shared/split-view";
+import { ProblemSchemaResponseType } from "@/dtos/problem.dto";
 import { checkCode } from "@/lib/fetchers/code.fetchers";
-import { useState } from "react";
+import { fetchProblem } from "@/lib/fetchers/problem.fetchers";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-export default function Home() {
+export default function Home({ params }: { params: { id: string } }) {
+  const router = useRouter();
+  if (!params || !params.id) {
+    router.push("/");
+    return null;
+  }
+
+  const [problem, setProblem] = useState<ProblemSchemaResponseType | null>(null);
   const [code, setCode] = useState<string>("");
 
   const handleCodeChange = (value: string | undefined) => {
@@ -24,11 +34,24 @@ export default function Home() {
     }
   };
 
-  const problem = {
-    title: "Sample Problem",
-    author: "John Doe",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-  }
+  useEffect(() => {
+    const fetchProblemData = async () => {
+      try {
+        const problemData = await fetchProblem(params.id);
+        if (problemData) {
+          setProblem(problemData);
+        } else {
+          console.error("Problem not found");
+          router.push("/");
+        }
+      } catch (error) {
+        console.error("Error fetching problem:", error);
+        router.push("/");
+      }
+    };
+
+    fetchProblemData();
+  }, []);
 
   return (
     <div>
