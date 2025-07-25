@@ -13,7 +13,7 @@ class ProblemService {
         }
 
         const response = ProblemSchemaResponse.parse(problem);
-        const user = await UserService.getUserById(response.userId);
+        const user = await UserService.getUserById(response.authorId);
         if (user) {
             response.author = UserResponseSchema.parse(user).name;
         } else {
