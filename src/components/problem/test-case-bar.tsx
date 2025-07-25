@@ -9,12 +9,12 @@ interface TestCaseBarProps {
 
 const TestCaseBar: React.FC<TestCaseBarProps> = ({ onSubmit }) => {
   return (
-    <ProblemCard classList='relative overflow-hidden'>
+    <ProblemCard className='relative overflow-hidden'>
         <div className='px-4 py-3 rounded-t-xl border-b border-gray-200 dark:border-gray-700'>
             <p className='text-sm text-center font-semibold'>Test Cases</p>
         </div>
 
-        <div className='max-h-full overflow-scroll pb-26'>
+        <div className='max-h-full overflow-auto pb-26'>
           <div className='px-4 py-2 flex flex-col gap-2'>
             <TestCase testCaseNumber={1} status='passed' isHidden/>
             <TestCase testCaseNumber={2} status='failed'/>
