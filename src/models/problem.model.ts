@@ -55,4 +55,8 @@ export const Problem = sequelize.define("Problem", {
         type: DataTypes.DATE,
         allowNull: true,
     }
+}, 
+{
+    timestamps: true,
+    paranoid: true,
 });

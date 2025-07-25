@@ -41,4 +41,8 @@ export const User = sequelize.define("User", {
         type: DataTypes.DATE,
         allowNull: true,
     }
+},
+{
+    timestamps: true,
+    paranoid: true,
 });
