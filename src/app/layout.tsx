@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${poppins.variable} antialiased min-h-screen `}
+        className={`${poppins.variable} antialiased min-h-screen flex flex-col`}
       >
          <ThemeProvider
             attribute="class"
@@ -28,7 +28,9 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Navbar />
-            {children}
+            <main className="flex-1">
+              {children}
+            </main>
             <Footer />
           </ThemeProvider>
       </body>
