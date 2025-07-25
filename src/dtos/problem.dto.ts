@@ -6,7 +6,7 @@ export const ProblemSchemaResponse = z.object({
     title: z.string().min(2).max(100),
     description: z.string().min(10).max(1000),
     difficulty: z.enum(DifficultyEnum),
-    defaultCode: z.string().max(1000).optional(),
+    defaultCode: z.string().max(1000).nullable(),
     authorId: z.number(),
     author: z.string().min(2).max(50).optional(),
 });
@@ -15,7 +15,7 @@ export const AddProblemSchema = z.object({
     title: z.string().min(2).max(100),
     description: z.string().min(10).max(1000),
     difficulty: z.enum(DifficultyEnum),
-    defaultCode: z.string().max(1000).optional(),
+    defaultCode: z.string().max(1000).nullable().optional(),
 })
 
 export type AddProblemSchemaType = z.infer<typeof AddProblemSchema>;

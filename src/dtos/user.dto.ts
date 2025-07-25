@@ -9,7 +9,8 @@ export const LoginRequestSchema = z.object({
 export const RegisterRequestSchema = z.object({
     username: z.string().min(3).max(30),
     password: z.string().min(6).max(100),
-    name: z.string().min(2).max(50),
+    confirmPassword: z.string().min(6).max(100),
+    name: z.string().min(2).max(50).optional(),
     role: z.enum(RoleEnum).optional().default(RoleEnum.USER),
 });
 

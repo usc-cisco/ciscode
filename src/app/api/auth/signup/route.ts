@@ -11,7 +11,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: parsedData.error }, { status: 400 });
         }
 
-        const user = await UserService.register(parsedData.data);
+        const user = await UserService.registerAsUser(parsedData.data);
         if (!user) {
             return NextResponse.json({ error: "User registration failed" }, { status: 500 });
         }

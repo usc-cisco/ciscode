@@ -2,10 +2,16 @@ import instance from "../axios";
 
 export const fetchProblem = async (problemId: string) => {
     try {
-        const response = await instance.get(`/problems/${problemId}`);
+        const token = localStorage.getItem("token");
+        if (token) {
+            instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        }
+
+        const response = await instance.get(`/problem/${problemId}`);
+
         return response.data;
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error fetching problem:", error);
-        throw new Error("Failed to fetch problem");
+        throw new Error(error.response?.data?.error || "Failed to fetch problem");
     }
 };
