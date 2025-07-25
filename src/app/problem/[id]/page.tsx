@@ -57,7 +57,7 @@ export default function Home() {
     fetchProblemData();
   }, []);
 
-  if (loading && !problem) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
         <div className="text-lg text-gray-500">Loading problem...</div>
@@ -65,7 +65,7 @@ export default function Home() {
     );
   }
 
-  if (!loading && !problem) {
+  if (!problem) {
     router.push("/problem");
     return null;
   }
