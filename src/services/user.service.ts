@@ -9,23 +9,29 @@ class UserService {
         return user;
     }
 
-    static async register(data: RegisterRequestSchemaType): Promise<UserResponseSchemaType> {
-        const existingUser = await User.findOne({ where: { username: data.username } });
-        if (existingUser) {
-            throw new Error("User with this username already exists");
+    static async registerAsUser(data: RegisterRequestSchemaType): Promise<UserResponseSchemaType> {
+        if (data.password !== data.confirmPassword) {
+            throw new Error("Passwords do not match");
         }
+
+        const existingUser = await User.findOne({ where: { username: data.username, password: null } });
+        if (!existingUser) {
+            throw new Error("Invalid Student ID");
+        }
+
+        const user = UserResponseSchema.parse(existingUser);
 
         const hashedPassword = await bcrypt.hash(data.password, 10);
 
-        const newUser = await User.create({
+        await User.update({
             ...data,
             password: hashedPassword,
-            createdAt: new Date(),
-            updatedAt: new Date(),
+        }, {
+            where: { id: user.id },
+            returning: true,
         });
 
-        const response = UserResponseSchema.parse(newUser);
-        return response;
+        return user;
     }
 
     static async login(data: LoginRequestSchemaType): Promise<UserResponseSchemaType | null> {

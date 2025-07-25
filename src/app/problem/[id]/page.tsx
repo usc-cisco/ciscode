@@ -7,18 +7,21 @@ import SplitView from "@/components/shared/split-view";
 import { ProblemSchemaResponseType } from "@/dtos/problem.dto";
 import { checkCode } from "@/lib/fetchers/code.fetchers";
 import { fetchProblem } from "@/lib/fetchers/problem.fetchers";
-import { useRouter } from "next/router";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function Home({ params }: { params: { id: string } }) {
+export default function Home() {
   const router = useRouter();
-  if (!params || !params.id) {
-    router.push("/");
+
+  const params = useParams();
+  if (!params.id) {
+    router.push("/problem");
     return null;
   }
 
   const [problem, setProblem] = useState<ProblemSchemaResponseType | null>(null);
   const [code, setCode] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   const handleCodeChange = (value: string | undefined) => {
     setCode(value || "");
@@ -37,21 +40,35 @@ export default function Home({ params }: { params: { id: string } }) {
   useEffect(() => {
     const fetchProblemData = async () => {
       try {
-        const problemData = await fetchProblem(params.id);
-        if (problemData) {
-          setProblem(problemData);
+        const response = await fetchProblem(params.id as string);
+        if (response.data) {
+          setProblem(response.data);
         } else {
           console.error("Problem not found");
           router.push("/");
         }
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching problem:", error);
+        console.error(error);
         router.push("/");
       }
     };
 
     fetchProblemData();
   }, []);
+
+  if (loading && !problem) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
+        <div className="text-lg text-gray-500">Loading problem...</div>
+      </div>
+    );
+  }
+
+  if (!loading && !problem) {
+    router.push("/problem");
+    return null;
+  }
 
   return (
     <div>

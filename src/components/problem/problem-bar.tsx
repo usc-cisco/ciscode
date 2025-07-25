@@ -3,14 +3,10 @@ import ProblemCard from './problem-card';
 import { ProblemSchemaResponseType } from '@/dtos/problem.dto';
 
 interface ProblemBarProps {
-    problem: ProblemSchemaResponseType | null;
+    problem: ProblemSchemaResponseType;
 }
 
 const ProblemBar: React.FC<ProblemBarProps> = ({ problem }) => {
-  if (!problem) {
-    return <div>Loading...</div>;
-  }
-
   const { title, author, description } = problem;
   return (
     <ProblemCard classList='p-6 overflow-y-scroll'>
