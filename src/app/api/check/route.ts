@@ -1,5 +1,5 @@
 import { runCCode } from "@/lib/code-runner";
-import { RunCodeSchema } from "@/lib/types/code.types";
+import { RunCodeSchema } from "@/dtos/code.dto";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
