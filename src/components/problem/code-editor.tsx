@@ -3,14 +3,13 @@ import { useTheme } from 'next-themes';
 import React from 'react'
 import ProblemCard from './problem-card';
 import { CodeXml } from 'lucide-react';
-import { COriginal } from 'devicons-react';
 
 interface CodeEditorProps {
-    handleCodeChange: (value: string | undefined) => void;
-    className?: string;
+    defaultCode?: string;
+    onCodeChange: (value: string | undefined) => void;
 }
 
-const CodeEditor: React.FC<CodeEditorProps> = ({ handleCodeChange, className }) => {
+const CodeEditor: React.FC<CodeEditorProps> = ({ onCodeChange, defaultCode }) => {
     const { resolvedTheme } = useTheme();
 
   return (
@@ -24,8 +23,9 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ handleCodeChange, className }) 
       <Editor
           theme={resolvedTheme === 'dark' ? 'vs-dark' : 'light'}
           height="100%"
+          defaultValue={defaultCode || ''}
           defaultLanguage="c"
-          onChange={handleCodeChange}
+          onChange={onCodeChange}
           options={{
               fontSize: 14,
               lineHeight: 22,
