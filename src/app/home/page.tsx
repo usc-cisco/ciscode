@@ -10,6 +10,7 @@ import { ProblemSchemaDisplayResponseType } from '@/dtos/problem.dto';
 import env from '@/lib/env';
 import { fetchProblems } from '@/lib/fetchers/problem.fetchers';
 import DifficultyEnum from '@/lib/types/enums/difficulty.enum';
+import { create } from 'domain';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { FormEventHandler, useCallback, useEffect, useState } from 'react'
 import { set } from 'zod';
@@ -27,9 +28,11 @@ export default function Home() {
   const [problems, setProblems] = useState<ProblemSchemaDisplayResponseType[]>([]);
 
   const createQueryString = useCallback(
-    (name: string, value: string) => {
+    (data: {name: string, value: string}[]) => {
       const newParams = new URLSearchParams(params.toString())
-      newParams.set(name, value)
+      data.forEach(({name, value}) => {
+        newParams.set(name, value)
+      })
 
       return newParams.toString()
     },
@@ -61,12 +64,14 @@ export default function Home() {
 
   const handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
+    setPage(1); // Reset to first page on filter change
     setFilter(displayFilter);
-    router.push("/home?" + createQueryString("filter", filter)); // Reset to first page on filter change
+    router.push("/home?" + createQueryString([{name: "page", value: "1"}, {name: "filter", value: displayFilter}]));
   };
 
   const handleValueChange = (value: string) => {
-    router.push("/home?" + createQueryString("difficulty", value));
+    router.push("/home?" + createQueryString([{name: "page", value: "1"}, {name: "difficulty", value}]));
+    setPage(1);
     setDifficultyFilter(value);
   };
 
@@ -116,7 +121,7 @@ export default function Home() {
           <ProblemTable problems={problems} />
           {
             totalPages > 1 &&
-            <div className='my-4'>
+            <div className='mt-8'>
               <CustomPagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} createQueryString={createQueryString} />
             </div>
           }
