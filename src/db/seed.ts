@@ -1,5 +1,4 @@
 import { sequelize } from "@/db/sequelize";
-import { User } from "@/models/user.model";
 
 (async () => {
   await sequelize.sync(); // ensure DB is ready

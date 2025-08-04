@@ -8,7 +8,7 @@ export const ProblemSchemaDisplayResponse = z.object({
     author: z.string().min(2).max(50).optional(),
     difficulty: z.enum(DifficultyEnum),
     acceptance: z.number().min(0).max(100).optional(),
-    status: z.enum(ProblemStatusEnum),
+    status: z.enum(ProblemStatusEnum).optional(),
 });
 
 export const ProblemSchemaResponse = z.object({
@@ -16,7 +16,7 @@ export const ProblemSchemaResponse = z.object({
     title: z.string().min(2).max(100),
     description: z.string().min(10).max(1000),
     difficulty: z.enum(DifficultyEnum),
-    defaultCode: z.string().max(1000).nullable(),
+    defaultCode: z.string().max(1000).optional().nullable().default(null),
     authorId: z.number(),
     author: z.string().min(2).max(50).optional(),
 });
@@ -25,7 +25,7 @@ export const AddProblemSchema = z.object({
     title: z.string().min(2).max(100),
     description: z.string().min(10).max(1000),
     difficulty: z.enum(DifficultyEnum),
-    defaultCode: z.string().max(1000).nullable().optional(),
+    defaultCode: z.string().max(1000).optional().nullable().default(null)
 })
 
 export type AddProblemSchemaType = z.infer<typeof AddProblemSchema>;

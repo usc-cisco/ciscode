@@ -3,17 +3,24 @@ import RoleEnum from "@/lib/types/enums/role.enum";
 import { requireRole } from "@/lib/require-role";
 import ProblemService from "@/services/problem.service";
 import { NextRequest, NextResponse } from "next/server";
-import { ca } from "zod/locales";
+import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
 
 export const GET = async (req: NextRequest) => {
     try {
+        const searchParams = req.nextUrl.searchParams;
+        const offset = searchParams.get("page") ? Number(searchParams.get("page")) - 1 : 0;
+        const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 10;
+        const search = searchParams.get("search") || "";
+        const difficulty = searchParams.get("difficulty") || null;
 
+        const problems = await ProblemService.getProblems(offset, limit, search, difficulty ? difficulty as DifficultyEnum : null);
+
+        return NextResponse.json({ data: problems }, { status: 200 });
     }
     catch (error: any) {
         console.error("Error fetching problems:", error);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    return NextResponse.json({ message: "GET request not implemented" }, { status: 501 });
 };
 
 export const POST = requireRole(async (req: NextRequest) => {
