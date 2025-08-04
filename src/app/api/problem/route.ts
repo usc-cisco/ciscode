@@ -3,6 +3,18 @@ import RoleEnum from "@/lib/types/enums/role.enum";
 import { requireRole } from "@/lib/require-role";
 import ProblemService from "@/services/problem.service";
 import { NextRequest, NextResponse } from "next/server";
+import { ca } from "zod/locales";
+
+export const GET = async (req: NextRequest) => {
+    try {
+
+    }
+    catch (error: any) {
+        console.error("Error fetching problems:", error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ message: "GET request not implemented" }, { status: 501 });
+};
 
 export const POST = requireRole(async (req: NextRequest) => {
     const userIdString = req.headers.get("x-user-id");
