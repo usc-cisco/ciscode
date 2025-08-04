@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '../ui/pagination'
-import Link from 'next/link';
 
 interface CustomPaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => () => void;
   createQueryString: (data: {name: string, value: string}[]) => string;
+  path: string;
 }
 
-const CustomPagination = ({ currentPage, totalPages, onPageChange, createQueryString }: CustomPaginationProps) => {
+const CustomPagination = ({ currentPage, totalPages, onPageChange, createQueryString, path }: CustomPaginationProps) => {
   const [isFirstPage, setIsFirstPage] = useState(currentPage === 1);
   const [isLastPage, setIsLastPage] = useState(currentPage === totalPages);
 
@@ -22,15 +22,15 @@ const CustomPagination = ({ currentPage, totalPages, onPageChange, createQuerySt
     <Pagination>
         <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious className={isFirstPage ? "opacity-20 pointer-events-none" : ""} onClick={onPageChange(currentPage - 1)} href={`/home?${createQueryString([{name: "page", value: String(currentPage - 1)}])}`} />
+              <PaginationPrevious className={isFirstPage ? "opacity-20 pointer-events-none" : ""} onClick={onPageChange(currentPage - 1)} href={`${path}?${createQueryString([{name: "page", value: String(currentPage - 1)}])}`} />
             </PaginationItem>
 
             <PaginationItem>
-              <PaginationLink onClick={onPageChange(currentPage)} isActive href={`/home?${createQueryString([{name: "page", value: String(currentPage)}])}`}>{currentPage}</PaginationLink>
+              <PaginationLink onClick={onPageChange(currentPage)} isActive href={`${path}?${createQueryString([{name: "page", value: String(currentPage)}])}`}>{currentPage}</PaginationLink>
             </PaginationItem>
 
             <PaginationItem>
-              <PaginationNext className={isLastPage ? "opacity-20 pointer-events-none" : ""} onClick={onPageChange(currentPage + 1)} href={`/home?${createQueryString([{name: "page", value: String(currentPage + 1)}])}`} />
+              <PaginationNext className={isLastPage ? "opacity-20 pointer-events-none" : ""} onClick={onPageChange(currentPage + 1)} href={`${path}?${createQueryString([{name: "page", value: String(currentPage + 1)}])}`} />
             </PaginationItem>
 
         </PaginationContent>

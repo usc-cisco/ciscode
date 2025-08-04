@@ -1,0 +1,28 @@
+import React from 'react'
+import ProblemCard from '@/components/problem/problem-card'
+import { Button } from '@/components/ui/button'
+import TestCase from '@/components/problem/test-case'
+
+interface AdminTestCaseBarProps {
+  onSubmit?: () => void;
+}
+
+const AdminTestCaseBar: React.FC<AdminTestCaseBarProps> = ({ onSubmit }) => {
+  return (
+    <ProblemCard className='relative overflow-hidden'>
+        <div className='px-4 py-3 rounded-t-xl border-b border-gray-200 dark:border-gray-700'>
+            <p className='text-sm text-center font-semibold'>Test Cases</p>
+        </div>
+
+        <div className='max-h-full overflow-auto pb-26'>
+          
+        </div>
+
+        <div className='px-4 h-14 absolute bottom-0 w-full border-t border-gray-200 dark:border-gray-700 flex justify-center items-center bg-vscode-light dark:bg-vscode-dark'>
+          <Button className='w-full bg-primary py-2 rounded-lg cursor-pointer' onClick={onSubmit}>Add Test Case</Button>
+        </div>
+    </ProblemCard>
+  )
+}
+
+export default AdminTestCaseBar

@@ -18,7 +18,7 @@ export default function Footer() {
           >
             Project Ciscode
           </a>{" "}
-          | An Open Source Initiative by DCISM Students & CISCO{" "}
+          | An Initiative by DCISM Students & CISCO{" "}
         </span>
       </p>
     </footer>

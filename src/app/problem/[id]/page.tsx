@@ -86,7 +86,8 @@ export default function Problem() {
           >
             <ProblemBar problem={problem}/>
             <CodeEditor
-              handleCodeChange={handleCodeChange}
+              defaultCode={problem.defaultCode ?? ""}
+              onCodeChange={handleCodeChange}
             />
             <TestCaseBar onSubmit={onSubmit} />
           </SplitView>

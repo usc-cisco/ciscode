@@ -1,3 +1,4 @@
+import { AddProblemSchemaType } from "@/dtos/problem.dto";
 import instance from "../axios";
 
 export const fetchProblem = async (problemId: string, token: string) => {
@@ -33,5 +34,20 @@ export const fetchProblems = async (token: string, page: number = 1, limit: numb
     } catch (error: any) {
         console.error("Error fetching problems:", error);
         throw new Error(error.response?.data?.error || "Failed to fetch problems");
+    }
+};
+
+export const addProblem = async (data: AddProblemSchemaType, token: string) => {
+    try {
+        if (token) {
+            instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        }
+
+        const response = await instance.post("/problem", data);
+
+        return response.data;
+    } catch (error: any) {
+        console.error("Error adding problem:", error);
+        throw new Error(error.response?.data?.error || "Failed to add problem");
     }
 };
