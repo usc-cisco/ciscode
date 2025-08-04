@@ -1,6 +1,5 @@
 import { LoginRequestSchemaType, RegisterRequestSchemaType, UserResponseSchema, UserResponseSchemaType, UserResponseSchemaWithPassword } from "@/dtos/user.dto";
 import { User } from "@/models/user.model";
-import { Sign } from "crypto";
 import * as bcrypt from "bcryptjs";
 
 class UserService {
