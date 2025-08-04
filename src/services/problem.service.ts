@@ -53,6 +53,23 @@ class ProblemService {
         return Promise.all(parsedProblems);
     }
 
+    static async getTotalCount(search: string = "", difficulty: DifficultyEnum | null = null): Promise<number> {
+        const count = await Problem.count({
+            where: {
+                [Op.or]: [
+                    {
+                        title: {
+                            [Op.like]: `%${search}%`
+                        }
+                    }
+                ],
+                ...(difficulty && { difficulty })
+            },
+        });
+
+        return count;
+    }
+
     static async addProblem(data: AddProblemSchemaType, userId: number): Promise<ProblemSchemaResponseType> {
         const user = await UserService.getUserById(userId);
         if (!user) {
