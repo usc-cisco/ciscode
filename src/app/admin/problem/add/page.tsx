@@ -56,7 +56,6 @@ const AddProblemPage = () => {
             >
                 <AdminProblemBar problem={problem} onProblemChange={handleProblemChange} onSave={handleSaveProblem} />
                 <CodeEditor
-                    defaultCode={"// Write boilerplate code here..."}
                     onCodeChange={handleCodeChange}
                 />
                 <AdminTestCaseBar onSubmit={() => {}} />
