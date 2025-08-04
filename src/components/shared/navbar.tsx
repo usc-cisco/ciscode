@@ -26,7 +26,7 @@ const Navbar = () => {
       <div className='flex items-center gap-4'>
         {
           isAuthenticated && role !== null && (
-            <Badge onClick={role === RoleEnum.ADMIN ? () => redirect('/admin') : () => {}} variant={'default'} className='text-xs bg-primary-foreground text-primary rounded-xl cursor-pointer'>
+            <Badge onClick={role === RoleEnum.ADMIN ? () => redirect('/admin') : () => {}} variant={'default'} className={`text-xs bg-primary-foreground text-primary rounded-xl ${role === RoleEnum.ADMIN && 'cursor-pointer'}`}>
               {role === RoleEnum.ADMIN ? 'ADMIN' : 'STUDENT'}
             </Badge>
           )

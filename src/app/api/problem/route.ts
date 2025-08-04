@@ -8,14 +8,19 @@ import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
 export const GET = async (req: NextRequest) => {
     try {
         const searchParams = req.nextUrl.searchParams;
-        const offset = searchParams.get("page") ? Number(searchParams.get("page")) - 1 : 0;
+        const offset = searchParams.get("offset") ? Number(searchParams.get("offset")) : 0;
         const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 10;
         const search = searchParams.get("search") || "";
         const difficulty = searchParams.get("difficulty") || null;
 
         const problems = await ProblemService.getProblems(offset, limit, search, difficulty ? difficulty as DifficultyEnum : null);
+        const totalCount = await ProblemService.getTotalCount(search, difficulty ? difficulty as DifficultyEnum : null);
 
-        return NextResponse.json({ data: problems }, { status: 200 });
+        return NextResponse.json({ data: {
+            problems: problems,
+            totalPages: Math.ceil(totalCount / limit),
+            totalCount
+        } }, { status: 200 });
     }
     catch (error: any) {
         console.error("Error fetching problems:", error);

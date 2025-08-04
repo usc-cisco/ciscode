@@ -20,7 +20,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requireAdmin 
 
         if (!isAuthenticated) {
             console.log('User not authenticated, redirecting to auth page');
-            redirect('/auth');
+            redirect('/');
         } 
 
         if (requireAdmin && !isAdmin) {

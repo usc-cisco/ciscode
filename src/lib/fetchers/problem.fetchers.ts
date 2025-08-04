@@ -15,10 +15,10 @@ export const fetchProblem = async (problemId: string, token: string) => {
     }
 };
 
-export const fetchProblems = async (token: string, offset: number = 0, limit: number = 10, search: string = "", difficulty: string | null = null) => {
+export const fetchProblems = async (token: string, page: number = 1, limit: number = 10, search: string = "", difficulty: string | null = null) => {
     try {
 
-        const params: any = { offset, limit, search };
+        const params: any = { offset: page - 1, limit, search };
         if (difficulty) {
             params.difficulty = difficulty;
         }
