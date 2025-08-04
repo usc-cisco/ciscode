@@ -3,14 +3,17 @@
 import CodeEditor from "@/components/problem/code-editor";
 import ProblemBar from "@/components/problem/problem-bar";
 import TestCaseBar from "@/components/problem/test-case-bar";
+import ProtectedRoute from "@/components/shared/protected-route";
 import SplitView from "@/components/shared/split-view";
+import { useAuth } from "@/contexts/auth.context";
 import { ProblemSchemaResponseType } from "@/dtos/problem.dto";
 import { checkCode } from "@/lib/fetchers/code.fetchers";
 import { fetchProblem } from "@/lib/fetchers/problem.fetchers";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function Home() {
+export default function Problem() {
+  const { token } = useAuth();
   const router = useRouter();
 
   const params = useParams();
@@ -38,9 +41,11 @@ export default function Home() {
   };
 
   useEffect(() => {
+    if (!token) return;
+
     const fetchProblemData = async () => {
       try {
-        const response = await fetchProblem(params.id as string);
+        const response = await fetchProblem(params.id as string, token || "");
         if (response.data) {
           setProblem(response.data);
         } else {
@@ -55,13 +60,15 @@ export default function Home() {
     };
 
     fetchProblemData();
-  }, []);
+  }, [token]);
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-        <div className="text-lg text-gray-500">Loading problem...</div>
-      </div>
+      <ProtectedRoute>
+        <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
+          <div className="text-lg text-gray-500">Loading problem...</div>
+        </div>
+      </ProtectedRoute>
     );
   }
 
@@ -71,18 +78,20 @@ export default function Home() {
   }
 
   return (
-    <div>
+    <ProtectedRoute>
       <div>
-        <SplitView 
-          sizes={[25, 50, 25]}
-        >
-          <ProblemBar problem={problem}/>
-          <CodeEditor 
-            handleCodeChange={handleCodeChange}
-          />
-          <TestCaseBar onSubmit={onSubmit} />
-        </SplitView>
+        <div>
+          <SplitView
+            sizes={[25, 50, 25]}
+          >
+            <ProblemBar problem={problem}/>
+            <CodeEditor
+              handleCodeChange={handleCodeChange}
+            />
+            <TestCaseBar onSubmit={onSubmit} />
+          </SplitView>
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }

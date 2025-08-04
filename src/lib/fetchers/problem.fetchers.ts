@@ -1,8 +1,7 @@
 import instance from "../axios";
 
-export const fetchProblem = async (problemId: string) => {
+export const fetchProblem = async (problemId: string, token: string) => {
     try {
-        const token = localStorage.getItem("token");
         if (token) {
             instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         }

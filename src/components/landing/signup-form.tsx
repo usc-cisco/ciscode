@@ -31,7 +31,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSetLogin, handleSuccess }) =>
       <Input className='py-5' placeholder='Student ID' {...register('username')} />
       <Input className='py-5' placeholder='Password' type='password' {...register('password')} />
       <Input className='py-5' placeholder='Confirm Password' type='password' {...register('confirmPassword')} />
-      <Button className='py-5' type='submit'>Sign up</Button>
+      <Button className='py-5 cursor-pointer' type='submit'>Sign up</Button>
 
       <div className='text-gray-400 dark:text-gray-600 flex gap-1 items-start justify-center mt-4'>
           <Info className='size-3 mt-[0.125rem]'/>
@@ -40,7 +40,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSetLogin, handleSuccess }) =>
 
       <hr className='my-4'/>
 
-      <Button className='bg-green-500 hover:bg-green-400 py-5' type='button' onClick={onSetLogin}>Go to Log in</Button>
+      <Button className='bg-green-500 hover:bg-green-400 py-5 cursor-pointer' type='button' onClick={onSetLogin}>Go to Log in</Button>
     </form>
   )
 }

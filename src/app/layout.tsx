@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono, Poppins } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/shared/theme-provider";
 import Navbar from "@/components/shared/navbar";
 import Footer from "@/components/shared/footer";
+import { AuthProvider } from "@/contexts/auth.context";
 
 export const poppins = Poppins({
   variable: "--font-poppins",
@@ -21,18 +21,20 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} antialiased min-h-screen flex flex-col`}
       >
-         <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Navbar />
-            <main className="flex-1">
-              {children}
-            </main>
-            <Footer />
-          </ThemeProvider>
+         <AuthProvider>
+           <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Navbar />
+              <main className="flex-1">
+                {children}
+              </main>
+              <Footer />
+            </ThemeProvider>
+         </AuthProvider>
       </body>
     </html>
   );

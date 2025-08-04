@@ -14,6 +14,11 @@ export const RegisterRequestSchema = z.object({
     role: z.enum(RoleEnum).optional().default(RoleEnum.USER),
 });
 
+export const LoginResponseSchema = z.object({
+    token: z.string(),
+    role: z.enum(RoleEnum),
+});
+
 export const UserResponseSchema = z.object({
     id: z.number(),
     username: z.string().min(3).max(30),
@@ -27,4 +32,6 @@ export const UserResponseSchemaWithPassword = UserResponseSchema.extend({
 
 export type LoginRequestSchemaType = z.infer<typeof LoginRequestSchema>;
 export type RegisterRequestSchemaType = z.infer<typeof RegisterRequestSchema>;
+
+export type LoginResponseSchemaType = z.infer<typeof LoginResponseSchema>;
 export type UserResponseSchemaType = z.infer<typeof UserResponseSchema>;
