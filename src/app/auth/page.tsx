@@ -3,11 +3,10 @@
 import LoginForm from "@/components/landing/login-form";
 import SignupForm from "@/components/landing/signup-form";
 import { useAuth } from "@/contexts/auth.context";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Auth() {
-  const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const { isAuthenticated } = useAuth();
 
@@ -20,7 +19,7 @@ export default function Auth() {
   }
 
   const handleLoginSuccess = () => {
-    router.push("/");
+    redirect("/");
   }
 
   const handleSignupSuccess = () => {
@@ -29,7 +28,7 @@ export default function Auth() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.push("/");
+      redirect("/");
     }
   }, [isAuthenticated]);
 

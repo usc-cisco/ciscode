@@ -6,7 +6,6 @@ import { Badge } from '@/components/ui/badge'
 import { ProblemSchemaDisplayResponseType } from '@/dtos/problem.dto'
 import { useRouter } from 'next/navigation';
 import { getDifficultyColor } from '@/lib/types/enums/difficulty.enum';
-import { getStatusColor } from '@/lib/types/enums/problemstatus.enum';
 
 interface ProblemTableProps {
   problems: ProblemSchemaDisplayResponseType[]
@@ -29,13 +28,13 @@ const ProblemTable = ({ problems }: ProblemTableProps) => {
                     <TableHead>Title</TableHead>
                     <TableHead>Author</TableHead>
                     <TableHead>Difficulty</TableHead>
-                    <TableHead>Acceptance</TableHead>
-                    <TableHead>Status</TableHead>
+                    {/* <TableHead>Acceptance</TableHead> */}
+                    {/* <TableHead>Status</TableHead> */}
                 </TableRow>
                 </TableHeader>
                 <TableBody>
-                {problems.map((problem) => (
-                    <TableRow onClick={() => handleRowClick(problem.id)} key={problem.id} className="cursor-pointer odd:bg-neutral odd:dark:bg-neutral-800">
+                {problems.map((problem, index) => (
+                    <TableRow key={index} onClick={() => handleRowClick(problem.id)} className="cursor-pointer odd:bg-neutral-50 odd:dark:bg-neutral-800">
                         <TableCell className="font-medium">{problem.id}</TableCell>
                         <TableCell>
                             <div className="font-medium">{problem.title}</div>
@@ -46,12 +45,12 @@ const ProblemTable = ({ problems }: ProblemTableProps) => {
                         <TableCell>
                             <Badge className={getDifficultyColor(problem.difficulty)}>{problem.difficulty}</Badge>
                         </TableCell>
-                        <TableCell>
+                        {/* <TableCell>
                             {problem.acceptance ? problem.acceptance.toFixed(1) : "0.0" }%
-                        </TableCell>
-                        <TableCell>
+                        </TableCell> */}
+                        {/* <TableCell>
                             <Badge className={getStatusColor(problem.status)}>{problem.status}</Badge>
-                        </TableCell>
+                        </TableCell> */}
                     </TableRow>
                 ))}
                 </TableBody>

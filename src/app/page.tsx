@@ -4,46 +4,48 @@ import DropDownSelect from '@/components/home/drop-down-select';
 import ProblemTable from '@/components/home/problem-table';
 import SearchBar from '@/components/home/search-bar';
 import ProtectedRoute from '@/components/shared/protected-route';
+import { useAuth } from '@/contexts/auth.context';
 import { ProblemSchemaDisplayResponseType } from '@/dtos/problem.dto';
+import env from '@/lib/env';
+import { fetchProblems } from '@/lib/fetchers/problem.fetchers';
 import DifficultyEnum from '@/lib/types/enums/difficulty.enum';
 import ProblemStatusEnum from '@/lib/types/enums/problemstatus.enum';
-import React, { useState } from 'react'
+import React, { FormEventHandler, useEffect, useState } from 'react'
 
 export default function Home() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [difficultyFilter, setDifficultyFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const { token } = useAuth();
 
-  const sampleProblems: ProblemSchemaDisplayResponseType[] = [
-    {
-      id: 1,
-      title: "Two Sum",
-      author: "John Doe",
-      difficulty: DifficultyEnum.PROG1,
-      acceptance: 75,
-      status: ProblemStatusEnum.SOLVED
-    },
-    {
-      id: 2,
-      title: "Valid Parentheses",
-      author: "Jane Smith",
-      difficulty: DifficultyEnum.DSA,
-      acceptance: 80,
-      status: ProblemStatusEnum.NOT_STARTED
-    },
-    {
-      id: 3,
-      title: "Merge Two Sorted Lists",
-      author: "Alice Johnson",
-      difficulty: DifficultyEnum.PROG2,
-      acceptance: 85,
-      status: ProblemStatusEnum.ATTEMPTED
-    }
-  ];
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [displayedSearchTerm, setDisplayedSearchTerm] = useState("");
+  const [difficultyFilter, setDifficultyFilter] = useState("all");
+  const [problems, setProblems] = useState<ProblemSchemaDisplayResponseType[]>([]);
+
+  useEffect(() => {
+    if (!token) return;
+
+    // Fetch problems based on filters
+    const getProblems = async () => {
+      try {
+        const response = await fetchProblems(token ?? "", page, env.PROBLEM_LIMIT_PER_PAGE, searchTerm, difficultyFilter !== "all" ? difficultyFilter : null);
+        setProblems(response.data || []);
+      } catch (error) {
+        console.error("Error fetching problems:", error);
+      }
+    };
+
+    getProblems();
+  }, [token, searchTerm, difficultyFilter]);
+
+  const handleSubmit: FormEventHandler = (e) => {
+    e.preventDefault();
+    setSearchTerm(displayedSearchTerm);
+  };
 
   return (
     <ProtectedRoute>
-      <div className="h-[calc(100vh-4rem)]">
         <section className="py-8">
           <div className="max-w-7xl mx-auto px-6">
             <div className="mb-8">
@@ -52,8 +54,8 @@ export default function Home() {
             </div>
 
             {/* Filters */}
-            <form className="flex flex-col sm:flex-row gap-4 mb-6">
-              <SearchBar searchTerm={searchTerm} handleChange={setSearchTerm} placeholder='Search problems...' />
+            <form className="flex flex-col sm:flex-row gap-4 mb-6" onSubmit={handleSubmit}>
+              <SearchBar searchTerm={displayedSearchTerm} handleChange={setDisplayedSearchTerm} placeholder='Search problems...' />
               <DropDownSelect
                 value={difficultyFilter}
                 handleValueChange={setDifficultyFilter}
@@ -65,7 +67,7 @@ export default function Home() {
                   { value: DifficultyEnum.DSA, label: 'DSA' },
                 ]}
               />
-              <DropDownSelect
+              {/* <DropDownSelect
                 value={statusFilter}
                 handleValueChange={setStatusFilter}
                 placeholder="Status"
@@ -75,14 +77,13 @@ export default function Home() {
                   { value: 'attempted', label: 'Attempted' },
                   { value: 'not-started', label: 'Not Started' },
                 ]}
-              />
+              /> */}
             </form>
 
           {/* Problems Table */}
-          <ProblemTable problems={sampleProblems} />
+          <ProblemTable problems={problems} />
           </div>
       </section>
-      </div>
     </ProtectedRoute>
   )
 }

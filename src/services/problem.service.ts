@@ -1,9 +1,10 @@
-import { Problem } from "@/models/problem.model";   
-import { AddProblemSchemaType, ProblemSchemaResponse, ProblemSchemaResponseType } from "@/dtos/problem.dto";
-import { id } from "zod/locales";
-import { User } from "@/models/user.model";
+import { defineAssociations, Problem, User } from "@/models";   
+import { AddProblemSchemaType, ProblemSchemaDisplayResponse, ProblemSchemaDisplayResponseType, ProblemSchemaResponse, ProblemSchemaResponseType } from "@/dtos/problem.dto";
 import { UserResponseSchema } from "@/dtos/user.dto";
 import UserService from "./user.service";
+import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
+import { Op } from "sequelize";
+import { parse } from "path";
 
 class ProblemService {
     static async getProblemById(id: number): Promise<ProblemSchemaResponseType | null> {
@@ -23,13 +24,33 @@ class ProblemService {
         return response;
     }
 
-    static async getProblems(page: number = 1, limit: number = 10) {
+    static async getProblems(offset: number = 0, limit: number = 10, search: string = "", difficulty: DifficultyEnum | null = null): Promise<ProblemSchemaDisplayResponseType[]> {
         const problems = await Problem.findAll({
-            order: [["updatedAt", "DESC"]],
-            offset: (page - 1) * limit,
+            order: [["id", "ASC"]],
+            offset: (offset) * limit,
             limit,
+            where: {
+                [Op.or]: [
+                    {
+                        title: {
+                        [Op.like]: `%${search}%`
+                        }
+                    }
+                ],
+                ...(difficulty && { difficulty })
+            },
         });
-        return problems;
+
+        const parsedProblems = problems.map(async (problem) => {
+            const parsedProblem = ProblemSchemaResponse.parse(problem);
+
+            const user = await UserService.getUserById(parsedProblem.authorId);
+            parsedProblem.author = user ? UserResponseSchema.parse(user).name : "Unknown";
+
+            return ProblemSchemaDisplayResponse.parse(parsedProblem);
+        });
+
+        return Promise.all(parsedProblems);
     }
 
     static async addProblem(data: AddProblemSchemaType, userId: number): Promise<ProblemSchemaResponseType> {
