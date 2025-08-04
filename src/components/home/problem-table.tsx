@@ -36,13 +36,13 @@ const ProblemTable = ({ problems }: ProblemTableProps) => {
                 {problems.map((problem, index) => (
                     <TableRow key={index} onClick={() => handleRowClick(problem.id)} className="cursor-pointer odd:bg-neutral-50 odd:dark:bg-neutral-800">
                         <TableCell className="font-medium">{problem.id}</TableCell>
-                        <TableCell>
+                        <TableCell className='truncate table-fixed flex-1'>
                             <div className="font-medium">{problem.title}</div>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className='truncate table-fixed w-40'>
                             <Badge variant="outline">{problem.author}</Badge>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className='truncate table-fixed w-40'>
                             <Badge className={getDifficultyColor(problem.difficulty)}>{problem.difficulty}</Badge>
                         </TableCell>
                         {/* <TableCell>
