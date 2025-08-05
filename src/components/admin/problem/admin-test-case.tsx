@@ -1,3 +1,4 @@
+import Markdown from '@/components/shared/markdown';
 import { Button } from '@/components/ui/button';
 import { AddTestCaseSchemaType } from '@/dtos/testcase.dto';
 import { cn } from '@/lib/utils';
@@ -51,7 +52,7 @@ const AdminTestCase: React.FC<AdminTestCaseProps> = ({ testCaseNumber, testCase,
             &&
             (
                 <div className='flex flex-col gap-2 px-4 py-2 w-full text-xs'>
-                    <div className='flex gap-2'>
+                    <div className='flex flex-col gap-2'>
                         <label className='font-semibold mt-1'>Input:</label>
                         <textarea
                             value={testCase.input}
@@ -67,11 +68,13 @@ const AdminTestCase: React.FC<AdminTestCaseProps> = ({ testCaseNumber, testCase,
                         </button>
                     </div>
 
-                    <div className='flex items-center gap-2'>
+                    <div className='flex flex-col gap-2 h-full'>
                         <label className='font-semibold'>Output:</label>
-                        <p>
-                            {testCase.output || 'No output provided'}
-                        </p>
+                        <div className='bg-neutral-100 dark:bg-neutral-800 rounded-sm p-2 text-gray-400 overflow-x-auto h-full'>
+                            <code className='whitespace-pre text-foreground h-full'>
+                                {testCase.output || 'No output provided.'}
+                            </code>
+                        </div>
                     </div>
 
                     <Button className='w-full bg-red-500 dark:bg-red-900 hover:dark:bg-red-800 text-white hover:bg-red-600 mt-4 cursor-pointer' variant="destructive" size="sm" onClick={onDelete}>

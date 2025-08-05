@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import DifficultyEnum, { getDifficultyColor } from '@/lib/types/enums/difficulty.enum';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import MarkdownEditor from '@/components/shared/markdown-editor';
 
 interface AdminProblemBarProps {
     problem: {
@@ -32,11 +33,11 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({ problem, onProblemCha
 
             <div className='mt-4 text-sm h-full'>
             {/* Maybe add a markdown renderer */}
-                <textarea className='w-full resize-y min-h-96' placeholder='Description here...' value={description} onChange={(e) => onProblemChange('description', e.target.value)}></textarea>
+                <textarea className='w-full min-h-96 resize-y' placeholder='Description here...' value={description} onChange={(e) => onProblemChange('description', e.target.value)}></textarea>
             </div>
         </div>
 
-        <div className='px-4 h-14 absolute bottom-0 w-full border-t border-gray-200 dark:border-gray-700 flex justify-center items-center bg-vscode-light dark:bg-vscode-dark'>
+        <div className='px-4 h-14 absolute bottom-0 w-full border-t border-gray-200 dark:border-gray-700 flex justify-center items-center bg-vscode-light dark:bg-vscode-dark z-10'>
           <Button className='w-full bg-primary py-2 rounded-lg cursor-pointer' onClick={onSave}>Save Problem</Button>
         </div>
     </ProblemCard>

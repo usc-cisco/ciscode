@@ -4,6 +4,7 @@ import { ProblemSchemaResponseType } from '@/dtos/problem.dto';
 import { Badge } from '../ui/badge';
 import { getDifficultyColor } from '@/lib/types/enums/difficulty.enum';
 import { cn } from '@/lib/utils';
+import Markdown from '../shared/markdown';
 
 interface ProblemBarProps {
     problem: ProblemSchemaResponseType;
@@ -23,7 +24,7 @@ const ProblemBar: React.FC<ProblemBarProps> = ({ problem }) => {
 
         <div className='mt-4 text-sm'>
             {/* Maybe add a markdown renderer */}
-            <p>{description}</p>
+            <p className='whitespace-pre-wrap'>{description}</p>
         </div>
     </ProblemCard>
   )
