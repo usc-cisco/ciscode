@@ -1,12 +1,12 @@
 "use client"
 
+import AdminCodeEditor from '@/components/admin/problem/admin-code-editor'
 import AdminProblemBar from '@/components/admin/problem/admin-problem-bar'
 import AdminTestCaseBar from '@/components/admin/problem/admin-test-case-bar'
-import CodeEditor from '@/components/problem/code-editor'
-import ProblemBar from '@/components/problem/problem-bar'
 import SplitView from '@/components/shared/split-view'
 import { useAuth } from '@/contexts/auth.context'
 import { AddProblemSchemaType } from '@/dtos/problem.dto'
+import { AddTestCaseSchemaType } from '@/dtos/testcase.dto'
 import { addProblem } from '@/lib/fetchers/problem.fetchers'
 import DifficultyEnum from '@/lib/types/enums/difficulty.enum'
 import { redirect, useRouter } from 'next/navigation'
@@ -19,14 +19,42 @@ const AddProblemPage = () => {
         title: "",
         description: "",
         difficulty: DifficultyEnum.PROG1,
-        defaultCode: ""
+        defaultCode: "// Write your boilerplate code here...",
+        solutionCode: "// Write your solution code here...",
     });
+    const [testCases, setTestCases] = useState<AddTestCaseSchemaType[]>([{
+        input: "",
+        hidden: false
+    }]);
+    const [isSolution, setIsSolution] = useState(true);
 
     const handleProblemChange = (field: string, value: string | DifficultyEnum) => {
         setProblem(prev => ({
             ...prev,
             [field]: value
         }));
+    };
+
+    const handleAddTestCase = () => {
+        setTestCases(prev => [...prev, {
+            input: "",
+            hidden: false
+        }]);
+    };
+
+    const handleEditTestCase = (index: number) => (field: string, value: string | boolean) => {
+        setTestCases(prev => {
+            const updatedTestCases = [...prev];
+            updatedTestCases[index] = {
+                ...updatedTestCases[index],
+                [field]: value
+            };
+            return updatedTestCases;
+        });
+    };
+
+    const handleDeleteTestCase = (index: number) => () => {
+        setTestCases(prev => prev.filter((_, i) => i !== index));
     };
 
     const handleSaveProblem = async () => {
@@ -36,7 +64,9 @@ const AddProblemPage = () => {
         }
 
         try {
-            await addProblem(problem as AddProblemSchemaType, token);
+            await addProblem({
+                ...problem,
+                defaultCode: problem.defaultCode == "// Write your boilerplate code here..." ? null : problem.defaultCode,            } as AddProblemSchemaType, token);
             router.push("/admin");
         } catch (error) {
             console.error("Error saving problem:", error);
@@ -44,8 +74,20 @@ const AddProblemPage = () => {
     }
 
     const handleCodeChange = (value: string | undefined) => {
-        handleProblemChange('defaultCode', value || "");
-        console.log(problem.defaultCode)
+        if (!value) return;
+
+        isSolution
+            ? handleProblemChange('solutionCode', value)
+            : handleProblemChange('defaultCode', value);
+    };
+
+    const handleChangeIsSolution = (value: boolean) => () => {
+        setIsSolution(value);
+        if (value) {
+            handleProblemChange('solutionCode', problem.solutionCode || "// Write your solution code here...");
+        } else {
+            handleProblemChange('defaultCode', problem.defaultCode || "// Write your boilerplate code here...");
+        }
     };
 
     return (
@@ -55,10 +97,14 @@ const AddProblemPage = () => {
                 sizes={[25, 50, 25]}
             >
                 <AdminProblemBar problem={problem} onProblemChange={handleProblemChange} onSave={handleSaveProblem} />
-                <CodeEditor
+                <AdminCodeEditor
+                    defaultCode={problem.defaultCode}
+                    solutionCode={problem.solutionCode}
                     onCodeChange={handleCodeChange}
+                    isSolution={isSolution}
+                    handleChangeIsSolution={handleChangeIsSolution}
                 />
-                <AdminTestCaseBar onSubmit={() => {}} />
+                <AdminTestCaseBar testCases={testCases} onAddTestCase={handleAddTestCase} onTestCaseChange={handleEditTestCase} onDeleteTestCase={handleDeleteTestCase} />
             </SplitView>
             </div>
         </div>
