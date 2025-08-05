@@ -166,3 +166,16 @@
 body {
   font-family: "Poppins";
 }
+
+.markdown > p {
+  font-size: 0.875rem;
+  color: black;
+}
+
+.dark .markdown > p {
+  color: white;
+}
+
+.markdown > code {
+  background-color: white;
+}
