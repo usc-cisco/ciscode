@@ -31,8 +31,13 @@ export default function Problem() {
   };
 
   const onSubmit = async () => {
+    if (!token) {
+      console.error("User is not authenticated");
+      return;
+    }
+
     const input = ""; // You can replace this with actual input if needed
-    const { output, error } = await checkCode(code, input);
+    const { output, error } = await checkCode(code, input, token);
     if (error) {
       console.error("Error checking code:", error);
     } else {

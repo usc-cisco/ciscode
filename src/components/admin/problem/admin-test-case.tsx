@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { ChevronDown, ChevronUp, Circle, CircleCheck, CircleX, Delete, DeleteIcon, Trash } from 'lucide-react';
 import React, { useState } from 'react'
 import { FaPlay } from "react-icons/fa";
+import { ClipLoader } from 'react-spinners';
 
 
 interface AdminTestCaseProps {
@@ -13,10 +14,12 @@ interface AdminTestCaseProps {
     isHidden?: boolean; // Optional prop to hide the test case
     onChange: (field: string, value: string | boolean) => void;
     onDelete: () => void;
+    handleCheckCode: (testCase: AddTestCaseSchemaType) => Promise<string | undefined>;
 }
 
-const AdminTestCase: React.FC<AdminTestCaseProps> = ({ testCaseNumber, testCase, isHidden, onChange, onDelete }) => {
+const AdminTestCase: React.FC<AdminTestCaseProps> = ({ testCaseNumber, testCase, isHidden, onChange, onDelete, handleCheckCode }) => {
     const [showDetails, setShowDetails] = useState(false);
+    const [sending, setSending] = useState(false);
     
     const handleToggleDetails = () => {
         setShowDetails(!showDetails);
@@ -28,6 +31,22 @@ const AdminTestCase: React.FC<AdminTestCaseProps> = ({ testCaseNumber, testCase,
 
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         onChange('input', e.target.value);
+    };
+
+    const handleOutputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        onChange('output', e.target.value);
+    };
+
+    const handleGetOutput = async () => {
+        setSending(true);
+        const output = await handleCheckCode(testCase);
+        if (output) {
+            onChange('output', output);
+        } else {
+            onChange('output', "No output provided.");
+        }
+
+        setSending(false);
     };
   
     return (
@@ -42,9 +61,13 @@ const AdminTestCase: React.FC<AdminTestCaseProps> = ({ testCaseNumber, testCase,
                     <p className='text-xs text-gray-500'>Hidden</p>
                 )}
             </div>
-            <button className={`relative rounded-full flex items-center justify-center border border-primary size-6 hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer transition-colors`}>
-                <FaPlay className='size-2 text-primary absolute left-[0.45rem]' />
-            </button>
+            {sending ? (
+                <ClipLoader size={20} color='#1752F0' className='size-4 text-primary pr-4' />
+            ) : (
+                <button onClick={handleGetOutput} className={`relative rounded-full flex items-center justify-center border border-primary size-6 hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer transition-colors`}>
+                    <FaPlay className='size-2 text-primary absolute left-[0.45rem]' />
+                </button>
+            )}
         </div>
 
         {

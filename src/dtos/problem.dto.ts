@@ -4,8 +4,8 @@ import z from "zod";
 
 export const ProblemSchemaDisplayResponse = z.object({
     id: z.int(),
-    title: z.string().min(2).max(100),
-    author: z.string().min(2).max(50).optional(),
+    title: z.string(),
+    author: z.string().optional(),
     difficulty: z.enum(DifficultyEnum),
     acceptance: z.number().min(0).max(100).optional(),
     status: z.enum(ProblemStatusEnum).optional(),
@@ -22,8 +22,8 @@ export const ProblemSchemaResponse = z.object({
 });
 
 export const AddProblemSchema = z.object({
-    title: z.string(),
-    description: z.string(),
+    title: z.string().min(2, "Title must be at least 2 characters").max(100, "Title cannot exceed 100 characters"),
+    description: z.string().min(2, "Description must be at least 2 characters").max(500, "Description cannot exceed 500 characters"),
     difficulty: z.enum(DifficultyEnum),
     defaultCode: z.string().optional().nullable().default(null),
     solutionCode: z.string().optional().default(""),
