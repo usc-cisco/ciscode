@@ -1,3 +1,4 @@
+import axios from "axios";
 import instance from "../axios";
 
 export const checkCode = async (code: string, input: string, token: string): Promise<{ output: string | null; error: string | null }> => {
@@ -9,7 +10,10 @@ export const checkCode = async (code: string, input: string, token: string): Pro
         });
         return response.data;
     } catch (error) {
-        console.error("Error checking code:", error);
+        if (axios.isAxiosError(error) && error.response?.data?.error) {
+        return { output: null, error: error.response.data.error };
+        }
+
         return { output: null, error: "Internal server error" };
     }
 }

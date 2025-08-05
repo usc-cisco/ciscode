@@ -33,11 +33,8 @@ const AdminTestCase: React.FC<AdminTestCaseProps> = ({ testCaseNumber, testCase,
         onChange('input', e.target.value);
     };
 
-    const handleOutputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        onChange('output', e.target.value);
-    };
-
     const handleGetOutput = async () => {
+        onChange('output', "Loading...");
         setSending(true);
         const output = await handleCheckCode(testCase);
         if (output) {
