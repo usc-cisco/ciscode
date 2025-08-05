@@ -1,4 +1,4 @@
-import { unlink, writeFile } from "fs/promises";
+import { chmod, unlink, writeFile } from "fs/promises";
 import { promisify } from "util";
 import { exec as rawExec } from "child_process";
 import pty from "node-pty";
@@ -11,18 +11,22 @@ export async function runCCode(code: string, input: string): Promise<{ output: s
   if (!existsSync(tmpDir)) {
     mkdirSync(tmpDir);
   }
-  
+
   const id = Date.now() + "-" + Math.random().toString(36).slice(2);
   const codePath = `${tmpDir}/${id}.c`;
   const binaryPath = `${tmpDir}/${id}.out`;
 
-  // Save code to file
-  await writeFile(codePath, code);
-  
-  // Compile the code
+  // Inject fflush to ensure output is flushed immediately
+  const modifiedCode = code.replace(
+    /int\s+main\s*\([^)]*\)\s*{/,
+    match => match + `\n printf("\\n"); fflush(stdout);`
+  );
+
+  await writeFile(codePath, modifiedCode);
+
   try {
     await exec(`gcc ${codePath} -o ${binaryPath}`);
-    // await chmod(binaryPath, 0o755); // make it executable
+    await chmod(binaryPath, 0o755);
   } catch (err: any) {
     return { output: null, error: "Compilation failed: " + err.stderr };
   }
@@ -37,28 +41,38 @@ export async function runCCode(code: string, input: string): Promise<{ output: s
     });
 
     let output = "";
-    const inputs = input.split(/\r?\n/);
+    const inputLines = input.split(/\r?\n/);
     let inputIndex = 0;
 
-    const timeout = setTimeout(() => {
-      ptyProcess.kill(); // kill after time limit
+    const overallTimeout = setTimeout(() => {
+      ptyProcess.kill();
       resolve({
         output: output.trim() + "\n\n[Execution timed out]",
         error: null,
       });
-    }, 4000); // 4 second time limit
+    }, 5000); // total safety timeout
+
+    let idleTimeout: NodeJS.Timeout | null = null;
+
+    const startIdleTimer = () => {
+      if (idleTimeout) clearTimeout(idleTimeout);
+      idleTimeout = setTimeout(() => {
+        if (inputIndex < inputLines.length) {
+          const line = inputLines[inputIndex++];
+          ptyProcess.write(line + "\r");
+          startIdleTimer(); // reset after input
+        }
+      }, 10); // how long to wait before assuming it needs input
+    };
 
     ptyProcess.onData((data) => {
       output += data;
-
-      // When a prompt is detected, send next line
-      if (inputIndex < inputs.length && /[:?>]\s*$/.test(data)) {
-        const line = inputs[inputIndex++];
-        ptyProcess.write(line + "\r"); // simulate Enter key
-      }
+      startIdleTimer(); // reset idle timer on new output
     });
 
     ptyProcess.onExit(async ({ exitCode }) => {
+      clearTimeout(overallTimeout);
+      if (idleTimeout) clearTimeout(idleTimeout);
       try {
         await unlink(codePath);
         await unlink(binaryPath);
@@ -69,7 +83,7 @@ export async function runCCode(code: string, input: string): Promise<{ output: s
       if (exitCode !== 0) {
         return resolve({ output: null, error: `Exited with code ${exitCode}` });
       }
-      resolve({ output, error: null });
+      resolve({ output: output.trim(), error: null });
     });
   });
 }
