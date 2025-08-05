@@ -9,9 +9,10 @@ interface AdminTestCaseBarProps {
   onAddTestCase: () => void;
   onTestCaseChange: (index: number) => (field: string, value: string | boolean) => void;
   onDeleteTestCase: (index: number) => () => void;
+  handleCheckCode: (testCase: AddTestCaseSchemaType) => Promise<string | undefined>;
 }
 
-const AdminTestCaseBar: React.FC<AdminTestCaseBarProps> = ({ testCases, onAddTestCase, onTestCaseChange, onDeleteTestCase }) => {
+const AdminTestCaseBar: React.FC<AdminTestCaseBarProps> = ({ testCases, onAddTestCase, onTestCaseChange, onDeleteTestCase, handleCheckCode }) => {
   return (
     <ProblemCard className='relative overflow-hidden'>
         <div className='px-4 py-3 rounded-t-xl border-b border-gray-200 dark:border-gray-700'>
@@ -29,6 +30,7 @@ const AdminTestCaseBar: React.FC<AdminTestCaseBarProps> = ({ testCases, onAddTes
                       isHidden={testCase.hidden}
                       onChange={onTestCaseChange(index)}
                       onDelete={onDeleteTestCase(index)}
+                      handleCheckCode={handleCheckCode}
                   />
               ))
             }

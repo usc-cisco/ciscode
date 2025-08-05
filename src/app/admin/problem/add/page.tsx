@@ -7,6 +7,7 @@ import SplitView from '@/components/shared/split-view'
 import { useAuth } from '@/contexts/auth.context'
 import { AddProblemSchemaType } from '@/dtos/problem.dto'
 import { AddTestCaseSchemaType } from '@/dtos/testcase.dto'
+import { checkCode } from '@/lib/fetchers/code.fetchers'
 import { addProblem } from '@/lib/fetchers/problem.fetchers'
 import DifficultyEnum from '@/lib/types/enums/difficulty.enum'
 import { redirect, useRouter } from 'next/navigation'
@@ -66,7 +67,9 @@ const AddProblemPage = () => {
         try {
             await addProblem({
                 ...problem,
-                defaultCode: problem.defaultCode == "// Write your boilerplate code here..." ? null : problem.defaultCode,            } as AddProblemSchemaType, token);
+                defaultCode: problem.defaultCode == "// Write your boilerplate code here..." ? "" : problem.defaultCode,
+                solutionCode: problem.solutionCode == "// Write your solution code here..." ? "" : problem.solutionCode,
+            } as AddProblemSchemaType, token);
             router.push("/admin");
         } catch (error) {
             console.error("Error saving problem:", error);
@@ -90,6 +93,20 @@ const AddProblemPage = () => {
         }
     };
 
+    const handleCheckCode = async (testCase: AddTestCaseSchemaType): Promise<string | undefined> => {
+        if (!token) {
+            console.error("User is not authenticated");
+            return;
+        }
+
+        try {
+            const response = await checkCode(problem.solutionCode, testCase.input, token);
+            return response.output ?? response.error ?? undefined;
+        } catch (error) {
+            console.error("Error checking code:", error);
+        }
+    };
+
     return (
         <div>
             <div>
@@ -104,7 +121,8 @@ const AddProblemPage = () => {
                     isSolution={isSolution}
                     handleChangeIsSolution={handleChangeIsSolution}
                 />
-                <AdminTestCaseBar testCases={testCases} onAddTestCase={handleAddTestCase} onTestCaseChange={handleEditTestCase} onDeleteTestCase={handleDeleteTestCase} />
+                <AdminTestCaseBar testCases={testCases} onAddTestCase={handleAddTestCase} onTestCaseChange={handleEditTestCase} onDeleteTestCase={handleDeleteTestCase} handleCheckCode
+                ={handleCheckCode}/>
             </SplitView>
             </div>
         </div>
