@@ -50,7 +50,7 @@ export async function runCCode(code: string, input: string): Promise<{ output: s
         output: output.trim() + "\n\n[Execution timed out]",
         error: null,
       });
-    }, 5000); // total safety timeout
+    }, 4500); // total safety timeout
 
     let idleTimeout: NodeJS.Timeout | null = null;
 
