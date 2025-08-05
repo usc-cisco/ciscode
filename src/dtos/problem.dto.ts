@@ -13,19 +13,20 @@ export const ProblemSchemaDisplayResponse = z.object({
 
 export const ProblemSchemaResponse = z.object({
     id: z.int(),
-    title: z.string().min(2).max(100),
-    description: z.string().min(10).max(1000),
+    title: z.string(),
+    description: z.string(),
     difficulty: z.enum(DifficultyEnum),
-    defaultCode: z.string().max(1000).optional().nullable().default(null),
+    defaultCode: z.string().optional().nullable().default(null),
     authorId: z.number(),
     author: z.string().min(2).max(50).optional(),
 });
 
 export const AddProblemSchema = z.object({
-    title: z.string().min(2).max(100),
-    description: z.string().min(10).max(1000),
+    title: z.string(),
+    description: z.string(),
     difficulty: z.enum(DifficultyEnum),
-    defaultCode: z.string().max(1000).optional().nullable().default(null)
+    defaultCode: z.string().optional().nullable().default(null),
+    solutionCode: z.string().optional().default(""),
 })
 
 export type AddProblemSchemaType = z.infer<typeof AddProblemSchema>;
