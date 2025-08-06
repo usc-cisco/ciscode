@@ -14,7 +14,6 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSetLogin, handleSuccess }) =>
     const {
         register,
         handleSubmit,
-        formState: { errors },
     } = useForm();
 
     const onSubmit = async (data: any) => {

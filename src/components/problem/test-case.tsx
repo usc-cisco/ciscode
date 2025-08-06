@@ -58,7 +58,7 @@ const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange,
             onChange('actualOutput', error || "An error occurred while checking the code.");
         }
         else {
-            onChange('actualOutput', "No output received.");
+            onChange('actualOutput', "");
         }
 
         handleStatusChange(status);
@@ -109,7 +109,7 @@ const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange,
                     <div className='flex flex-col gap-2 h-full'>
                         <label className='font-semibold'>Actual Output:</label>
                         {
-                            testCase.actualOutput 
+                            testCase.actualOutput
                             ?
                             <div className='bg-neutral-100 dark:bg-neutral-800 rounded-sm p-2 text-gray-400 overflow-x-auto min-h-2'>
                                 <p className='whitespace-pre text-foreground min-h-3 font-mono'>
