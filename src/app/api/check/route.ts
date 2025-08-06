@@ -1,5 +1,5 @@
 import { runCCode } from "@/lib/code-runner";
-import { RunCodeSchema } from "@/dtos/code.dto";
+import { RunCodeResponseSchema, RunCodeSchema } from "@/dtos/code.dto";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -14,7 +14,10 @@ export async function POST(req: NextRequest) {
 
         const result = await runCCode(code, input || "");
 
-        return NextResponse.json(result, { status: result.error ? 500 : 200 });
+        return NextResponse.json({
+            message: "Code executed successfully",
+            data: RunCodeResponseSchema.parse(result)
+        }, { status: result.error ? 500 : 200 });
     }
     catch (error) {
         console.error("Error running code:", error);

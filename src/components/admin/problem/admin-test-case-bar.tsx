@@ -3,13 +3,14 @@ import ProblemCard from '@/components/problem/problem-card'
 import { Button } from '@/components/ui/button'
 import { AddTestCaseSchemaType } from '@/dtos/testcase.dto';
 import AdminTestCase from './admin-test-case';
+import { RunCodeResponseType } from '@/dtos/code.dto';
 
 interface AdminTestCaseBarProps {
   testCases: AddTestCaseSchemaType[];
   onAddTestCase: () => void;
   onTestCaseChange: (index: number) => (field: string, value: string | boolean) => void;
   onDeleteTestCase: (index: number) => () => void;
-  handleCheckCode: (testCase: AddTestCaseSchemaType) => Promise<{ output: string | null, error: string | null }>;
+  handleCheckCode: (testCase: AddTestCaseSchemaType) => Promise<RunCodeResponseType>;
 }
 
 const AdminTestCaseBar: React.FC<AdminTestCaseBarProps> = ({ testCases, onAddTestCase, onTestCaseChange, onDeleteTestCase, handleCheckCode }) => {

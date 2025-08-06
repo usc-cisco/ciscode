@@ -1,21 +1,25 @@
 import axios from "axios";
 import instance from "../axios";
+import ApiResponse from "../types/interface/api-response.interface";
+import { RunCodeResponseType } from "@/dtos/code.dto";
 
-export const checkCode = async (code: string, input: string, token: string): Promise<{ output: string | null; error: string | null }> => {
+export const checkCode = async (code: string, input: string, token: string): Promise<RunCodeResponseType> => {
     try {
-        const response = await instance.post("/check", { code, input }, {
+        const response = await instance.post<ApiResponse<RunCodeResponseType>>("/check", { code, input }, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
 
+        const { data: responseData } = response.data;
+
         return {
-            ...response.data,
-            error: response.data.output.includes("[Execution timed out]") ? "Execution timed out" : null,
+            ...responseData,
+            error: (responseData.output && responseData.output.includes("[Execution timed out]")) ? "Execution timed out" : null,
         };
     } catch (error) {
-        if (axios.isAxiosError(error) && error.response?.data?.error) {
-        return { output: null, error: error.response.data.error };
+        if (axios.isAxiosError(error) && error.response?.data?.data?.error) {
+            return { output: null, error: error.response.data.data.error };
         }
 
         return { output: null, error: "Internal server error" };

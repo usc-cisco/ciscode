@@ -3,7 +3,7 @@ import ProblemService from "@/services/problem.service";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(_: NextRequest, context: { params: { id: string } }) {
-    const { id } = await context.params;
+    const { id } = context.params;
     if (!id || isNaN(Number(id))) {
         return NextResponse.json({ error: "Invalid problem ID" }, { status: 400 });
     }
