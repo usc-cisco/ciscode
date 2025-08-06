@@ -26,20 +26,20 @@ export async function POST(req: NextRequest, context: { params: { id: string } }
         }
 
         // Run code first
-        const { code, input } = parsedData.data;
-        const result = await runCCode(code, input || "");
-
+        const { code } = parsedData.data;
+        const result = await runCCode(code, testCase.input || "");
+        
         let status = SubmissionStatusEnum.COMPLETED;
 
-        if (result.error || (result.output && result.output !== testCase.output)) {
+        if (result.error || result.output !== testCase.output) {
             status = SubmissionStatusEnum.FAILED;
         }
 
         return NextResponse.json({
             message: "Code executed successfully",
             data: CheckCodeResponseSchema.parse({
-                output: testCase.hidden || result.output || "",
-                error: testCase.hidden || result.error || null,
+                output: testCase.hidden ? null : result.output || "",
+                error: testCase.hidden ? null : result.error || "",
                 status
             })
         });

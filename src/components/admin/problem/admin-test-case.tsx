@@ -118,11 +118,17 @@ const AdminTestCase: React.FC<AdminTestCaseProps> = ({ testCaseNumber, testCase,
 
                     <div className='flex flex-col gap-2 h-full'>
                         <label className='font-semibold'>Output:</label>
-                        <div className='bg-neutral-100 dark:bg-neutral-800 rounded-sm p-2 text-gray-400 overflow-x-auto h-auto'>
-                            <code className='whitespace-pre text-foreground h-full'>
-                                {testCase.output || 'No output provided.'}
-                            </code>
-                        </div>
+                        {
+                            testCase.output 
+                            ?
+                            <div className='bg-neutral-100 dark:bg-neutral-800 rounded-sm p-2 text-gray-400 overflow-x-auto min-h-2'>
+                                <p className='whitespace-pre text-foreground min-h-3 font-mono'>
+                                    {testCase.output}
+                                </p>
+                            </div>
+                            :
+                            <p className='text-neutral-400 dark:text-neutral-600 pb-2'>No output provided.</p>
+                        }
                     </div>
 
                     <Button className='w-full bg-red-500 dark:bg-red-900 hover:dark:bg-red-800 text-white hover:bg-red-600 mt-4 cursor-pointer' variant="destructive" size="sm" onClick={onDelete}>

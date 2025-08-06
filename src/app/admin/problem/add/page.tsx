@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/auth.context'
 import { RunCodeResponseType } from '@/dtos/code.dto'
 import { AddProblemSchemaType } from '@/dtos/problem.dto'
 import { AddTestCaseSchemaType } from '@/dtos/testcase.dto'
-import { checkCode } from '@/lib/fetchers/code.fetchers'
+import { runCode } from '@/lib/fetchers/code.fetchers'
 import { addProblem } from '@/lib/fetchers/problem.fetchers'
 import DifficultyEnum from '@/lib/types/enums/difficulty.enum'
 import SubmissionStatusEnum from '@/lib/types/enums/submissionstatus.enum'
@@ -122,7 +122,7 @@ const AddProblemPage = () => {
         setChecked(true);
 
         try {
-            const response = await checkCode(problem.solutionCode, testCase.input ?? "", token);
+            const response = await runCode(problem.solutionCode, testCase.input ?? "", token);
             return response;
         } catch (error) {
             console.error("Error checking code:", error);

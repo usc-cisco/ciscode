@@ -55,10 +55,12 @@ class TestCaseService {
         return testCases.map(testCase => {
             const parsedTestCase = TestCaseResponse.parse(testCase);
 
-            return {
-                ...parsedTestCase,
-                output: parsedTestCase.hidden ? "" : parsedTestCase.output
+            if (parsedTestCase.hidden) {
+                delete parsedTestCase.input;
+                delete parsedTestCase.output;
             }
+
+            return parsedTestCase;
         });
     }
 }
