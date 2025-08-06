@@ -46,14 +46,19 @@ const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange,
 
     const handleCheckCode = async () => {
         setSending(true);
+        onChange('actualOutput', "Loading...");
         onChange('status', SubmissionStatusEnum.PENDING);
 
         const { output, error, status } = await onCheckCode(testCase);
         
         if (output) {
             onChange('actualOutput', output);
-        } else if (error) {
-            onChange('actualOutput', error || "An error occurred");
+        }
+        else if (error) {
+            onChange('actualOutput', error || "An error occurred while checking the code.");
+        }
+        else {
+            onChange('actualOutput', "No output received.");
         }
 
         handleStatusChange(status);
@@ -86,7 +91,7 @@ const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange,
             !testCase.hidden
             &&
             (
-                <div className='flex flex-col gap-2 px-4 py-2 w-full text-xs'>
+                <div className='flex flex-col gap-2 px-4 pt-2 pb-4 w-full text-xs'>
                     <div className='flex flex-col gap-2 h-full'>
                         <label className='font-semibold'>Expected Output:</label>
                         {

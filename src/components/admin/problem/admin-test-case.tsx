@@ -99,7 +99,7 @@ const AdminTestCase: React.FC<AdminTestCaseProps> = ({ testCaseNumber, testCase,
             showDetails
             &&
             (
-                <div className='flex flex-col gap-2 px-4 py-2 w-full text-xs'>
+                <div className='flex flex-col gap-2 px-4 pt-2 pb-4 w-full text-xs'>
                     <div className='flex flex-col gap-2'>
                         <label className='font-semibold mt-1'>Input:</label>
                         <textarea

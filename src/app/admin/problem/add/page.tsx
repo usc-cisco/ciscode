@@ -94,7 +94,7 @@ const AddProblemPage = () => {
     }
 
     const handleCodeChange = (value: string | undefined) => {
-        if (checked) {
+        if (checked && isSolution) {
             setChecked(false);
             setAllToPending();
         }
