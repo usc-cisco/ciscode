@@ -16,21 +16,7 @@ const TestCaseBar: React.FC<TestCaseBarProps> = ({ onSubmit }) => {
 
         <div className='max-h-full overflow-auto pb-26'>
           <div className='px-4 py-2 flex flex-col gap-2'>
-            <TestCase testCaseNumber={1} status='passed' isHidden/>
-            <TestCase testCaseNumber={2} status='failed'/>
-            <TestCase testCaseNumber={3} status='neutral'/>
-            <TestCase testCaseNumber={1} status='passed'/>
-            <TestCase testCaseNumber={2} status='failed'/>
-            <TestCase testCaseNumber={3} status='neutral'/>
-            <TestCase testCaseNumber={1} status='passed'/>
-            <TestCase testCaseNumber={2} status='failed'/>
-            <TestCase testCaseNumber={3} status='neutral'/>
-            <TestCase testCaseNumber={1} status='passed'/>
-            <TestCase testCaseNumber={2} status='failed'/>
-            <TestCase testCaseNumber={3} status='neutral'/>
-            <TestCase testCaseNumber={1} status='passed'/>
-            <TestCase testCaseNumber={2} status='failed'/>
-            <TestCase testCaseNumber={3} status='neutral'/>
+
           </div>
         </div>
 

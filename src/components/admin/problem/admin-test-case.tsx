@@ -1,5 +1,6 @@
 import Markdown from '@/components/shared/markdown';
 import { Button } from '@/components/ui/button';
+import { RunCodeResponseType } from '@/dtos/code.dto';
 import { AddTestCaseSchemaType } from '@/dtos/testcase.dto';
 import SubmissionStatusEnum from '@/lib/types/enums/submissionstatus.enum';
 import { cn } from '@/lib/utils';
@@ -15,7 +16,7 @@ interface AdminTestCaseProps {
     isHidden?: boolean; // Optional prop to hide the test case
     onChange: (field: string, value: string | boolean) => void;
     onDelete: () => void;
-    handleCheckCode: (testCase: AddTestCaseSchemaType) => Promise<{ output: string | null, error: string | null }>;
+    handleCheckCode: (testCase: AddTestCaseSchemaType) => Promise<RunCodeResponseType>;
 }
 
 const AdminTestCase: React.FC<AdminTestCaseProps> = ({ testCaseNumber, testCase, isHidden, onChange, onDelete, handleCheckCode }) => {

@@ -5,6 +5,7 @@ import AdminProblemBar from '@/components/admin/problem/admin-problem-bar'
 import AdminTestCaseBar from '@/components/admin/problem/admin-test-case-bar'
 import SplitView from '@/components/shared/split-view'
 import { useAuth } from '@/contexts/auth.context'
+import { RunCodeResponseType } from '@/dtos/code.dto'
 import { AddProblemSchemaType } from '@/dtos/problem.dto'
 import { AddTestCaseSchemaType } from '@/dtos/testcase.dto'
 import { checkCode } from '@/lib/fetchers/code.fetchers'
@@ -98,11 +99,9 @@ const AddProblemPage = () => {
             setAllToPending();
         }
 
-        if (!value) return;
-
         isSolution
-            ? handleProblemChange('solutionCode', value)
-            : handleProblemChange('defaultCode', value);
+            ? handleProblemChange('solutionCode', value ?? "")
+            : handleProblemChange('defaultCode', value ?? "");
     };
 
     const handleChangeIsSolution = (value: boolean) => () => {
@@ -114,7 +113,7 @@ const AddProblemPage = () => {
         }
     };
 
-    const handleCheckCode = async (testCase: AddTestCaseSchemaType): Promise<{ output: string | null, error: string | null }> => {
+    const handleCheckCode = async (testCase: AddTestCaseSchemaType): Promise<RunCodeResponseType> => {
         if (!token) {
             console.error("User is not authenticated");
             return { output: null, error: "User is not authenticated" };
@@ -123,7 +122,7 @@ const AddProblemPage = () => {
         setChecked(true);
 
         try {
-            const response = await checkCode(problem.solutionCode, testCase.input, token);
+            const response = await checkCode(problem.solutionCode, testCase.input ?? "", token);
             return response;
         } catch (error) {
             console.error("Error checking code:", error);

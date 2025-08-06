@@ -52,7 +52,14 @@ class TestCaseService {
             order: [["id", "ASC"]]
         });
 
-        return testCases.map(testCase => TestCaseResponse.parse(testCase));
+        return testCases.map(testCase => {
+            const parsedTestCase = TestCaseResponse.parse(testCase);
+
+            return {
+                ...parsedTestCase,
+                output: parsedTestCase.hidden ? "" : parsedTestCase.output
+            }
+        });
     }
 }
 
