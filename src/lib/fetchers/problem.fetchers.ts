@@ -1,5 +1,6 @@
-import { AddProblemSchemaType } from "@/dtos/problem.dto";
+import { AddProblemSchemaType, ProblemSchemaResponseWithTestCasesType } from "@/dtos/problem.dto";
 import instance from "../axios";
+import ApiResponse from "../types/interface/api-response.interface";
 
 export const fetchProblem = async (problemId: string, token: string) => {
     try {
@@ -7,7 +8,7 @@ export const fetchProblem = async (problemId: string, token: string) => {
             instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         }
 
-        const response = await instance.get(`/problem/${problemId}`);
+        const response = await instance.get<ApiResponse<ProblemSchemaResponseWithTestCasesType>>(`/problem/${problemId}`);
 
         return response.data;
     } catch (error: any) {

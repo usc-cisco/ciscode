@@ -6,9 +6,12 @@ import TestCaseBar from "@/components/problem/test-case-bar";
 import ProtectedRoute from "@/components/shared/protected-route";
 import SplitView from "@/components/shared/split-view";
 import { useAuth } from "@/contexts/auth.context";
-import { ProblemSchemaResponseType } from "@/dtos/problem.dto";
-import { checkCode } from "@/lib/fetchers/code.fetchers";
+import { CheckCodeResponseType } from "@/dtos/code.dto";
+import { ProblemSchemaResponseType, ProblemSchemaResponseWithTestCasesType } from "@/dtos/problem.dto";
+import { TestCaseResponseType } from "@/dtos/testcase.dto";
+import { checkCode, runCode } from "@/lib/fetchers/code.fetchers";
 import { fetchProblem } from "@/lib/fetchers/problem.fetchers";
+import SubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -23,6 +26,7 @@ export default function Problem() {
   }
 
   const [problem, setProblem] = useState<ProblemSchemaResponseType | null>(null);
+  const [testCases, setTestCases] = useState<TestCaseResponseType[]>([]);
   const [code, setCode] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -30,19 +34,39 @@ export default function Problem() {
     setCode(value || "");
   };
 
-  const onSubmit = async () => {
+  const handleEditTestCase = (index: number) => (field: string, value: string | boolean) => {
+      setTestCases(prev => {
+          const updatedTestCases = [...prev];
+          updatedTestCases[index] = {
+              ...updatedTestCases[index],
+              [field]: value
+          };
+          return updatedTestCases;
+      });
+  };
+
+  const handleCheckCode = async (testCase: TestCaseResponseType): Promise<CheckCodeResponseType> => {
+      if (!token) {
+          console.error("User is not authenticated");
+          return { output: null, error: "User is not authenticated", status: SubmissionStatusEnum.FAILED };
+      }
+
+      try {
+          const response = await checkCode(code, testCase.id, token);
+          return response;
+      } catch (error) {
+          console.error("Error checking code:", error);
+          return { output: null, error: "Error checking code", status: SubmissionStatusEnum.FAILED };
+      }
+  };
+
+  const handleSubmit = async () => {
     if (!token) {
       console.error("User is not authenticated");
       return;
     }
 
-    const input = ""; // You can replace this with actual input if needed
-    const { output, error } = await checkCode(code, input, token);
-    if (error) {
-      console.error("Error checking code:", error);
-    } else {
-      console.log("Output:", output);
-    }
+    // Submit logic here
   };
 
   useEffect(() => {
@@ -52,7 +76,9 @@ export default function Problem() {
       try {
         const response = await fetchProblem(params.id as string, token || "");
         if (response.data) {
+          setCode(response.data.defaultCode || "");
           setProblem(response.data);
+          setTestCases(response.data.testCases || []);
         } else {
           console.error("Problem not found");
           router.push("/");
@@ -94,7 +120,12 @@ export default function Problem() {
               defaultCode={problem.defaultCode ?? ""}
               onCodeChange={handleCodeChange}
             />
-            <TestCaseBar onSubmit={onSubmit} />
+            <TestCaseBar 
+              testCases={testCases} 
+              onSubmit={handleSubmit} 
+              onEditTestCase={handleEditTestCase} 
+              onCheckCode={handleCheckCode}
+            />
           </SplitView>
         </div>
       </div>
