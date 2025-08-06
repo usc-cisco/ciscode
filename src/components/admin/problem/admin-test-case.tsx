@@ -1,6 +1,7 @@
 import Markdown from '@/components/shared/markdown';
 import { Button } from '@/components/ui/button';
 import { AddTestCaseSchemaType } from '@/dtos/testcase.dto';
+import SubmissionStatusEnum from '@/lib/types/enums/submissionstatus.enum';
 import { cn } from '@/lib/utils';
 import { ChevronDown, ChevronUp, Circle, CircleCheck, CircleX, Delete, DeleteIcon, Trash } from 'lucide-react';
 import React, { useState } from 'react'
@@ -14,12 +15,26 @@ interface AdminTestCaseProps {
     isHidden?: boolean; // Optional prop to hide the test case
     onChange: (field: string, value: string | boolean) => void;
     onDelete: () => void;
-    handleCheckCode: (testCase: AddTestCaseSchemaType) => Promise<string | undefined>;
+    handleCheckCode: (testCase: AddTestCaseSchemaType) => Promise<{ output: string | null, error: string | null }>;
 }
 
 const AdminTestCase: React.FC<AdminTestCaseProps> = ({ testCaseNumber, testCase, isHidden, onChange, onDelete, handleCheckCode }) => {
     const [showDetails, setShowDetails] = useState(false);
     const [sending, setSending] = useState(false);
+
+    let StatusIcon: React.ElementType = Circle;
+    let statusClassName: string = 'text-gray-300 dark:text-gray-600';
+
+    switch(testCase.status) {
+        case SubmissionStatusEnum.COMPLETED:
+            StatusIcon = CircleCheck;
+            statusClassName = 'text-green-500';
+            break;
+        case SubmissionStatusEnum.FAILED:
+            StatusIcon = CircleX;
+            statusClassName = 'text-red-500';
+            break;
+    }
     
     const handleToggleDetails = () => {
         setShowDetails(!showDetails);
@@ -34,38 +49,50 @@ const AdminTestCase: React.FC<AdminTestCaseProps> = ({ testCaseNumber, testCase,
     };
 
     const handleGetOutput = async () => {
+        // Start off with a loading state
         onChange('output', "Loading...");
+        onChange('status', SubmissionStatusEnum.PENDING);
         setSending(true);
-        const output = await handleCheckCode(testCase);
+
+        // Check code and get output
+        const { output, error } = await handleCheckCode(testCase);
+
+        
         if (output) {
             onChange('output', output);
-        } else {
-            onChange('output', "No output provided.");
+            onChange('status', error ? SubmissionStatusEnum.FAILED : SubmissionStatusEnum.COMPLETED);
+        }
+        else if (error) {
+            onChange('output', error || "An error occurred while checking the code.");
+            onChange('status', SubmissionStatusEnum.FAILED);
+        }
+        else {
+            onChange('output', "No output received.");
+            onChange('status', SubmissionStatusEnum.COMPLETED);
         }
 
         setSending(false);
     };
   
     return (
-    <div className={`w-full min-h-14 flex flex-col justify-center p-2 rounded-xl shadow-md bg-vscode dark:bg-vscode-dark transition-all duration-200`}>
-        <div className='flex items-center justify-between w-full'>
-            <div className='flex items-center gap-2 px-2'>
-                <Button variant="ghost" onClick={handleToggleDetails} className='cursor-pointer'>
-                    <ChevronDown className={`size-4 transition-transform ${showDetails && '-rotate-180'}`}/>
-                </Button>
+    <div className={`w-full flex flex-col justify-center rounded-xl shadow-md bg-vscode dark:bg-vscode-dark transition-all duration-200 relative`}>
+        <button onClick={handleToggleDetails} className='flex items-center px-2 py-4 justify-between w-full h-full rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer select-none'>
+            <div className='flex items-center gap-2 px-2 h-full'>
+                <StatusIcon className={cn('size-4', statusClassName)} />
                 <p className='text-sm font-semibold'>Test case #{testCaseNumber}</p>
                 {isHidden && (
                     <p className='text-xs text-gray-500'>Hidden</p>
                 )}
             </div>
-            {sending ? (
-                <ClipLoader size={20} color='#1752F0' className='size-4 text-primary pr-4' />
-            ) : (
-                <button onClick={handleGetOutput} className={`relative rounded-full flex items-center justify-center border border-primary size-6 hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer transition-colors`}>
-                    <FaPlay className='size-2 text-primary absolute left-[0.45rem]' />
-                </button>
-            )}
-        </div>
+        </button>
+
+        {sending ? (
+                <ClipLoader size={20} color='#1752F0' className='absolute top-4 right-2 size-4 text-primary' />
+        ) : (
+            <button onClick={handleGetOutput} className={`absolute top-4 right-2 rounded-full flex items-center justify-center border border-primary size-6 hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer transition-colors`}>
+                <FaPlay className='size-2 text-primary absolute left-[0.45rem]' />
+            </button>
+        )}
 
         {
             showDetails
@@ -90,7 +117,7 @@ const AdminTestCase: React.FC<AdminTestCaseProps> = ({ testCaseNumber, testCase,
 
                     <div className='flex flex-col gap-2 h-full'>
                         <label className='font-semibold'>Output:</label>
-                        <div className='bg-neutral-100 dark:bg-neutral-800 rounded-sm p-2 text-gray-400 overflow-x-auto h-full'>
+                        <div className='bg-neutral-100 dark:bg-neutral-800 rounded-sm p-2 text-gray-400 overflow-x-auto h-auto'>
                             <code className='whitespace-pre text-foreground h-full'>
                                 {testCase.output || 'No output provided.'}
                             </code>

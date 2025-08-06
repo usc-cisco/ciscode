@@ -9,7 +9,7 @@ interface AdminTestCaseBarProps {
   onAddTestCase: () => void;
   onTestCaseChange: (index: number) => (field: string, value: string | boolean) => void;
   onDeleteTestCase: (index: number) => () => void;
-  handleCheckCode: (testCase: AddTestCaseSchemaType) => Promise<string | undefined>;
+  handleCheckCode: (testCase: AddTestCaseSchemaType) => Promise<{ output: string | null, error: string | null }>;
 }
 
 const AdminTestCaseBar: React.FC<AdminTestCaseBarProps> = ({ testCases, onAddTestCase, onTestCaseChange, onDeleteTestCase, handleCheckCode }) => {
@@ -20,6 +20,7 @@ const AdminTestCaseBar: React.FC<AdminTestCaseBarProps> = ({ testCases, onAddTes
         </div>
 
         <div className='max-h-full overflow-auto pb-26'>
+          <p className='text-[0.65rem] text-center mt-2 text-gray-400 dark:text-gray-600'>Please check all test cases before submitting</p>
           <div className='px-4 py-2 flex flex-col gap-2'>
             {
               testCases.map((testCase, index) => (

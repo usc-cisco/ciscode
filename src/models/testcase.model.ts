@@ -23,6 +23,11 @@ export const TestCase = sequelize.define("TestCase", {
         type: DataTypes.TEXT,
         allowNull: false,
     },
+    hidden: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+    },
     createdAt: {
         type: DataTypes.DATE,
         allowNull: false,

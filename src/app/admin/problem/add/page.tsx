@@ -10,12 +10,18 @@ import { AddTestCaseSchemaType } from '@/dtos/testcase.dto'
 import { checkCode } from '@/lib/fetchers/code.fetchers'
 import { addProblem } from '@/lib/fetchers/problem.fetchers'
 import DifficultyEnum from '@/lib/types/enums/difficulty.enum'
-import { redirect, useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import SubmissionStatusEnum from '@/lib/types/enums/submissionstatus.enum'
+import { useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
 
 const AddProblemPage = () => {
     const router = useRouter();
     const { token } = useAuth();
+
+    const [isSolution, setIsSolution] = useState(true);
+    const [checked, setChecked] = useState(false);
+    const [canSubmit, setCanSubmit] = useState(false);
+
     const [problem, setProblem] = useState({
         title: "",
         description: "",
@@ -23,11 +29,19 @@ const AddProblemPage = () => {
         defaultCode: "// Write your boilerplate code here...",
         solutionCode: "// Write your solution code here...",
     });
+
     const [testCases, setTestCases] = useState<AddTestCaseSchemaType[]>([{
         input: "",
-        hidden: false
+        hidden: false,
+        status: SubmissionStatusEnum.PENDING
     }]);
-    const [isSolution, setIsSolution] = useState(true);
+
+    const setAllToPending = () => {
+        setTestCases(prev => prev.map(testCase => ({
+            ...testCase,
+            status: SubmissionStatusEnum.PENDING
+        })));
+    }
 
     const handleProblemChange = (field: string, value: string | DifficultyEnum) => {
         setProblem(prev => ({
@@ -39,7 +53,8 @@ const AddProblemPage = () => {
     const handleAddTestCase = () => {
         setTestCases(prev => [...prev, {
             input: "",
-            hidden: false
+            hidden: false,
+            status: SubmissionStatusEnum.PENDING
         }]);
     };
 
@@ -69,6 +84,7 @@ const AddProblemPage = () => {
                 ...problem,
                 defaultCode: problem.defaultCode == "// Write your boilerplate code here..." ? "" : problem.defaultCode,
                 solutionCode: problem.solutionCode == "// Write your solution code here..." ? "" : problem.solutionCode,
+                testCases: testCases
             } as AddProblemSchemaType, token);
             router.push("/admin");
         } catch (error) {
@@ -77,6 +93,11 @@ const AddProblemPage = () => {
     }
 
     const handleCodeChange = (value: string | undefined) => {
+        if (checked) {
+            setChecked(false);
+            setAllToPending();
+        }
+
         if (!value) return;
 
         isSolution
@@ -93,19 +114,30 @@ const AddProblemPage = () => {
         }
     };
 
-    const handleCheckCode = async (testCase: AddTestCaseSchemaType): Promise<string | undefined> => {
+    const handleCheckCode = async (testCase: AddTestCaseSchemaType): Promise<{ output: string | null, error: string | null }> => {
         if (!token) {
             console.error("User is not authenticated");
-            return;
+            return { output: null, error: "User is not authenticated" };
         }
+
+        setChecked(true);
 
         try {
             const response = await checkCode(problem.solutionCode, testCase.input, token);
-            return response.output ?? response.error ?? undefined;
+            return response;
         } catch (error) {
             console.error("Error checking code:", error);
+            return { output: null, error: "Error checking code" };
         }
     };
+
+    useEffect(() => {
+        if (testCases.length > 0) {
+            setCanSubmit(testCases.every(testCase => testCase.status === SubmissionStatusEnum.COMPLETED));
+        } else {
+            setCanSubmit(false);
+        }
+    }, [testCases])
 
     return (
         <div>
@@ -113,7 +145,7 @@ const AddProblemPage = () => {
             <SplitView
                 sizes={[25, 50, 25]}
             >
-                <AdminProblemBar problem={problem} onProblemChange={handleProblemChange} onSave={handleSaveProblem} />
+                <AdminProblemBar problem={problem} onProblemChange={handleProblemChange} onSave={handleSaveProblem} canSubmit={canSubmit} />
                 <AdminCodeEditor
                     defaultCode={problem.defaultCode}
                     solutionCode={problem.solutionCode}

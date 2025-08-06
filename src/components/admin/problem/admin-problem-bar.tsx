@@ -14,9 +14,10 @@ interface AdminProblemBarProps {
     };
     onProblemChange: (field: string, value: string | DifficultyEnum) => void;
     onSave: () => void;
+    canSubmit: boolean;
 }
 
-const AdminProblemBar: React.FC<AdminProblemBarProps> = ({ problem, onProblemChange, onSave }) => {
+const AdminProblemBar: React.FC<AdminProblemBarProps> = ({ problem, onProblemChange, onSave, canSubmit }) => {
   const { title, difficulty, description } = problem;
   return (
     <ProblemCard className='overflow-hidden hide-scrollbar relative'>
@@ -37,8 +38,8 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({ problem, onProblemCha
             </div>
         </div>
 
-        <div className='px-4 h-14 absolute bottom-0 w-full border-t border-gray-200 dark:border-gray-700 flex justify-center items-center bg-vscode-light dark:bg-vscode-dark z-10'>
-          <Button className='w-full bg-primary py-2 rounded-lg cursor-pointer' onClick={onSave}>Save Problem</Button>
+        <div className='px-4 h-14 absolute bottom-0 w-full border-t border-gray-200 dark:border-gray-700 flex flex-col justify-center items-center bg-vscode-light dark:bg-vscode-dark z-10'>
+          <Button className={`w-full bg-primary py-2 rounded-lg cursor-pointer ${canSubmit ? 'opacity-100' : 'opacity-40 pointer-events-none'}`} onClick={onSave}>Save Problem</Button>
         </div>
     </ProblemCard>
   )

@@ -4,6 +4,7 @@ import { requireRole } from "@/lib/require-role";
 import ProblemService from "@/services/problem.service";
 import { NextRequest, NextResponse } from "next/server";
 import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
+import TestCaseService from "@/services/testcase.service";
 
 export const GET = async (req: NextRequest) => {
     try {
@@ -47,7 +48,12 @@ export const POST = requireRole(async (req: NextRequest) => {
         console.log(userId);
         const newProblem = await ProblemService.addProblem(data, userId);
 
-        return NextResponse.json({ message: "Problem created successfully", data: newProblem }, { status: 201 });
+        const testCases = await TestCaseService.addTestCases(data.testCases, newProblem);
+
+        return NextResponse.json({ message: "Problem created successfully", data: {
+            ...newProblem,
+            testCases
+        } }, { status: 201 });
     }
     catch (error: any) {
         console.error("Error running code:", error);
