@@ -8,7 +8,11 @@ export const checkCode = async (code: string, input: string, token: string): Pro
                 Authorization: `Bearer ${token}`
             }
         });
-        return response.data;
+
+        return {
+            ...response.data,
+            error: response.data.output.includes("[Execution timed out]") ? "Execution timed out" : null,
+        };
     } catch (error) {
         if (axios.isAxiosError(error) && error.response?.data?.error) {
         return { output: null, error: error.response.data.error };

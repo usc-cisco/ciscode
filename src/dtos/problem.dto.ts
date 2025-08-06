@@ -1,6 +1,7 @@
 import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
 import ProblemStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import z from "zod";
+import { AddTestCaseSchema } from "./testcase.dto";
 
 export const ProblemSchemaDisplayResponse = z.object({
     id: z.int(),
@@ -17,6 +18,7 @@ export const ProblemSchemaResponse = z.object({
     description: z.string(),
     difficulty: z.enum(DifficultyEnum),
     defaultCode: z.string().optional().nullable().default(null),
+    solutionCode: z.string().optional().default(""),
     authorId: z.number(),
     author: z.string().min(2).max(50).optional(),
 });
@@ -27,6 +29,7 @@ export const AddProblemSchema = z.object({
     difficulty: z.enum(DifficultyEnum),
     defaultCode: z.string().optional().nullable().default(null),
     solutionCode: z.string().optional().default(""),
+    testCases: z.array(AddTestCaseSchema).min(1, "At least one test case is required").max(20, "Cannot have more than 20 test cases"),
 })
 
 export type AddProblemSchemaType = z.infer<typeof AddProblemSchema>;

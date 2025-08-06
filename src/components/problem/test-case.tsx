@@ -27,7 +27,7 @@ const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, status, isHidden })
     }
 
   return (
-    <div className={`w-full min-h-14 flex items-center justify-between px-2 rounded-xl shadow-md ${isHidden ? 'cursor-not-allowed' : 'cursor-pointer bg-vscode-light dark:bg-vscode-dark hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200'}`}>
+    <div className={`w-full min-h-14 flex items-center justify-between px-2 rounded-xl shadow-md ${isHidden ? 'cursor-not-allowed' : 'cursor-pointer bg-vscode-light dark:bg-vscode-dark hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200'}`}>
         <div className='flex items-center gap-2 px-2'>
             <StatusIcon className={cn('size-4', statusClassName)} />
             <p className='text-sm font-semibold'>Test case #{testCaseNumber}</p>
