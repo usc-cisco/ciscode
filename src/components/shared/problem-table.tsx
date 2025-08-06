@@ -34,7 +34,7 @@ const ProblemTable = ({ problems }: ProblemTableProps) => {
                 </TableHeader>
                 <TableBody>
                 {problems.map((problem, index) => (
-                    <TableRow key={index} onClick={() => handleRowClick(problem.id)} className="cursor-pointer odd:bg-neutral-50 odd:dark:bg-neutral-800">
+                    <TableRow key={index} onClick={() => handleRowClick(problem.id)} className="cursor-pointer odd:bg-neutral-100 odd:dark:bg-neutral-800">
                         <TableCell className="font-medium">{problem.id}</TableCell>
                         <TableCell className='truncate table-fixed flex-1'>
                             <div className="font-medium">{problem.title}</div>
