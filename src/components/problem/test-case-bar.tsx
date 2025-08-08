@@ -21,7 +21,7 @@ const TestCaseBar: React.FC<TestCaseBarProps> = ({ testCases, onSubmit, onEditTe
             <p className='text-sm text-center font-semibold'>Test Cases</p>
         </div>
 
-        <div className='max-h-full overflow-auto pb-26'>
+        <div className='max-h-full overflow-auto pb-26 min-w-56'>
           <div className='px-4 py-2 flex flex-col gap-2'>
             {
               testCases.map((testCase, index) => (

@@ -163,7 +163,7 @@ export default function Problem() {
               onEditTestCase={handleEditTestCase} 
               onCheckCode={handleCheckCode}
               submitted={submitted}
-              sending={sending}
+              sending={!code || sending}
             />
           </SplitView>
         </div>

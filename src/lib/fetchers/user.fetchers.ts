@@ -26,6 +26,40 @@ export const registerUser = async (data: RegisterRequestSchemaType) => {
     }
 }
 
+export const fetchUsers = async (token: string, page: number = 1, limit: number = 10, search: string = "", role: string | null = null, verified: boolean = true) => {
+    try {
+        const params: any = { offset: page - 1, limit, search, verified };
+        if (role) {
+            params.role = role;
+        }
+
+        if (token) {
+            instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        }
+
+        const response = await instance.get("/user", { params });
+
+        return response.data;
+    } catch (error: any) {
+        console.error("Error fetching users:", error);
+        throw new Error(error.response?.data?.error || "Failed to fetch users");
+    }
+};
+
+export const addUserAsAdmin = async (data: RegisterRequestSchemaType, token: string) => {
+    try {
+        const response = await instance.post("/user", data, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error: any) {
+        console.error("Error registering user:", error);
+        throw new Error(error.response?.data?.error || "Failed to register user");
+    }
+}
+
 export const fetchUserCount = async (token: string): Promise<ApiResponse<AdminCount>> => {
     try {
         if (token) {

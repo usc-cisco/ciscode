@@ -1,12 +1,36 @@
 import { LoginRequestSchemaType, RegisterRequestSchemaType, UserResponseSchema, UserResponseSchemaType, UserResponseSchemaWithPassword } from "@/dtos/user.dto";
+import RoleEnum from "@/lib/types/enums/role.enum";
 import { User } from "@/models/user.model";
 import * as bcrypt from "bcryptjs";
-import { Op } from "sequelize";
+import { Model, Op } from "sequelize";
 
 class UserService {
     static async getUserById(userId: number) {
         const user = await User.findByPk(userId);
         return user;
+    }
+
+    static async getUsers(offset: number = 0, limit: number = 10, search: string = "", role: RoleEnum | null = null): Promise<UserResponseSchemaType[]> {
+        const users = await User.findAll({
+            order: [["id", "ASC"]],
+            offset: (offset) * limit,
+            limit,
+            where: {
+                [Op.or]: [
+                    {
+                        name: {
+                            [Op.like]: `%${search}%`
+                        },
+                        username: {
+                            [Op.like]: `%${search}%`
+                        }
+                    }
+                ],
+                ...(role && { role })
+            },
+        }) as (Model & UserResponseSchemaType)[];
+
+        return users;
     }
 
     static async getTotalCount(): Promise<number> {
@@ -27,7 +51,7 @@ class UserService {
         return count;
     }
 
-    static async registerAsUser(data: RegisterRequestSchemaType): Promise<UserResponseSchemaType> {
+    static async addUser(data: RegisterRequestSchemaType): Promise<UserResponseSchemaType> {
         if (data.password !== data.confirmPassword) {
             throw new Error("Passwords do not match");
         }

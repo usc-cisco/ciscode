@@ -26,9 +26,9 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({ problem, onProblemCha
             <div className='flex justify-between gap-2 items-center py-2'>
                 <p className='text-sm font-semibold'>Difficulty: </p>
                 <div className='flex gap-2 items-center'>
-                    <Badge className={cn(getDifficultyColor(DifficultyEnum.PROG1), `${difficulty === DifficultyEnum.PROG1 ? 'opacity-100' : 'opacity-40'} cursor-pointer`)} onClick={() => onProblemChange('difficulty', DifficultyEnum.PROG1)}>{DifficultyEnum.PROG1}</Badge>
-                    <Badge className={cn(getDifficultyColor(DifficultyEnum.PROG2), `${difficulty === DifficultyEnum.PROG2 ? 'opacity-100' : 'opacity-40'} cursor-pointer`)} onClick={() => onProblemChange('difficulty', DifficultyEnum.PROG2)}>{DifficultyEnum.PROG2}</Badge>
-                    <Badge className={cn(getDifficultyColor(DifficultyEnum.DSA), `${difficulty === DifficultyEnum.DSA ? 'opacity-100' : 'opacity-40'} cursor-pointer`)} onClick={() => onProblemChange('difficulty', DifficultyEnum.DSA)}>{DifficultyEnum.DSA}</Badge>
+                    <Badge className={cn(getDifficultyColor(DifficultyEnum.PROG1), `${difficulty === DifficultyEnum.PROG1 ? 'opacity-100' : 'opacity-40'} cursor-pointer rounded-xl`)} onClick={() => onProblemChange('difficulty', DifficultyEnum.PROG1)}>{DifficultyEnum.PROG1}</Badge>
+                    <Badge className={cn(getDifficultyColor(DifficultyEnum.PROG2), `${difficulty === DifficultyEnum.PROG2 ? 'opacity-100' : 'opacity-40'} cursor-pointer rounded-xl`)} onClick={() => onProblemChange('difficulty', DifficultyEnum.PROG2)}>{DifficultyEnum.PROG2}</Badge>
+                    <Badge className={cn(getDifficultyColor(DifficultyEnum.DSA), `${difficulty === DifficultyEnum.DSA ? 'opacity-100' : 'opacity-40'} cursor-pointer rounded-xl`)} onClick={() => onProblemChange('difficulty', DifficultyEnum.DSA)}>{DifficultyEnum.DSA}</Badge>
                 </div>
             </div>
 
