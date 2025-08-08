@@ -10,9 +10,10 @@ interface TestCaseBarProps {
   onSubmit: () => void;
   onEditTestCase: (index: number) => (field: string, value: string | boolean) => void;
   onCheckCode: (testCase: TestCaseResponseType) => Promise<CheckCodeResponseType>;
+  submitted: boolean;
 }
 
-const TestCaseBar: React.FC<TestCaseBarProps> = ({ testCases, onSubmit, onEditTestCase, onCheckCode }) => {
+const TestCaseBar: React.FC<TestCaseBarProps> = ({ testCases, onSubmit, onEditTestCase, onCheckCode, submitted }) => {
   return (
     <ProblemCard className='relative overflow-hidden'>
         <div className='px-4 py-3 rounded-t-xl border-b border-gray-200 dark:border-gray-700'>
@@ -29,6 +30,7 @@ const TestCaseBar: React.FC<TestCaseBarProps> = ({ testCases, onSubmit, onEditTe
                       testCase={testCase}
                       onChange={onEditTestCase(index)}
                       onCheckCode={onCheckCode}
+                      submitted={submitted}
                   />
               ))
             }

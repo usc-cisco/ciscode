@@ -7,10 +7,11 @@ import ProtectedRoute from "@/components/shared/protected-route";
 import SplitView from "@/components/shared/split-view";
 import { useAuth } from "@/contexts/auth.context";
 import { CheckCodeResponseType } from "@/dtos/code.dto";
-import { ProblemSchemaResponseType, ProblemSchemaResponseWithTestCasesType } from "@/dtos/problem.dto";
+import { ProblemSchemaResponseType } from "@/dtos/problem.dto";
 import { TestCaseResponseType } from "@/dtos/testcase.dto";
-import { checkCode, runCode } from "@/lib/fetchers/code.fetchers";
+import { runTestCase } from "@/lib/fetchers/code.fetchers";
 import { fetchProblem } from "@/lib/fetchers/problem.fetchers";
+import { submitCode } from "@/lib/fetchers/submission.fetchers";
 import SubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -18,6 +19,8 @@ import { useEffect, useState } from "react";
 export default function Problem() {
   const { token } = useAuth();
   const router = useRouter();
+
+  const [submitted, setSubmitted] = useState<boolean>(false);
 
   const params = useParams();
   if (!params.id) {
@@ -52,7 +55,7 @@ export default function Problem() {
       }
 
       try {
-          const response = await checkCode(code, testCase.id, token);
+          const response = await runTestCase(code, testCase.id, token);
           return response;
       } catch (error) {
           console.error("Error checking code:", error);
@@ -66,7 +69,30 @@ export default function Problem() {
       return;
     }
 
-    // Submit logic here
+    setSubmitted(true);
+
+    try {
+      const response = await submitCode(code, Number(params.id), token);
+      if (response) {
+        console.log("Status: ", response.status);
+        setTestCases(prev => {
+          const updatedTestCases = [...prev];
+          response.testCaseSubmissions.forEach((testCase, index) => {
+            updatedTestCases[index] = {
+              ...updatedTestCases[index],
+              status: testCase.status,
+              actualOutput: testCase.output ?? ""
+            };
+          });
+          return updatedTestCases;
+        });
+      }
+    } catch (error) {
+      console.error("Error submitting code:", error);
+    }
+    finally {
+      setSubmitted(false);
+    }
   };
 
   useEffect(() => {
@@ -125,6 +151,7 @@ export default function Problem() {
               onSubmit={handleSubmit} 
               onEditTestCase={handleEditTestCase} 
               onCheckCode={handleCheckCode}
+              submitted={submitted}
             />
           </SplitView>
         </div>

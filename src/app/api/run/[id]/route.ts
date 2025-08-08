@@ -14,9 +14,9 @@ export async function POST(req: NextRequest, context: { params: { id: string } }
 
     try {
         const body = await req.json();
-        const parsedData = await RunCodeSchema.safeParseAsync(body);
-        if (!parsedData.success) {
-            return NextResponse.json({ error: parsedData.error }, { status: 400 });
+        const { code } = body;
+        if (!code) {
+            return NextResponse.json({ error: "Code is required" }, { status: 400 });
         }
 
         // Fetch the test case by ID
@@ -25,8 +25,6 @@ export async function POST(req: NextRequest, context: { params: { id: string } }
             return NextResponse.json({ error: "Test case not found" }, { status: 404 });
         }
 
-        // Run code first
-        const { code } = parsedData.data;
         const result = await runCCode(code, testCase.input || "");
         
         let status = SubmissionStatusEnum.COMPLETED;
@@ -38,8 +36,8 @@ export async function POST(req: NextRequest, context: { params: { id: string } }
         return NextResponse.json({
             message: "Code executed successfully",
             data: CheckCodeResponseSchema.parse({
-                output: testCase.hidden ? null : result.output || "",
-                error: testCase.hidden ? null : result.error || "",
+                output: testCase.hidden ? null : result.output,
+                error: testCase.hidden ? null : result.error,
                 status
             })
         });

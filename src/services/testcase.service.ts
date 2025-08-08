@@ -46,7 +46,7 @@ class TestCaseService {
         return TestCaseResponse.parse(testCase);
     }
 
-    static async getTestCasesByProblemId(problemId: number): Promise<TestCaseResponseType[]> {
+    static async getTestCasesByProblemId(problemId: number, withHidden: boolean = false): Promise<TestCaseResponseType[]> {
         const testCases = await TestCase.findAll({
             where: { problemId },
             order: [["id", "ASC"]]
@@ -54,12 +54,12 @@ class TestCaseService {
 
         return testCases.map(testCase => {
             const parsedTestCase = TestCaseResponse.parse(testCase);
-
-            if (parsedTestCase.hidden) {
+            
+            if (!withHidden && parsedTestCase.hidden) {
                 delete parsedTestCase.input;
                 delete parsedTestCase.output;
             }
-
+            
             return parsedTestCase;
         });
     }

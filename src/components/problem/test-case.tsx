@@ -4,9 +4,10 @@ import SubmissionStatusEnum from '@/lib/types/enums/submissionstatus.enum';
 import { cn } from '@/lib/utils';
 import { stat } from 'fs';
 import { ChevronDown, Circle, CircleCheck, CircleX, Play } from 'lucide-react';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaPlay } from "react-icons/fa";
 import { ClipLoader } from 'react-spinners';
+import { set } from 'zod';
 
 
 interface TestCaseProps {
@@ -14,11 +15,12 @@ interface TestCaseProps {
     testCase: TestCaseResponseType;
     onChange: (field: string, value: string | boolean) => void;
     onCheckCode: (testCase: TestCaseResponseType) => Promise<CheckCodeResponseType>;
+    submitted: boolean;
 }
 
-const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange, onCheckCode }) => {
+const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange, onCheckCode, submitted }) => {
     const [showDetails, setShowDetails] = useState(false);
-    const [sending, setSending] = useState(false);
+    const [sending, setSending] = useState(submitted);
 
     let StatusIcon: React.ElementType = Circle;
     let statusClassName: string = 'text-gray-300 dark:text-gray-600';
@@ -64,6 +66,16 @@ const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange,
         handleStatusChange(status);
         setSending(false);
     };
+
+    useEffect(() => {
+        setSending(submitted);
+
+        if (submitted) {
+            onChange('status', SubmissionStatusEnum.PENDING);
+            onChange('actualOutput', "Loading...");
+        }
+
+    }, [submitted]);
 
   return (
     <div className={`w-full flex flex-col justify-center rounded-xl shadow-md bg-vscode dark:bg-vscode-dark transition-all duration-200 relative`}>
