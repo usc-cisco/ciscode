@@ -2,12 +2,11 @@ import axios from "axios";
 import instance from "../axios";
 import ApiResponse from "../types/interface/api-response.interface";
 import { CheckCodeResponseType, RunCodeResponseType } from "@/dtos/code.dto";
-import { Sub } from "@radix-ui/react-dropdown-menu";
 import SubmissionStatusEnum from "../types/enums/submissionstatus.enum";
 
 export const runCode = async (code: string, input: string, token: string): Promise<RunCodeResponseType> => {
     try {
-        const response = await instance.post<ApiResponse<RunCodeResponseType>>("/check", { code, input }, {
+        const response = await instance.post<ApiResponse<RunCodeResponseType>>("/run", { code, input }, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -17,7 +16,7 @@ export const runCode = async (code: string, input: string, token: string): Promi
 
         return {
             ...responseData,
-            error: (responseData.output && responseData.output.includes("[Execution timed out]")) ? "Execution timed out" : null,
+            error: (responseData.output && responseData.output.includes("[Execution timed out]")) ? "Execution timed out" : responseData.error,
         };
     } catch (error) {
         if (axios.isAxiosError(error) && error.response?.data?.data?.error) {
@@ -28,9 +27,9 @@ export const runCode = async (code: string, input: string, token: string): Promi
     }
 }
 
-export const checkCode = async (code: string, testCaseId: number, token: string): Promise<CheckCodeResponseType> => {
+export const runTestCase = async (code: string, testCaseId: number, token: string): Promise<CheckCodeResponseType> => {
     try {
-        const response = await instance.post<ApiResponse<CheckCodeResponseType>>(`/check/${testCaseId}`, { code }, {
+        const response = await instance.post<ApiResponse<CheckCodeResponseType>>(`/run/${testCaseId}`, { code }, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -40,7 +39,7 @@ export const checkCode = async (code: string, testCaseId: number, token: string)
 
         return {
             ...responseData,
-            error: (responseData.output && responseData.output.includes("[Execution timed out]")) ? "Execution timed out" : null,
+            error: (responseData.output && responseData.output.includes("[Execution timed out]")) ? "Execution timed out" : responseData.error,
         };
     } catch (error) {
         if (axios.isAxiosError(error) && error.response?.data?.data?.error) {

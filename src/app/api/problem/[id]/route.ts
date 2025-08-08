@@ -1,9 +1,18 @@
+import Problem from "@/app/problem/[id]/page";
 import { sequelize } from "@/db/sequelize";
+import { CheckCodeResponseSchema } from "@/dtos/code.dto";
+import { UpdateSubmissionType } from "@/dtos/submission.dto";
+import { runCCode } from "@/lib/code-runner";
+import ProblemStatusEnum from "@/lib/types/enums/problemstatus.enum";
+import SubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
 import ProblemService from "@/services/problem.service";
+import SubmissionService from "@/services/submission.service";
+import TestCaseSubmissionService from "@/services/testcase-submission.service";
+import TestCaseService from "@/services/testcase.service";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(_: NextRequest, context: { params: { id: string } }) {
-    const { id } = context.params;
+    const { id } = await context.params;
     if (!id || isNaN(Number(id))) {
         return NextResponse.json({ error: "Invalid problem ID" }, { status: 400 });
     }

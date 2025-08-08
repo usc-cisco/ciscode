@@ -1,11 +1,10 @@
-import { defineAssociations, Problem, User } from "@/models";   
 import { AddProblemSchemaType, ProblemSchemaDisplayResponse, ProblemSchemaDisplayResponseType, ProblemSchemaResponse, ProblemSchemaResponseType, ProblemSchemaResponseWithTestCases } from "@/dtos/problem.dto";
 import { UserResponseSchema } from "@/dtos/user.dto";
 import UserService from "./user.service";
 import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
 import { Op } from "sequelize";
-import { parse } from "path";
 import TestCaseService from "./testcase.service";
+import { Problem } from "@/models/problem.model";
 
 class ProblemService {
     static async getProblemById(id: number): Promise<ProblemSchemaResponseType | null> {

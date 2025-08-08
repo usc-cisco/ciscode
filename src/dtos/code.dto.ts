@@ -7,6 +7,7 @@ export const RunCodeSchema = z.object({
 })
 
 export const RunCodeResponseSchema = z.object({
+    id: z.number().int().positive().optional(),
     output: z.string().nullable(),
     error: z.string().nullable(),
 });

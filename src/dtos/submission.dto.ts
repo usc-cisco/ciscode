@@ -1,17 +1,25 @@
-import SubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
+import ProblemStatusEnum from "@/lib/types/enums/problemstatus.enum";
+import { TestCaseSubmission } from "@/models/testcase-submission.model";
 import z from "zod";
+import { TestCaseSubmissionResponse } from "./testcase-submission.dto";
 
 export const SubmissionResponse = z.object({
-    testCaseId: z.number(),
-    userId: z.number(),
-    output: z.string().optional(),
-    status: z.enum(SubmissionStatusEnum),
-})
+    id: z.number().int().positive(),
+    userId: z.number().int().positive(),
+    problemId: z.number().int().positive(),
+    code: z.string().optional().default(""),
+    status: z.enum(ProblemStatusEnum).default(ProblemStatusEnum.ATTEMPTED),
+});
 
-export const AddSubmissionSchema = z.object({
-    testCaseId: z.number().min(1, "Test case ID must be positive"),
-    code: z.string().min(1, "Code cannot be empty"),
-})
+export const SubmissionResponseWithTestCaseSubmission = SubmissionResponse.extend({
+    testCaseSubmissions: z.array(TestCaseSubmissionResponse).optional().default([]),
+});
+
+export const UpdateSubmissionSchema = z.object({
+    code: z.string().optional().default(""),
+    status: z.enum(ProblemStatusEnum).optional().default(ProblemStatusEnum.ATTEMPTED),
+});
 
 export type SubmissionResponseType = z.infer<typeof SubmissionResponse>;
-export type AddSubmissionSchemaType = z.infer<typeof AddSubmissionSchema>;
+export type SubmissionResponseWithTestCaseSubmissionType = z.infer<typeof SubmissionResponseWithTestCaseSubmission>;
+export type UpdateSubmissionType = z.infer<typeof UpdateSubmissionSchema>;

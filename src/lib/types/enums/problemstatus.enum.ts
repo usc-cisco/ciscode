@@ -1,10 +1,9 @@
 enum ProblemStatusEnum {
     SOLVED = "Solved",
     ATTEMPTED = "Attempted",
-    NOT_STARTED = "Not Started"
 }
 
-export const getStatusColor = (status: ProblemStatusEnum): string => {
+export const getStatusColor = (status?: ProblemStatusEnum): string => {
     switch (status) {
         case ProblemStatusEnum.SOLVED:
             return "bg-green-100 text-green-800";
