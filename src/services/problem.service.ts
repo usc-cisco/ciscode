@@ -28,12 +28,13 @@ class ProblemService {
         return response;
     }
 
-    static async getProblems(offset: number = 0, limit: number = 10, search: string = "", difficulty: DifficultyEnum | null = null): Promise<ProblemSchemaDisplayResponseType[]> {
+    static async getProblems(verified: boolean = true, offset: number = 0, limit: number = 10, search: string = "", difficulty: DifficultyEnum | null = null): Promise<ProblemSchemaDisplayResponseType[]> {
         const problems = await Problem.findAll({
             order: [["id", "ASC"]],
             offset: (offset) * limit,
             limit,
             where: {
+                verified: verified,
                 [Op.or]: [
                     {
                         title: {
@@ -57,9 +58,10 @@ class ProblemService {
         return Promise.all(parsedProblems);
     }
 
-    static async getTotalCount(search: string = "", difficulty: DifficultyEnum | null = null): Promise<number> {
+    static async getTotalCount(verified: boolean = true, search: string = "", difficulty: DifficultyEnum | null = null): Promise<number> {
         const count = await Problem.count({
             where: {
+                verified: verified,
                 [Op.or]: [
                     {
                         title: {
@@ -69,6 +71,21 @@ class ProblemService {
                 ],
                 ...(difficulty && { difficulty })
             },
+        });
+
+        return count;
+    }
+
+    static async getLastMonthCount(verified: boolean = true): Promise<number> {
+        const startOfMonth = new Date();
+        startOfMonth.setDate(1);
+        const count = await Problem.count({
+            where: {
+                verified: verified,
+                createdAt: {
+                    [Op.gte]: startOfMonth
+                }
+            }
         });
 
         return count;
@@ -84,6 +101,7 @@ class ProblemService {
 
         const newProblem = await Problem.create({
             ...data,
+            verified: true,
             authorId: userId,
             createdAt: new Date(),
             updatedAt: new Date(),

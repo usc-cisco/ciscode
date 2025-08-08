@@ -1,11 +1,30 @@
 import { LoginRequestSchemaType, RegisterRequestSchemaType, UserResponseSchema, UserResponseSchemaType, UserResponseSchemaWithPassword } from "@/dtos/user.dto";
 import { User } from "@/models/user.model";
 import * as bcrypt from "bcryptjs";
+import { Op } from "sequelize";
 
 class UserService {
     static async getUserById(userId: number) {
         const user = await User.findByPk(userId);
         return user;
+    }
+
+    static async getTotalCount(): Promise<number> {
+        const count = await User.count();
+        return count;
+    }
+
+    static async getLastMonthCount(): Promise<number> {
+        const lastMonth = new Date();
+        lastMonth.setMonth(lastMonth.getMonth() - 1);
+        const count = await User.count({
+            where: {
+                createdAt: {
+                    [Op.gte]: lastMonth
+                }
+            }
+        });
+        return count;
     }
 
     static async registerAsUser(data: RegisterRequestSchemaType): Promise<UserResponseSchemaType> {

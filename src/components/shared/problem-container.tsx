@@ -15,21 +15,23 @@ import { Button } from '../ui/button';
 
 interface ProblemContainerProps {
     inAdmin?: boolean;
+    verified?: boolean;
 }
 
-const ProblemContainer = ({ inAdmin }: ProblemContainerProps) => {
+const ProblemContainer = ({ inAdmin, verified = true }: ProblemContainerProps) => {
     const { token } = useAuth();
     const router = useRouter()
     const params = useSearchParams();
     const path = inAdmin ? "/admin" : "/home";
-    
+
+    const [loading, setLoading] = useState<boolean>(true);    
     const [page, setPage] = useState<number>(Number(params.get("page")) || 1);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [difficultyFilter, setDifficultyFilter] = useState<string>(params.get("difficulty") || "all");
     const [filter, setFilter] = useState<string>(params.get("filter") || "");
     const [displayFilter, setDisplayFilter] = useState<string>(params.get("filter") || "");
     const [problems, setProblems] = useState<ProblemSchemaDisplayResponseType[]>([]);
-    
+
     const createQueryString = useCallback(
         (data: {name: string, value: string}[]) => {
             const newParams = new URLSearchParams(params.toString())
@@ -45,25 +47,37 @@ const ProblemContainer = ({ inAdmin }: ProblemContainerProps) => {
     useEffect(() => {
         if (!token) return;
         
+        setLoading(true);
+
         // Fetch problems based on filters
         const getProblems = async () => {
             try {
                 const response = await fetchProblems(
-                    token ?? "", 
-                    page,
-                    env.PROBLEM_LIMIT_PER_PAGE, 
-                    filter, 
-                    difficultyFilter !== "all" ? difficultyFilter : null
-        );
-        setProblems(response.data.problems || []);
-        setTotalPages(response.data.totalPages || 1);
-    } catch (error) {
-        console.error("Error fetching problems:", error);
-    }
-};
+                token ?? "", 
+                page,
+                env.PROBLEM_LIMIT_PER_PAGE, 
+                filter, 
+                difficultyFilter !== "all" ? difficultyFilter : null,
+                verified
+                );
+                setProblems(response.data.problems || []);
+                setTotalPages(response.data.totalPages || 1);
 
-getProblems();
-}, [token, page, filter, difficultyFilter]);
+                if (response.data.problems.length === 0) {
+                    setPage(1);
+                    setTotalPages(1);
+                    router.push(path + "?" + createQueryString([{name: "page", value: "1"}]));
+                }
+            } catch (error) {
+                console.error("Error fetching problems:", error);
+            }
+            finally{
+                setLoading(false);
+            }
+        };
+
+        getProblems();
+    }, [token, page, filter, difficultyFilter, verified]);
 
 const handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
@@ -107,7 +121,7 @@ return (
         </form>
         
         {/* Problems Table */}
-        <ProblemTable problems={problems} />
+        <ProblemTable problems={problems} inAdmin={inAdmin} loading={loading} />
         {
             totalPages > 1 &&
             <div className='mt-8'>

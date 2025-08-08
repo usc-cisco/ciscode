@@ -9,13 +9,14 @@ import TestCaseService from "@/services/testcase.service";
 export const GET = async (req: NextRequest) => {
     try {
         const searchParams = req.nextUrl.searchParams;
+        const verified = searchParams.get("verified") !== "false";
         const offset = searchParams.get("offset") ? Number(searchParams.get("offset")) : 0;
         const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 10;
         const search = searchParams.get("search") || "";
         const difficulty = searchParams.get("difficulty") || null;
 
-        const problems = await ProblemService.getProblems(offset, limit, search, difficulty ? difficulty as DifficultyEnum : null);
-        const totalCount = await ProblemService.getTotalCount(search, difficulty ? difficulty as DifficultyEnum : null);
+        const problems = await ProblemService.getProblems(verified, offset, limit, search, difficulty ? difficulty as DifficultyEnum : null);
+        const totalCount = await ProblemService.getTotalCount(verified, search, difficulty ? difficulty as DifficultyEnum : null);
 
         return NextResponse.json({ data: {
             problems: problems,
@@ -59,4 +60,4 @@ export const POST = requireRole(async (req: NextRequest) => {
         console.error("Error running code:", error);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
-}, [RoleEnum.ADMIN]);
+}, [RoleEnum.SUPER_ADMIN, RoleEnum.ADMIN]);

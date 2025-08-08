@@ -1,6 +1,7 @@
 import { AddProblemSchemaType, ProblemSchemaResponseWithTestCasesType } from "@/dtos/problem.dto";
 import instance from "../axios";
 import ApiResponse from "../types/interface/api-response.interface";
+import AdminCount from "../types/interface/admin-count.interface";
 
 export const fetchProblem = async (problemId: string, token: string) => {
     try {
@@ -17,10 +18,10 @@ export const fetchProblem = async (problemId: string, token: string) => {
     }
 };
 
-export const fetchProblems = async (token: string, page: number = 1, limit: number = 10, search: string = "", difficulty: string | null = null) => {
+export const fetchProblems = async (token: string, page: number = 1, limit: number = 10, search: string = "", difficulty: string | null = null, verified: boolean = true) => {
     try {
 
-        const params: any = { offset: page - 1, limit, search };
+        const params: any = { offset: page - 1, limit, search, verified };
         if (difficulty) {
             params.difficulty = difficulty;
         }
@@ -37,6 +38,21 @@ export const fetchProblems = async (token: string, page: number = 1, limit: numb
         throw new Error(error.response?.data?.error || "Failed to fetch problems");
     }
 };
+
+export const fetchProblemCount = async (token: string, verified: boolean = true): Promise<ApiResponse<AdminCount>> => {
+    try {
+        if (token) {
+            instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        }
+
+        const response = await instance.get(`/problem/count?verified=${verified}`);
+
+        return response.data;
+    } catch (error: any) {
+        console.error("Error fetching problem count:", error);
+        throw new Error(error.response?.data?.error || "Failed to fetch problem count");
+    }
+}
 
 export const addProblem = async (data: AddProblemSchemaType, token: string) => {
     try {
