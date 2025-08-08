@@ -1,6 +1,7 @@
 "use client"
 
 import AdminCard from "@/components/admin/admin-card";
+import UserContainer from "@/components/admin/user-container";
 import ProblemContainer from "@/components/shared/problem-container";
 import ProtectedRoute from "@/components/shared/protected-route";
 import { useAuth } from "@/contexts/auth.context";
@@ -8,7 +9,7 @@ import { fetchProblemCount } from "@/lib/fetchers/problem.fetchers";
 import { fetchUserCount } from "@/lib/fetchers/user.fetchers";
 import AdminCount from "@/lib/types/interface/admin-count.interface";
 import { Code2, CodeIcon, User } from "lucide-react";
-import { redirect } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 enum AdminTableEnum {
@@ -19,8 +20,9 @@ enum AdminTableEnum {
 
 export default function Admin() {
     const { token } = useAuth();
+    const params = useSearchParams();
 
-    const [currentAdminTable, setCurrentAdminTable] = useState<AdminTableEnum>(AdminTableEnum.VERIFIED_PROBLEMS);
+    const [currentAdminTable, setCurrentAdminTable] = useState<AdminTableEnum>(params.get("table") as AdminTableEnum || AdminTableEnum.VERIFIED_PROBLEMS);
     const [verifiedProblemCounts, setVerifiedProblemCounts] = useState<AdminCount>({
         count: 0,
         lastMonthCount: 0
@@ -36,8 +38,7 @@ export default function Admin() {
 
     const handleTableChange = (table: AdminTableEnum) => () => {
         if (currentAdminTable === table) return; // Prevent unnecessary state updates
-        setCurrentAdminTable(table);
-        redirect("/admin"); // Clear search params
+        redirect("/admin?table=" + table); // Clear search params
     };
 
     useEffect(() => {
@@ -69,14 +70,33 @@ export default function Admin() {
         getProblemData(false);
     }, [token])
 
+    useEffect(() => {
+        setCurrentAdminTable(params.get("table") as AdminTableEnum || AdminTableEnum.VERIFIED_PROBLEMS);
+    }, [params]);
+
     const renderTable = () => {
         switch (currentAdminTable) {
             case AdminTableEnum.VERIFIED_PROBLEMS:
-                return <ProblemContainer key={"verified-problems"} inAdmin verified />;
+                return (
+                <>
+                    <p className="py-2 font-semibold">Verified Problems</p>
+                    <ProblemContainer key={"verified-problems"} inAdmin verified />
+                </>
+                );
             case AdminTableEnum.ACTIVE_USERS:
-                return <></>;
+                return (
+                <>
+                    <p className="py-2 font-semibold">Registered Users</p>
+                    <UserContainer />
+                </>
+                );
             case AdminTableEnum.OFFERED_PROBLEMS:
-                return <ProblemContainer key={"offered-problems"} inAdmin verified={false} />;
+                return (
+                <>
+                    <p className="py-2 font-semibold">Offered Problems</p>
+                    <ProblemContainer key={"offered-problems"} inAdmin verified={false} />
+                </>
+                );
             default:
                 return null;
         }

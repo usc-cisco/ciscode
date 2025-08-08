@@ -14,13 +14,13 @@ const ProblemBar: React.FC<ProblemBarProps> = ({ problem }) => {
   const { title, difficulty, author, description } = problem;
   return (
     <ProblemCard className='p-6 overflow-y-auto hide-scrollbar'>
+        <h1 className='text-xl font-semibold'>{title}</h1>
         <div className='flex gap-2 justify-between'>
-          <h1 className='text-xl font-semibold truncate'>{title}</h1>
+          <p className='text-sm text-muted-foreground truncate'>By {author}</p>
           <div className='flex items-center'>
             <Badge className={cn(getDifficultyColor(difficulty), "rounded-xl text-xs px-3")}>{difficulty}</Badge>
           </div>
         </div>
-        <p className='text-sm text-muted-foreground'>By {author}</p>
 
         <div className='mt-4 text-sm'>
             {/* Maybe add a markdown renderer */}

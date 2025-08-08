@@ -63,7 +63,7 @@ const ProblemContainer = ({ inAdmin, verified = true }: ProblemContainerProps) =
                 setProblems(response.data.problems || []);
                 setTotalPages(response.data.totalPages || 1);
 
-                if (response.data.problems.length === 0) {
+                if (page !== 1 && response.data.problems.length === 0) {
                     setPage(1);
                     setTotalPages(1);
                     router.push(path + "?" + createQueryString([{name: "page", value: "1"}]));
@@ -114,7 +114,7 @@ return (
                 ]}
             />
             {inAdmin && (
-                <Button type='button' className="cursor-pointer" onClick={() => router.push("/admin/problem/add")}>
+                <Button type='button' className="cursor-pointer w-32" onClick={() => router.push("/admin/problem/add")}>
                     Add Problem
                 </Button>
             )}

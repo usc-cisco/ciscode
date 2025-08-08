@@ -6,7 +6,7 @@ export const TestCaseResponse = z.object({
     problemId: z.number(),
     input: z.string().optional(),
     output: z.string().optional(),
-    actualOutput: z.string().optional(),
+    actualOutput: z.string().optional().nullable(),
     hidden: z.boolean().default(false),
     status: z.enum(TestCaseSubmissionStatusEnum).optional().default(TestCaseSubmissionStatusEnum.PENDING),
 })
