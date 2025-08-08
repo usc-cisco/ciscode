@@ -20,6 +20,7 @@ export default function Problem() {
   const { token } = useAuth();
   const router = useRouter();
 
+  const [sending, setSending] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
 
   const params = useParams();
@@ -54,11 +55,15 @@ export default function Problem() {
           return { output: null, error: "User is not authenticated", status: SubmissionStatusEnum.FAILED };
       }
 
+      setSending(true);
+
       try {
           const response = await runTestCase(code, testCase.id, token);
+          setSending(false);
           return response;
       } catch (error) {
           console.error("Error checking code:", error);
+          setSending(false);
           return { output: null, error: "Error checking code", status: SubmissionStatusEnum.FAILED };
       }
   };
@@ -152,6 +157,7 @@ export default function Problem() {
               onEditTestCase={handleEditTestCase} 
               onCheckCode={handleCheckCode}
               submitted={submitted}
+              sending={sending}
             />
           </SplitView>
         </div>
