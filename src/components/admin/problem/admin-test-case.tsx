@@ -2,7 +2,7 @@ import Markdown from '@/components/shared/markdown';
 import { Button } from '@/components/ui/button';
 import { RunCodeResponseType } from '@/dtos/code.dto';
 import { AddTestCaseSchemaType } from '@/dtos/testcase.dto';
-import SubmissionStatusEnum from '@/lib/types/enums/submissionstatus.enum';
+import TestCaseSubmissionStatusEnum from '@/lib/types/enums/submissionstatus.enum';
 import { cn } from '@/lib/utils';
 import { ChevronDown, ChevronUp, Circle, CircleCheck, CircleX, Delete, DeleteIcon, Trash } from 'lucide-react';
 import React, { useState } from 'react'
@@ -27,11 +27,11 @@ const AdminTestCase: React.FC<AdminTestCaseProps> = ({ testCaseNumber, testCase,
     let statusClassName: string = 'text-gray-300 dark:text-gray-600';
 
     switch(testCase.status) {
-        case SubmissionStatusEnum.COMPLETED:
+        case TestCaseSubmissionStatusEnum.COMPLETED:
             StatusIcon = CircleCheck;
             statusClassName = 'text-green-500';
             break;
-        case SubmissionStatusEnum.FAILED:
+        case TestCaseSubmissionStatusEnum.FAILED:
             StatusIcon = CircleX;
             statusClassName = 'text-red-500';
             break;
@@ -52,7 +52,7 @@ const AdminTestCase: React.FC<AdminTestCaseProps> = ({ testCaseNumber, testCase,
     const handleGetOutput = async () => {
         // Start off with a loading state
         onChange('output', "Loading...");
-        onChange('status', SubmissionStatusEnum.PENDING);
+        onChange('status', TestCaseSubmissionStatusEnum.PENDING);
         setSending(true);
 
         // Check code and get output
@@ -61,15 +61,15 @@ const AdminTestCase: React.FC<AdminTestCaseProps> = ({ testCaseNumber, testCase,
         
         if (output) {
             onChange('output', output);
-            onChange('status', error ? SubmissionStatusEnum.FAILED : SubmissionStatusEnum.COMPLETED);
+            onChange('status', error ? TestCaseSubmissionStatusEnum.FAILED : TestCaseSubmissionStatusEnum.COMPLETED);
         }
         else if (error) {
             onChange('output', error || "An error occurred while checking the code.");
-            onChange('status', SubmissionStatusEnum.FAILED);
+            onChange('status', TestCaseSubmissionStatusEnum.FAILED);
         }
         else {
             onChange('output', "No output received.");
-            onChange('status', SubmissionStatusEnum.COMPLETED);
+            onChange('status', TestCaseSubmissionStatusEnum.COMPLETED);
         }
 
         setSending(false);

@@ -1,5 +1,5 @@
 import { sequelize } from "@/db/sequelize";
-import SubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
+import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
 import { DataTypes } from "sequelize";
 
 export const TestCaseSubmission = sequelize.define("TestCaseSubmission", {
@@ -33,9 +33,9 @@ export const TestCaseSubmission = sequelize.define("TestCaseSubmission", {
         allowNull: true,
     },
     status: {
-        type: DataTypes.ENUM(SubmissionStatusEnum.COMPLETED, SubmissionStatusEnum.PENDING, SubmissionStatusEnum.FAILED),
+        type: DataTypes.ENUM(TestCaseSubmissionStatusEnum.COMPLETED, TestCaseSubmissionStatusEnum.PENDING, TestCaseSubmissionStatusEnum.FAILED),
         allowNull: false,
-        defaultValue: SubmissionStatusEnum.PENDING,
+        defaultValue: TestCaseSubmissionStatusEnum.PENDING,
     },
     createdAt: {
         type: DataTypes.DATE,

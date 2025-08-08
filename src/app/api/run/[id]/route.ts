@@ -2,7 +2,9 @@ import { runCCode } from "@/lib/code-runner";
 import { CheckCodeResponseSchema, RunCodeSchema } from "@/dtos/code.dto";
 import { NextRequest, NextResponse } from "next/server";
 import TestCaseService from "@/services/testcase.service";
-import SubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
+import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
+import SubmissionService from "@/services/submission.service";
+import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 
 export async function POST(req: NextRequest, context: { params: { id: string } }) {
     const { id } = context.params;
@@ -10,6 +12,12 @@ export async function POST(req: NextRequest, context: { params: { id: string } }
         return NextResponse.json({ error: "Invalid problem ID" }, { status: 400 });
     }
 
+    const userIdString = req.headers.get("x-user-id");
+    if (!userIdString || isNaN(Number(userIdString))) {
+        return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
+    }
+
+    const userId = Number(userIdString);
     const testCaseId = Number(id);
 
     try {
@@ -25,12 +33,19 @@ export async function POST(req: NextRequest, context: { params: { id: string } }
             return NextResponse.json({ error: "Test case not found" }, { status: 404 });
         }
 
+        // Update code in submission
+        await SubmissionService.saveSubmission(testCase.problemId, userId, {
+            code,
+            status: SubmissionStatusEnum.ATTEMPTED
+        }, false);
+
+
         const result = await runCCode(code, testCase.input || "");
         
-        let status = SubmissionStatusEnum.COMPLETED;
+        let status = TestCaseSubmissionStatusEnum.COMPLETED;
 
         if (result.error || result.output !== testCase.output) {
-            status = SubmissionStatusEnum.FAILED;
+            status = TestCaseSubmissionStatusEnum.FAILED;
         }
 
         return NextResponse.json({

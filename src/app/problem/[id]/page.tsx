@@ -12,7 +12,7 @@ import { TestCaseResponseType } from "@/dtos/testcase.dto";
 import { runTestCase } from "@/lib/fetchers/code.fetchers";
 import { fetchProblem } from "@/lib/fetchers/problem.fetchers";
 import { submitCode } from "@/lib/fetchers/submission.fetchers";
-import SubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
+import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -52,7 +52,7 @@ export default function Problem() {
   const handleCheckCode = async (testCase: TestCaseResponseType): Promise<CheckCodeResponseType> => {
       if (!token) {
           console.error("User is not authenticated");
-          return { output: null, error: "User is not authenticated", status: SubmissionStatusEnum.FAILED };
+          return { output: null, error: "User is not authenticated", status: TestCaseSubmissionStatusEnum.FAILED };
       }
 
       setSending(true);
@@ -64,7 +64,7 @@ export default function Problem() {
       } catch (error) {
           console.error("Error checking code:", error);
           setSending(false);
-          return { output: null, error: "Error checking code", status: SubmissionStatusEnum.FAILED };
+          return { output: null, error: "Error checking code", status: TestCaseSubmissionStatusEnum.FAILED };
       }
   };
 

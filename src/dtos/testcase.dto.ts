@@ -1,4 +1,4 @@
-import SubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
+import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
 import z from "zod";
 
 export const TestCaseResponse = z.object({
@@ -8,7 +8,7 @@ export const TestCaseResponse = z.object({
     output: z.string().optional(),
     actualOutput: z.string().optional(),
     hidden: z.boolean().default(false),
-    status: z.enum(SubmissionStatusEnum).optional().default(SubmissionStatusEnum.PENDING),
+    status: z.enum(TestCaseSubmissionStatusEnum).optional().default(TestCaseSubmissionStatusEnum.PENDING),
 })
 
 export const AddTestCaseSchema = z.object({
@@ -16,7 +16,7 @@ export const AddTestCaseSchema = z.object({
     output: z.string().optional(),
     hidden: z.boolean().default(false),
     problemId: z.number().int().positive("Problem ID must be a positive integer").optional(),
-    status: z.enum(SubmissionStatusEnum).optional().default(SubmissionStatusEnum.PENDING),
+    status: z.enum(TestCaseSubmissionStatusEnum).optional().default(TestCaseSubmissionStatusEnum.PENDING),
 });
 
 export type TestCaseResponseType = z.infer<typeof TestCaseResponse>;

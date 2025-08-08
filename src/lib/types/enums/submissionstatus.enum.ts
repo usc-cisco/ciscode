@@ -1,7 +1,7 @@
-enum SubmissionStatusEnum {
+enum TestCaseSubmissionStatusEnum {
   PENDING = "PENDING",
   COMPLETED = "COMPLETED",
   FAILED = "FAILED"
 }
 
-export default SubmissionStatusEnum;
+export default TestCaseSubmissionStatusEnum;

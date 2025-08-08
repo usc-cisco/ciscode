@@ -1,6 +1,6 @@
 import { CheckCodeResponseType, RunCodeResponseType } from '@/dtos/code.dto';
 import { TestCaseResponseType } from '@/dtos/testcase.dto';
-import SubmissionStatusEnum from '@/lib/types/enums/submissionstatus.enum';
+import TestCaseSubmissionStatusEnum from '@/lib/types/enums/submissionstatus.enum';
 import { cn } from '@/lib/utils';
 import { stat } from 'fs';
 import { ChevronDown, Circle, CircleCheck, CircleX, Play } from 'lucide-react';
@@ -27,11 +27,11 @@ const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange,
     let statusClassName: string = 'text-gray-300 dark:text-gray-600';
 
     switch(testCase.status) { 
-        case SubmissionStatusEnum.COMPLETED:
+        case TestCaseSubmissionStatusEnum.COMPLETED:
             StatusIcon = CircleCheck;
             statusClassName = 'text-green-500';
             break;
-        case SubmissionStatusEnum.FAILED:
+        case TestCaseSubmissionStatusEnum.FAILED:
             StatusIcon = CircleX;
             statusClassName = 'text-red-500';
             break;
@@ -43,14 +43,14 @@ const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange,
         }
     }
 
-    const handleStatusChange = (status: SubmissionStatusEnum) => {
+    const handleStatusChange = (status: TestCaseSubmissionStatusEnum) => {
         onChange('status', status);
     };
 
     const handleCheckCode = async () => {
         setChecking(true);
         onChange('actualOutput', "Loading...");
-        onChange('status', SubmissionStatusEnum.PENDING);
+        onChange('status', TestCaseSubmissionStatusEnum.PENDING);
 
         const { output, error, status } = await onCheckCode(testCase);
         
@@ -72,7 +72,7 @@ const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange,
         setChecking(submitted);
 
         if (submitted) {
-            onChange('status', SubmissionStatusEnum.PENDING);
+            onChange('status', TestCaseSubmissionStatusEnum.PENDING);
             onChange('actualOutput', "Loading...");
         }
 

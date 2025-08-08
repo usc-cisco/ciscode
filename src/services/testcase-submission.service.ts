@@ -15,6 +15,21 @@ class TestCaseSubmissionService {
         }
     }
 
+    static async getTestCaseSubmissionsBySubmissionId(submissionId: number): Promise<TestCaseSubmissionResponseType[]> {
+        try {
+            const testCaseSubmissions = await TestCaseSubmission.findAll({
+                where: {
+                    submissionId
+                }
+            }) as (Model & TestCaseSubmissionResponseType)[];
+
+            return testCaseSubmissions;
+        } catch (error) {
+            console.error("Error fetching test case submissions:", error);
+            throw new Error("Failed to fetch test case submissions");
+        }
+    }
+
     static async getTestCaseSubmissionByUserIdAndTestCaseId(submissionId: number, testCaseId: number): Promise<TestCaseSubmissionResponseType | null> {
         try {
             const submission = await TestCaseSubmission.findOne({

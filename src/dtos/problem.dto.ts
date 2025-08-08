@@ -1,5 +1,5 @@
 import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
-import ProblemStatusEnum from "@/lib/types/enums/problemstatus.enum";
+import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import z from "zod";
 import { AddTestCaseSchema, TestCaseResponse } from "./testcase.dto";
 
@@ -9,7 +9,7 @@ export const ProblemSchemaDisplayResponse = z.object({
     author: z.string().optional(),
     difficulty: z.enum(DifficultyEnum),
     acceptance: z.number().min(0).max(100).optional(),
-    status: z.enum(ProblemStatusEnum).optional(),
+    status: z.enum(SubmissionStatusEnum).optional(),
 });
 
 export const ProblemSchemaResponse = z.object({

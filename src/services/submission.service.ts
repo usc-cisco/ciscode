@@ -1,4 +1,5 @@
 import { SubmissionResponseType, UpdateSubmissionType } from "@/dtos/submission.dto";
+import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import { Submission } from "@/models/submission.model";
 import { Model } from "sequelize";
 
@@ -40,10 +41,13 @@ class SubmissionService {
         return submission;
     }
 
-    static async saveSubmission(problemId: number, userId: number, payload: UpdateSubmissionType): Promise<SubmissionResponseType> {
+    static async saveSubmission(problemId: number, userId: number, payload: UpdateSubmissionType, updateStatus: boolean = true): Promise<SubmissionResponseType> {
         const existingSubmission = await this.getSubmissionByProblemIdAndUserId(problemId, userId);
         if (existingSubmission) {
-            return await this.updateSubmission(existingSubmission.id, payload);
+            return await this.updateSubmission(existingSubmission.id, {
+                ...payload,
+                status: updateStatus ? payload.status : existingSubmission.status
+            });
         }
 
         // Create a new submission if it doesn't exist

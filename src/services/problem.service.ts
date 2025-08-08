@@ -1,4 +1,4 @@
-import { AddProblemSchemaType, ProblemSchemaDisplayResponse, ProblemSchemaDisplayResponseType, ProblemSchemaResponse, ProblemSchemaResponseType, ProblemSchemaResponseWithTestCases } from "@/dtos/problem.dto";
+import { AddProblemSchemaType, ProblemSchemaDisplayResponse, ProblemSchemaDisplayResponseType, ProblemSchemaResponse, ProblemSchemaResponseType, ProblemSchemaResponseWithTestCases, ProblemSchemaResponseWithTestCasesType } from "@/dtos/problem.dto";
 import { UserResponseSchema } from "@/dtos/user.dto";
 import UserService from "./user.service";
 import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
@@ -7,7 +7,7 @@ import TestCaseService from "./testcase.service";
 import { Problem } from "@/models/problem.model";
 
 class ProblemService {
-    static async getProblemById(id: number): Promise<ProblemSchemaResponseType | null> {
+    static async getProblemById(id: number): Promise<ProblemSchemaResponseWithTestCasesType | null> {
         const problem = await Problem.findByPk(id);
         if (!problem) {
             return null;
