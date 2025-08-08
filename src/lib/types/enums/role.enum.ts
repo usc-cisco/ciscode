@@ -9,7 +9,7 @@ export const getRoleColor = (role: RoleEnum): string => {
         case RoleEnum.SUPER_ADMIN:
             return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200";
         case RoleEnum.ADMIN:
-            return "bg-primary text-primary dark:bg-primary dark:text-primary";
+            return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
         case RoleEnum.USER:
             return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
         default:

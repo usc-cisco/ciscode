@@ -12,9 +12,9 @@ const DropDownSelect = ({ value, handleValueChange, placeholder, pairs }: DropDo
   return (
     <Select value={value} onValueChange={handleValueChange}>
         <SelectTrigger className="w-full sm:w-[180px] bg-vscode-light dark:bg-vscode-dark">
-        <SelectValue placeholder={placeholder} />
+            <SelectValue placeholder={placeholder} />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className='bg-vscode-light dark:bg-vscode-dark'>
             {
                 pairs.map((pair) => (
                     <SelectItem key={pair.value} value={pair.value}>

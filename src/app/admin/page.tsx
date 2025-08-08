@@ -86,7 +86,7 @@ export default function Admin() {
             case AdminTableEnum.ACTIVE_USERS:
                 return (
                 <>
-                    <p className="py-2 font-semibold">Registered Users</p>
+                    <p className="py-2 font-semibold">Active Users</p>
                     <UserContainer />
                 </>
                 );
