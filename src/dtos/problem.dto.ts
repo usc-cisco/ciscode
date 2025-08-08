@@ -19,6 +19,7 @@ export const ProblemSchemaResponse = z.object({
     difficulty: z.enum(DifficultyEnum),
     defaultCode: z.string().optional().nullable().default(null),
     solutionCode: z.string().optional().default(""),
+    answerCode: z.string().optional().nullable().default(null),
     authorId: z.number(),
     author: z.string().min(2).max(50).optional(),
 });

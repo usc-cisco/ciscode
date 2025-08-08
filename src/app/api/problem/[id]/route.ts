@@ -1,6 +1,7 @@
 import Problem from "@/app/problem/[id]/page";
 import { sequelize } from "@/db/sequelize";
 import { CheckCodeResponseSchema } from "@/dtos/code.dto";
+import { ProblemSchemaResponseWithTestCases } from "@/dtos/problem.dto";
 import { UpdateSubmissionType } from "@/dtos/submission.dto";
 import { TestCaseSubmissionResponseType } from "@/dtos/testcase-submission.dto";
 import { runCCode } from "@/lib/code-runner";
@@ -41,9 +42,9 @@ export async function GET(req: NextRequest, context: { params: { id: string } })
 
         return NextResponse.json({ 
             message: "Problem fetched successfully", 
-            data: {
+            data: ProblemSchemaResponseWithTestCases.parse({
                 ...problem,
-                defaultCode: submission ? submission.code : problem.defaultCode,
+                answerCode: submission ? submission.code : null,
                 testCases: problem.testCases.map((testCase, index) => {
                     return {
                         ...testCase,
@@ -51,7 +52,7 @@ export async function GET(req: NextRequest, context: { params: { id: string } })
                         status: (testCaseSubmissions[index]) ? testCaseSubmissions[index].status : TestCaseSubmissionStatusEnum.PENDING,
                     };
                 })
-            },
+            }),
         }, { status: 200 });
     } catch (error: any) {
         console.error("Error fetching problem:", error);

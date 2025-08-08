@@ -38,6 +38,12 @@ export default function Problem() {
     setCode(value || "");
   };
 
+  const handleRestoreDefaultCode = () => {
+    if (problem) {
+      setCode(problem.defaultCode || "");
+    }
+  }
+
   const handleEditTestCase = (index: number) => (field: string, value: string | boolean) => {
       setTestCases(prev => {
           const updatedTestCases = [...prev];
@@ -107,7 +113,7 @@ export default function Problem() {
       try {
         const response = await fetchProblem(params.id as string, token || "");
         if (response.data) {
-          setCode(response.data.defaultCode || "");
+          setCode(response.data.answerCode || response.data.defaultCode || "");
           setProblem(response.data);
           setTestCases(response.data.testCases || []);
         } else {
@@ -148,7 +154,7 @@ export default function Problem() {
           >
             <ProblemBar problem={problem}/>
             <CodeEditor
-              defaultCode={problem.defaultCode ?? ""}
+              defaultCode={problem.answerCode || problem.defaultCode || ""}
               onCodeChange={handleCodeChange}
             />
             <TestCaseBar 
