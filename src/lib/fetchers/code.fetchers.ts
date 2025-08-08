@@ -2,7 +2,7 @@ import axios from "axios";
 import instance from "../axios";
 import ApiResponse from "../types/interface/api-response.interface";
 import { CheckCodeResponseType, RunCodeResponseType } from "@/dtos/code.dto";
-import SubmissionStatusEnum from "../types/enums/submissionstatus.enum";
+import TestCaseSubmissionStatusEnum from "../types/enums/submissionstatus.enum";
 
 export const runCode = async (code: string, input: string, token: string): Promise<RunCodeResponseType> => {
     try {
@@ -43,9 +43,9 @@ export const runTestCase = async (code: string, testCaseId: number, token: strin
         };
     } catch (error) {
         if (axios.isAxiosError(error) && error.response?.data?.data?.error) {
-            return { output: null, error: error.response.data.data.error, status: SubmissionStatusEnum.FAILED };
+            return { output: null, error: error.response.data.data.error, status: TestCaseSubmissionStatusEnum.FAILED };
         }
 
-        return { output: null, error: "Internal server error", status: SubmissionStatusEnum.FAILED };
+        return { output: null, error: "Internal server error", status: TestCaseSubmissionStatusEnum.FAILED };
     }
 }

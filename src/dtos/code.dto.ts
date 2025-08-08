@@ -1,4 +1,4 @@
-import SubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
+import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
 import z from "zod";
 
 export const RunCodeSchema = z.object({
@@ -13,7 +13,7 @@ export const RunCodeResponseSchema = z.object({
 });
 
 export const CheckCodeResponseSchema = RunCodeResponseSchema.extend({
-    status: z.enum(SubmissionStatusEnum).default(SubmissionStatusEnum.PENDING),
+    status: z.enum(TestCaseSubmissionStatusEnum).default(TestCaseSubmissionStatusEnum.PENDING),
 });
 
 export type RunCodeSchemaType = z.infer<typeof RunCodeSchema>;

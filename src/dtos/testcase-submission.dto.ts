@@ -1,4 +1,4 @@
-import SubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
+import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
 import z from "zod";
 
 export const TestCaseSubmissionResponse = z.object({
@@ -7,7 +7,7 @@ export const TestCaseSubmissionResponse = z.object({
     submissionId: z.number().int().positive(),
     output: z.string().nullable(),
     error: z.string().nullable(),
-    status: z.enum(SubmissionStatusEnum).default(SubmissionStatusEnum.PENDING),
+    status: z.enum(TestCaseSubmissionStatusEnum).default(TestCaseSubmissionStatusEnum.PENDING),
 });
 
 export type TestCaseSubmissionResponseType = z.infer<typeof TestCaseSubmissionResponse>;

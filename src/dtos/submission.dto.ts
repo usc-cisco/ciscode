@@ -1,4 +1,4 @@
-import ProblemStatusEnum from "@/lib/types/enums/problemstatus.enum";
+import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import { TestCaseSubmission } from "@/models/testcase-submission.model";
 import z from "zod";
 import { TestCaseSubmissionResponse } from "./testcase-submission.dto";
@@ -8,7 +8,7 @@ export const SubmissionResponse = z.object({
     userId: z.number().int().positive(),
     problemId: z.number().int().positive(),
     code: z.string().optional().default(""),
-    status: z.enum(ProblemStatusEnum).default(ProblemStatusEnum.ATTEMPTED),
+    status: z.enum(SubmissionStatusEnum).default(SubmissionStatusEnum.ATTEMPTED),
 });
 
 export const SubmissionResponseWithTestCaseSubmission = SubmissionResponse.extend({
@@ -17,7 +17,7 @@ export const SubmissionResponseWithTestCaseSubmission = SubmissionResponse.exten
 
 export const UpdateSubmissionSchema = z.object({
     code: z.string().optional().default(""),
-    status: z.enum(ProblemStatusEnum).optional().default(ProblemStatusEnum.ATTEMPTED),
+    status: z.enum(SubmissionStatusEnum).optional().default(SubmissionStatusEnum.ATTEMPTED),
 });
 
 export type SubmissionResponseType = z.infer<typeof SubmissionResponse>;

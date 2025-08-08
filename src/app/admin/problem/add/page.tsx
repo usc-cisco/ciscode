@@ -11,7 +11,7 @@ import { AddTestCaseSchemaType } from '@/dtos/testcase.dto'
 import { runCode } from '@/lib/fetchers/code.fetchers'
 import { addProblem } from '@/lib/fetchers/problem.fetchers'
 import DifficultyEnum from '@/lib/types/enums/difficulty.enum'
-import SubmissionStatusEnum from '@/lib/types/enums/submissionstatus.enum'
+import TestCaseSubmissionStatusEnum from '@/lib/types/enums/submissionstatus.enum'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
@@ -34,13 +34,13 @@ const AddProblemPage = () => {
     const [testCases, setTestCases] = useState<AddTestCaseSchemaType[]>([{
         input: "",
         hidden: false,
-        status: SubmissionStatusEnum.PENDING
+        status: TestCaseSubmissionStatusEnum.PENDING
     }]);
 
     const setAllToPending = () => {
         setTestCases(prev => prev.map(testCase => ({
             ...testCase,
-            status: SubmissionStatusEnum.PENDING
+            status: TestCaseSubmissionStatusEnum.PENDING
         })));
     }
 
@@ -55,7 +55,7 @@ const AddProblemPage = () => {
         setTestCases(prev => [...prev, {
             input: "",
             hidden: false,
-            status: SubmissionStatusEnum.PENDING
+            status: TestCaseSubmissionStatusEnum.PENDING
         }]);
     };
 
@@ -132,7 +132,7 @@ const AddProblemPage = () => {
 
     useEffect(() => {
         if (testCases.length > 0) {
-            setCanSubmit(testCases.every(testCase => testCase.status === SubmissionStatusEnum.COMPLETED));
+            setCanSubmit(testCases.every(testCase => testCase.status === TestCaseSubmissionStatusEnum.COMPLETED));
         } else {
             setCanSubmit(false);
         }

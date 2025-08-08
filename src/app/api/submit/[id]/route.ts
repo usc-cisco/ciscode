@@ -1,8 +1,8 @@
 import { CheckCodeResponseSchema } from "@/dtos/code.dto";
 import { SubmissionResponse, UpdateSubmissionType } from "@/dtos/submission.dto";
 import { runCCode } from "@/lib/code-runner";
-import ProblemStatusEnum from "@/lib/types/enums/problemstatus.enum";
-import SubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
+import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
+import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
 import SubmissionService from "@/services/submission.service";
 import TestCaseSubmissionService from "@/services/testcase-submission.service";
 import TestCaseService from "@/services/testcase.service";
@@ -32,21 +32,21 @@ export async function POST(req: NextRequest, context: { params: { id: string } }
         // Save submission
         const submission = await SubmissionService.saveSubmission(Number(id), userId, {
             code,
-            status: ProblemStatusEnum.ATTEMPTED
+            status: SubmissionStatusEnum.ATTEMPTED,
         });
 
         
         // Run the different test cases
-        let submissionStatus = ProblemStatusEnum.SOLVED;
+        let submissionStatus = SubmissionStatusEnum.SOLVED;
 
         const testCases = await TestCaseService.getTestCasesByProblemId(Number(id), true);
         const results = await Promise.all(testCases.map(async (testCase) => {
             const result = await runCCode(code, testCase.input || "");
-            let status = SubmissionStatusEnum.COMPLETED;
+            let status = TestCaseSubmissionStatusEnum.COMPLETED;
 
             if (result.error || result.output !== testCase.output) {
-                status = SubmissionStatusEnum.FAILED;
-                submissionStatus = ProblemStatusEnum.ATTEMPTED;
+                status = TestCaseSubmissionStatusEnum.FAILED;
+                submissionStatus = SubmissionStatusEnum.ATTEMPTED;
             }
 
             // Save as Test Case Submission
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest, context: { params: { id: string } }
         }));
 
         // Update submission status if Solved
-        if (submissionStatus === ProblemStatusEnum.SOLVED) {
+        if (submissionStatus === SubmissionStatusEnum.SOLVED) {
             await SubmissionService.updateSubmission(submission.id, {
                 status: submissionStatus
             } as UpdateSubmissionType);
