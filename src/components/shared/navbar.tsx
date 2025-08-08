@@ -11,7 +11,7 @@ import { Badge } from '../ui/badge';
 import RoleEnum from '@/lib/types/enums/role.enum';
 
 const Navbar = () => {
-  const { isAuthenticated, clearAuth, userInfo } = useAuth();
+  const { isAuthenticated, clearAuth, userInfo, isAdmin } = useAuth();
 
   const { role } = userInfo;
 
@@ -26,8 +26,13 @@ const Navbar = () => {
       <div className='flex items-center gap-4'>
         {
           isAuthenticated && role !== null && (
-            <Badge onClick={role === RoleEnum.ADMIN ? () => redirect('/admin') : () => {}} variant={'default'} className={`text-xs bg-primary-foreground text-primary rounded-xl ${role === RoleEnum.ADMIN && 'cursor-pointer'}`}>
-              {role === RoleEnum.ADMIN ? 'ADMIN' : 'STUDENT'}
+            <Badge onClick={isAdmin ? () => redirect('/admin') : () => {}} variant={'default'} className={`text-xs bg-primary-foreground text-primary rounded-xl ${isAdmin ? 'cursor-pointer' : 'pointer-events-none'}`}>
+              {
+                role === RoleEnum.USER ?
+                "STUDENT"
+                :
+                role
+              }
             </Badge>
           )
         }

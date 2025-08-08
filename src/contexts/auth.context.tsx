@@ -14,6 +14,7 @@ export interface AuthContextType {
   }
   isAuthenticated: boolean;
   isAdmin: boolean;
+  isSuperAdmin: boolean;
   setAuth: (token: string) => void;
   clearAuth: () => void;
 }
@@ -31,6 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     role: null,
   });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   
   const setAuth = (token: string) => {
@@ -52,7 +54,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("__jwt_token__", token);
     setToken(token);
     setIsAuthenticated(true);
-    setIsAdmin(decodedToken.role === RoleEnum.ADMIN);    
+    setIsAdmin(decodedToken.role !== RoleEnum.USER);
+    setIsSuperAdmin(decodedToken.role === RoleEnum.SUPER_ADMIN);
   }
   
   const clearAuth = () => {
@@ -65,6 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
     setIsAuthenticated(false);
     setIsAdmin(false);
+    setIsSuperAdmin(false);
   }
   
   useEffect(() => {
@@ -87,6 +91,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     userInfo,
     isAuthenticated,
     isAdmin,
+    isSuperAdmin,
     setAuth,
     clearAuth,
   }), [loading, token, userInfo, isAuthenticated, isAdmin]);

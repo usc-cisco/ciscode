@@ -9,13 +9,15 @@ import { getDifficultyColor } from '@/lib/types/enums/difficulty.enum';
 
 interface ProblemTableProps {
   problems: ProblemSchemaDisplayResponseType[]
+  inAdmin?: boolean;
+  loading: boolean;
 }
 
-const ProblemTable = ({ problems }: ProblemTableProps) => {
+const ProblemTable = ({ problems, inAdmin = false, loading }: ProblemTableProps) => {
     const router = useRouter();
 
     const handleRowClick = (id: number) => {
-        router.push(`/problem/${id}`);
+        router.push(inAdmin ? `/admin/problem/${id}` : `/problem/${id}`);
     }
 
   return (
@@ -33,33 +35,41 @@ const ProblemTable = ({ problems }: ProblemTableProps) => {
                 </TableRow>
                 </TableHeader>
                 <TableBody>
-                {problems.map((problem, index) => (
-                    <TableRow key={index} onClick={() => handleRowClick(problem.id)} className="cursor-pointer odd:bg-neutral-100 odd:dark:bg-neutral-800">
-                        <TableCell className="font-medium">{problem.id}</TableCell>
-                        <TableCell className='truncate table-fixed flex-1'>
-                            <div className="font-medium">{problem.title}</div>
-                        </TableCell>
-                        <TableCell className='truncate table-fixed w-40'>
-                            <Badge variant="outline">{problem.author}</Badge>
-                        </TableCell>
-                        <TableCell className='truncate table-fixed w-40'>
-                            <Badge className={getDifficultyColor(problem.difficulty)}>{problem.difficulty}</Badge>
-                        </TableCell>
-                        {/* <TableCell>
-                            {problem.acceptance ? problem.acceptance.toFixed(1) : "0.0" }%
-                        </TableCell> */}
-                        {/* <TableCell>
-                            <Badge className={getStatusColor(problem.status)}>{problem.status}</Badge>
-                        </TableCell> */}
-                    </TableRow>
-                ))}
+                    {
+                        loading
+                        ||
+                        problems.map((problem, index) => (
+                            <TableRow key={index} onClick={() => handleRowClick(problem.id)} className="cursor-pointer odd:bg-neutral-100 odd:dark:bg-neutral-800">
+                                <TableCell className="font-medium">{problem.id}</TableCell>
+                                <TableCell className='truncate table-fixed flex-1'>
+                                    <div className="font-medium">{problem.title}</div>
+                                </TableCell>
+                                <TableCell className='truncate table-fixed w-40'>
+                                    <Badge variant="outline">{problem.author}</Badge>
+                                </TableCell>
+                                <TableCell className='truncate table-fixed w-40'>
+                                    <Badge className={getDifficultyColor(problem.difficulty)}>{problem.difficulty}</Badge>
+                                </TableCell>
+                                {/* <TableCell>
+                                    {problem.acceptance ? problem.acceptance.toFixed(1) : "0.0" }%
+                                </TableCell> */}
+                                {/* <TableCell>
+                                    <Badge className={getStatusColor(problem.status)}>{problem.status}</Badge>
+                                </TableCell> */}
+                            </TableRow>
+                        ))}
                 </TableBody>
             </Table>
         </div>
-         {problems.length === 0 && (
-            <div className="text-center text-gray-500 py-8">
+         {loading ? 
+         <p className="text-center text-gray-500 py-8">
+            Loading...
+        </p>
+         :
+         problems.length === 0 && (
+            <p className="text-center text-gray-500 py-8">
                 No problems found matching your criteria.
-            </div>
+            </p>
         )}
     </>
   )

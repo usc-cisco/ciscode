@@ -29,6 +29,11 @@ export const Problem = sequelize.define("Problem", {
         allowNull: false,
         defaultValue: "",
     },
+    verified: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+    },
     authorId: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,

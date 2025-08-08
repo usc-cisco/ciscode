@@ -10,6 +10,7 @@ export const ProblemSchemaDisplayResponse = z.object({
     difficulty: z.enum(DifficultyEnum),
     acceptance: z.number().min(0).max(100).optional(),
     status: z.enum(SubmissionStatusEnum).optional(),
+    verified: z.boolean().optional(),
 });
 
 export const ProblemSchemaResponse = z.object({
