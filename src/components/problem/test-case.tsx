@@ -16,11 +16,12 @@ interface TestCaseProps {
     onChange: (field: string, value: string | boolean) => void;
     onCheckCode: (testCase: TestCaseResponseType) => Promise<CheckCodeResponseType>;
     submitted: boolean;
+    sending: boolean;
 }
 
-const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange, onCheckCode, submitted }) => {
+const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange, onCheckCode, submitted, sending }) => {
     const [showDetails, setShowDetails] = useState(false);
-    const [sending, setSending] = useState(submitted);
+    const [checking, setChecking] = useState(submitted);
 
     let StatusIcon: React.ElementType = Circle;
     let statusClassName: string = 'text-gray-300 dark:text-gray-600';
@@ -47,7 +48,7 @@ const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange,
     };
 
     const handleCheckCode = async () => {
-        setSending(true);
+        setChecking(true);
         onChange('actualOutput', "Loading...");
         onChange('status', SubmissionStatusEnum.PENDING);
 
@@ -64,11 +65,11 @@ const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange,
         }
 
         handleStatusChange(status);
-        setSending(false);
+        setChecking(false);
     };
 
     useEffect(() => {
-        setSending(submitted);
+        setChecking(submitted);
 
         if (submitted) {
             onChange('status', SubmissionStatusEnum.PENDING);
@@ -89,10 +90,10 @@ const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange,
             </div>
         </button>
 
-        {sending ? (
+        {checking ? (
                 <ClipLoader size={20} color='#1752F0' className='absolute top-4 right-2 size-4 text-primary' />
         ) : (
-            <button onClick={handleCheckCode} className={`absolute top-4 right-2 rounded-full flex items-center justify-center border border-primary size-6 hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer transition-colors`}>
+            <button onClick={handleCheckCode} className={`absolute top-4 right-2 rounded-full flex items-center justify-center border border-primary size-6 hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer transition-colors ${sending && 'pointer-events-none opacity-50'}`}>
                 <FaPlay className='size-2 text-primary absolute left-[0.45rem]' />
             </button>
         )}

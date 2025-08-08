@@ -32,6 +32,7 @@ const TestCaseBar: React.FC<TestCaseBarProps> = ({ testCases, onSubmit, onEditTe
                       onChange={onEditTestCase(index)}
                       onCheckCode={onCheckCode}
                       submitted={submitted}
+                      sending={sending}
                   />
               ))
             }
