@@ -34,7 +34,7 @@ export default function Auth() {
 
   return (
     <div className="h-[calc(100vh-4rem)] flex gap-4 items-center justify-evenly">
-      <div className="-mt-28 max-w-2/5">
+      <div className="-mt-24 max-w-2/5">
         <h1 className="text-primary font-semibold text-6xl">ciscode</h1>
         <p className="font-normal text-xl">Code your problems away...</p>
       </div>

@@ -5,6 +5,7 @@ import { loginUser } from '@/lib/fetchers/user.fetchers';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/auth.context';
+import { Info } from 'lucide-react';
 
 type LoginFormInputs = {
   username: string;
@@ -38,14 +39,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSetSignup, handleSuccess }) => 
         <Input className='py-5' placeholder='Student ID or Username' {...register('username')} />
         <Input className='py-5' placeholder='Password' type='password' {...register('password')} />
         <Button className='py-5 cursor-pointer' type='submit'>Log In</Button>
-
-        <div className='text-primary flex justify-center mt-4'>
-            <Link href="/forgot" className='text-sm font-semibold hover:underline cursor-pointer'>Forgot Password?</Link>
+        
+        <div className='text-gray-400 dark:text-gray-600 flex gap-1 items-center justify-center mt-2'>
+          <Info className='size-3'/>
+          <p className='text-xs text-center'>Contact a CISCO member if you are unable to log in.</p>
         </div>
 
-        <hr className='my-4'/>
-
-        <Button className='bg-green-500 hover:bg-green-400 py-5 cursor-pointer' type='button' onClick={onSetSignup}>Create New Account</Button>
     </form>
   )
 }
