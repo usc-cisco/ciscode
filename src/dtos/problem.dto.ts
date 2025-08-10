@@ -19,7 +19,7 @@ export const ProblemSchemaResponse = z.object({
     description: z.string(),
     difficulty: z.enum(DifficultyEnum),
     defaultCode: z.string().optional().nullable().default(null),
-    solutionCode: z.string().optional().default(""),
+    solutionCode: z.string().optional().default("").optional(),
     answerCode: z.string().optional().nullable().default(null),
     authorId: z.number(),
     author: z.string().min(2).max(50).optional(),
@@ -35,7 +35,7 @@ export const AddProblemSchema = z.object({
     difficulty: z.enum(DifficultyEnum),
     defaultCode: z.string().optional().nullable().default(null),
     solutionCode: z.string().optional().default(""),
-    testCases: z.array(AddTestCaseSchema).min(1, "At least one test case is required").max(20, "Cannot have more than 20 test cases"),
+    testCases: z.array(AddTestCaseSchema).min(1, "At least one test case is required").max(20, "Cannot have more than 20 test cases").optional(),
 })
 
 export type AddProblemSchemaType = z.infer<typeof AddProblemSchema>;

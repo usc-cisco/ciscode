@@ -29,7 +29,7 @@ const ProblemTable = ({ problems, inAdmin = false, loading }: ProblemTableProps)
                     <TableHead className="w-16">#</TableHead>
                     <TableHead>Title</TableHead>
                     <TableHead className='w-40'>Author</TableHead>
-                    <TableHead>Difficulty</TableHead>
+                    <TableHead className='w-40'>Difficulty</TableHead>
                     {/* <TableHead>Acceptance</TableHead> */}
                     {/* <TableHead>Status</TableHead> */}
                 </TableRow>

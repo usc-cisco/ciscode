@@ -18,6 +18,21 @@ export const fetchProblem = async (problemId: string, token: string) => {
     }
 };
 
+export const fetchProblemWithSolution = async (problemId: string, token: string) => {
+    try {
+        if (token) {
+            instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        }
+
+        const response = await instance.get<ApiResponse<ProblemSchemaResponseWithTestCasesType>>(`/problem/${problemId}/solution`);
+
+        return response.data;
+    } catch (error: any) {
+        console.error("Error fetching problem:", error);
+        throw new Error(error.response?.data?.error || "Failed to fetch problem");
+    }
+};
+
 export const fetchProblems = async (token: string, page: number = 1, limit: number = 10, search: string = "", difficulty: string | null = null, verified: boolean = true) => {
     try {
 
@@ -66,5 +81,20 @@ export const addProblem = async (data: AddProblemSchemaType, token: string) => {
     } catch (error: any) {
         console.error("Error adding problem:", error);
         throw new Error(error.response?.data?.error || "Failed to add problem");
+    }
+};
+
+export const updateProblem = async (problemId: string, data: AddProblemSchemaType, token: string) => {
+    try {
+        if (token) {
+            instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        }
+
+        const response = await instance.put(`/problem/${problemId}`, data);
+
+        return response.data;
+    } catch (error: any) {
+        console.error("Error updating problem:", error);
+        throw new Error(error.response?.data?.error || "Failed to update problem");
     }
 };

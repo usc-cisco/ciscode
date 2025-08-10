@@ -7,7 +7,7 @@ import TestCaseService from "./testcase.service";
 import { Problem } from "@/models/problem.model";
 
 class ProblemService {
-    static async getProblemById(id: number): Promise<ProblemSchemaResponseWithTestCasesType | null> {
+    static async getProblemById(id: number, withHidden: boolean = false): Promise<ProblemSchemaResponseWithTestCasesType | null> {
         const problem = await Problem.findByPk(id);
         if (!problem) {
             return null;
@@ -15,7 +15,7 @@ class ProblemService {
 
         const response = ProblemSchemaResponseWithTestCases.parse(problem);
 
-        const testCases = await TestCaseService.getTestCasesByProblemId(response.id);
+        const testCases = await TestCaseService.getTestCasesByProblemId(response.id, withHidden);
         response.testCases = testCases;
 
         const user = await UserService.getUserById(response.authorId);
@@ -111,6 +111,25 @@ class ProblemService {
         response.author = userParsedData.name;
 
         return response;
+    }
+
+    static async updateProblem(id: number, data: AddProblemSchemaType): Promise<ProblemSchemaResponseType> {
+        const problem = await Problem.findByPk(id);
+        if (!problem) {
+            throw new Error("Problem not found");
+        }
+
+        const updatedProblem = await problem.update(data);
+        return ProblemSchemaResponse.parse(updatedProblem);
+    }
+
+    static async deleteProblem(id: number): Promise<void> {
+        const problem = await Problem.findByPk(id);
+        if (!problem) {
+            throw new Error("Problem not found");
+        }
+
+        await problem.destroy();
     }
 }
 

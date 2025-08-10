@@ -139,7 +139,7 @@ const UserContainer = () => {
                                     <TableCell className='truncate table-fixed'>
                                         <Badge variant="outline">{user.name}</Badge>
                                     </TableCell>
-                                    <TableCell className='truncate table-fixed'>
+                                    <TableCell className='truncate table-fixed w-40'>
                                         <Badge className={getRoleColor(user.role)}>{user.role === RoleEnum.USER ? "STUDENT": user.role}</Badge>
                                     </TableCell>
                                 </TableRow>
