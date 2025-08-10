@@ -9,7 +9,8 @@ import { RunCodeResponseType } from '@/dtos/code.dto'
 import { AddProblemSchemaType, ProblemSchemaResponseType } from '@/dtos/problem.dto'
 import { AddTestCaseSchemaType } from '@/dtos/testcase.dto'
 import { runCode } from '@/lib/fetchers/code.fetchers'
-import { addProblem, fetchProblem, fetchProblemWithSolution, updateProblem } from '@/lib/fetchers/problem.fetchers'
+import { addProblem, deleteProblem, fetchProblem, fetchProblemWithSolution, updateProblem } from '@/lib/fetchers/problem.fetchers'
+import { toastr } from '@/lib/toastr'
 import DifficultyEnum from '@/lib/types/enums/difficulty.enum'
 import TestCaseSubmissionStatusEnum from '@/lib/types/enums/submissionstatus.enum'
 import { useParams, useRouter } from 'next/navigation'
@@ -94,8 +95,10 @@ const UpdateProblem = () => {
                 solutionCode: problem.solutionCode == "// Write your solution code here..." ? "" : problem.solutionCode,
                 testCases: testCases
             } as AddProblemSchemaType, token);
+            toastr.success("Problem updated successfully");
             router.push("/admin");
         } catch (error) {
+            toastr.error("Error saving problem");
             console.error("Error saving problem:", error);
         }
     }
@@ -137,38 +140,56 @@ const UpdateProblem = () => {
         }
     };
 
-    useEffect(() => {
-    if (!token) return;
-
-    const fetchProblemData = async () => {
-      try {
-        const response = await fetchProblemWithSolution(params.id as string, token || "");
-        if (response.data) {
-            const _testCases = response.data.testCases || [];
-            setProblem({
-                title: response.data.title,
-                description: response.data.description,
-                difficulty: response.data.difficulty,
-                defaultCode: response.data.defaultCode,
-                solutionCode: response.data.solutionCode ?? ""
-            });
-            setTestCases(_testCases.map(testCase => ({
-                ...testCase,
-                status: TestCaseSubmissionStatusEnum.PENDING
-            })));
-        } else {
-          console.error("Problem not found");
-          router.push("/");
+    const handleDelete = async () => {
+        if (!token) {
+            console.error("User is not authenticated");
+            return;
         }
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-        router.push("/");
-      }
-    };
 
-    fetchProblemData();
-  }, [token]);
+        try {
+            if (confirm("Are you sure you want to delete this problem?")) {
+                await deleteProblem(params.id as string, token);
+                router.push("/admin");
+                toastr.success("Problem deleted successfully");
+            }
+        } catch (error) {
+            console.error("Error deleting problem:", error);
+            toastr.error("Error deleting problem");
+        }
+    }
+
+    useEffect(() => {
+        if (!token) return;
+
+        const fetchProblemData = async () => {
+            try {
+                const response = await fetchProblemWithSolution(params.id as string, token || "");
+                if (response.data) {
+                    const _testCases = response.data.testCases || [];
+                    setProblem({
+                        title: response.data.title,
+                        description: response.data.description,
+                        difficulty: response.data.difficulty,
+                        defaultCode: response.data.defaultCode,
+                        solutionCode: response.data.solutionCode ?? ""
+                    });
+                    setTestCases(_testCases.map(testCase => ({
+                        ...testCase,
+                        status: TestCaseSubmissionStatusEnum.PENDING
+                    })));
+                } else {
+                console.error("Problem not found");
+                router.push("/");
+                }
+                setLoading(false);
+            } catch (error) {
+                console.error(error);
+                router.push("/");
+            }
+        };
+
+        fetchProblemData();
+    }, [token]);
 
     useEffect(() => {
         if (testCases.length > 0) {
@@ -194,7 +215,7 @@ const UpdateProblem = () => {
             <SplitView
                 sizes={[25, 50, 25]}
             >
-                <AdminProblemBar problem={problem} onProblemChange={handleProblemChange} onSave={handleSaveProblem} canSubmit={canSubmit} />
+                <AdminProblemBar problem={problem} onProblemChange={handleProblemChange} onSave={handleSaveProblem} canSubmit={canSubmit} onDelete={handleDelete} />
                 <AdminCodeEditor
                     defaultCode={problem.defaultCode ?? undefined}
                     solutionCode={problem.solutionCode}

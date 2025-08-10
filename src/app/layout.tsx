@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/shared/theme-provider";
 import Navbar from "@/components/shared/navbar";
 import Footer from "@/components/shared/footer";
 import { AuthProvider } from "@/contexts/auth.context";
+import { Toaster } from "@/components/ui/sonner";
 
 export const poppins = Poppins({
   variable: "--font-poppins",
@@ -32,6 +33,7 @@ export default function RootLayout({
               <main className="flex-1">
                 {children}
               </main>
+              <Toaster richColors={true} />
               <Footer />
             </ThemeProvider>
          </AuthProvider>

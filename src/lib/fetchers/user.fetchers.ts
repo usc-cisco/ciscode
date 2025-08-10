@@ -2,6 +2,7 @@ import { LoginRequestSchemaType, LoginResponseSchemaType, RegisterRequestSchemaT
 import instance from "../axios";
 import ApiResponse from "../types/interface/api-response.interface";
 import AdminCount from "../types/interface/admin-count.interface";
+import { toastr } from "../toastr";
 
 export const loginUser = async (payload: LoginRequestSchemaType) => {
     try {
