@@ -25,7 +25,7 @@ export default function Problem() {
 
   const params = useParams();
   if (!params.id) {
-    router.push("/problem");
+    router.push("/home");
     return null;
   }
 

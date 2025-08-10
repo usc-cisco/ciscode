@@ -49,7 +49,7 @@ export const POST = requireRole(async (req: NextRequest) => {
         console.log(userId);
         const newProblem = await ProblemService.addProblem(data, userId);
 
-        const testCases = await TestCaseService.addTestCases(data.testCases, newProblem);
+        const testCases = await TestCaseService.addTestCases(data.testCases ?? [], newProblem);
 
         return NextResponse.json({ message: "Problem created successfully", data: {
             ...newProblem,

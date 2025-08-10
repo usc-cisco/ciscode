@@ -1,11 +1,8 @@
-import Problem from "@/app/problem/[id]/page";
 import { sequelize } from "@/db/sequelize";
-import { CheckCodeResponseSchema } from "@/dtos/code.dto";
-import { ProblemSchemaResponseWithTestCases } from "@/dtos/problem.dto";
-import { UpdateSubmissionType } from "@/dtos/submission.dto";
+import { AddProblemSchema, ProblemSchemaResponseType, ProblemSchemaResponseWithTestCases } from "@/dtos/problem.dto";
 import { TestCaseSubmissionResponseType } from "@/dtos/testcase-submission.dto";
-import { runCCode } from "@/lib/code-runner";
-import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
+import { requireRole } from "@/lib/require-role";
+import RoleEnum from "@/lib/types/enums/role.enum";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
 import ProblemService from "@/services/problem.service";
 import SubmissionService from "@/services/submission.service";
@@ -44,12 +41,15 @@ export async function GET(req: NextRequest, context: { params: { id: string } })
             message: "Problem fetched successfully", 
             data: ProblemSchemaResponseWithTestCases.parse({
                 ...problem,
+                solutionCode: undefined,
                 answerCode: submission ? submission.code : null,
                 testCases: problem.testCases.map((testCase, index) => {
+                    const testCaseSubmission = testCaseSubmissions.filter(submission => submission.testCaseId === testCase.id);
+
                     return {
                         ...testCase,
-                        actualOutput: (testCaseSubmissions[index] && !testCase.hidden) ? (testCaseSubmissions[index].output || testCaseSubmissions[index].error) : "",
-                        status: (testCaseSubmissions[index]) ? testCaseSubmissions[index].status : TestCaseSubmissionStatusEnum.PENDING,
+                        actualOutput: (testCaseSubmission[0] && !testCase.hidden) ? (testCaseSubmission[0].output || testCaseSubmission[0].error) : "",
+                        status: (testCaseSubmission[0]) ? testCaseSubmission[0].status : TestCaseSubmissionStatusEnum.PENDING,
                     };
                 })
             }),
@@ -59,3 +59,58 @@ export async function GET(req: NextRequest, context: { params: { id: string } })
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
+
+export const PUT = requireRole(async (req: NextRequest, context: { params: { id: string } }) => {
+    const { id } = context.params;
+    const userIdString = req.headers.get("x-user-id");
+    if (!userIdString || isNaN(Number(userIdString))) {
+        return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
+    }
+
+    const userId = Number(userIdString);
+
+    try {
+        const problem = await ProblemService.getProblemById(Number(id));
+        if (!problem) {
+            return NextResponse.json({ error: "Problem not found" }, { status: 404 });
+        }
+
+        const body = await req.json();
+        const parsedData = AddProblemSchema.parse(body);
+
+        const problemTestCases = await TestCaseService.getTestCasesByProblemId(Number(id));
+        if (!problemTestCases) {
+            return NextResponse.json({ error: "Problem test cases not found" }, { status: 404 });
+        }
+
+        if (parsedData.testCases) {
+            const existingTestCaseIds = problemTestCases.map(testCase => testCase.id);
+            const newTestCases = parsedData.testCases.filter(testCase => !testCase.id || !existingTestCaseIds.includes(testCase.id));
+            const updatedTestCases = parsedData.testCases.filter(testCase => testCase.id && existingTestCaseIds.includes(testCase.id));
+            const deletedTestCases = problemTestCases.filter(testCase => !parsedData.testCases!.find(tc => tc.id === testCase.id));
+
+            // Add new test cases
+            await TestCaseService.addTestCases(newTestCases, problem as ProblemSchemaResponseType);
+
+            // Update existing test cases
+            await Promise.all(updatedTestCases.map(testCase => {
+                if (testCase.id) {
+                    return TestCaseService.updateTestCase(testCase.id, testCase);
+                }
+            }));
+
+            // Delete test cases
+            await Promise.all(deletedTestCases.map(testCase => {
+                if (testCase.id) {
+                    return TestCaseService.deleteTestCase(testCase.id);
+                }
+            }));
+        }
+
+        const updatedProblem = await ProblemService.updateProblem(Number(id), parsedData);
+        return NextResponse.json({ message: "Problem updated successfully", data: updatedProblem }, { status: 200 });
+    } catch (error: any) {
+        console.error("Error updating problem:", error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+}, [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN]);

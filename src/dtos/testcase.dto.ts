@@ -12,6 +12,7 @@ export const TestCaseResponse = z.object({
 })
 
 export const AddTestCaseSchema = z.object({
+    id: z.number().int().positive("ID must be a positive integer").optional(),
     input: z.string().optional(),
     output: z.string().optional(),
     hidden: z.boolean().default(false),
