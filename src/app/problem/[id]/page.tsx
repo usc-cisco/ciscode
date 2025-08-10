@@ -12,6 +12,8 @@ import { TestCaseResponseType } from "@/dtos/testcase.dto";
 import { runTestCase } from "@/lib/fetchers/code.fetchers";
 import { fetchProblem } from "@/lib/fetchers/problem.fetchers";
 import { submitCode } from "@/lib/fetchers/submission.fetchers";
+import { toastr } from "@/lib/toastr";
+import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -97,6 +99,17 @@ export default function Problem() {
           });
           return updatedTestCases;
         });
+
+        switch(response.status) {
+          case SubmissionStatusEnum.SOLVED:
+            toastr.success("All test cases passed");
+            break;
+          case SubmissionStatusEnum.ATTEMPTED:
+            toastr.error("Some test cases failed");
+            break;
+          default:
+            console.log("Unknown status");
+        }
       }
     } catch (error) {
       console.error("Error submitting code:", error);

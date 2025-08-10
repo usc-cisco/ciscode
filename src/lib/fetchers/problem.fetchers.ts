@@ -98,3 +98,18 @@ export const updateProblem = async (problemId: string, data: AddProblemSchemaTyp
         throw new Error(error.response?.data?.error || "Failed to update problem");
     }
 };
+
+export const deleteProblem = async (problemId: string, token: string) => {
+    try {
+        if (token) {
+            instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        }
+
+        const response = await instance.delete(`/problem/${problemId}`);
+
+        return response.data;
+    } catch (error: any) {
+        console.error("Error deleting problem:", error);
+        throw new Error(error.response?.data?.error || "Failed to delete problem");
+    }
+};

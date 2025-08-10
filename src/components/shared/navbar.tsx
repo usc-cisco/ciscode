@@ -22,7 +22,7 @@ const Navbar = () => {
 
   return (
     <div className='w-full h-16 px-6 flex justify-between items-center bg-primary text-primary-foreground'>
-      <Brand />
+      <Brand path={isAuthenticated ? "/home" : "/"}/>
       <div className='flex items-center gap-4'>
         {
           isAuthenticated && role !== null && (

@@ -1,9 +1,13 @@
 import Link from 'next/link'
 import React from 'react'
 
-const Brand = () => {
+interface BrandProps {
+  path: string;
+}
+
+const Brand = ({ path }: BrandProps) => {
   return (
-    <Link href="/" className="mr-auto w-auto text-lg font-semibold text-white sm:text-xl">
+    <Link href={path} className="mr-auto w-auto text-lg font-semibold text-white sm:text-xl">
         ciscode.dcism.org
     </Link>
   )

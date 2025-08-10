@@ -3,12 +3,15 @@
 import LoginForm from "@/components/landing/login-form";
 import SignupForm from "@/components/landing/signup-form";
 import { useAuth } from "@/contexts/auth.context";
-import { redirect } from "next/navigation";
+import { toastr } from "@/lib/toastr";
+import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
   const { isAuthenticated } = useAuth();
+  const router = useRouter();
 
   const handleSetSignup = () => {
     setIsLogin(false);
@@ -19,7 +22,8 @@ export default function Auth() {
   }
 
   const handleLoginSuccess = () => {
-    redirect("/");
+    toast.success("Login successful");
+    router.push("/home");
   }
 
   const handleSignupSuccess = () => {

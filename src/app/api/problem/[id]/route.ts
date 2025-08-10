@@ -114,3 +114,20 @@ export const PUT = requireRole(async (req: NextRequest, context: { params: { id:
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }, [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN]);
+
+export const DELETE = requireRole(async (_: NextRequest, context: { params: { id: string } }) => {
+    const { id } = context.params;
+
+    try {
+        const problem = await ProblemService.getProblemById(Number(id));
+        if (!problem) {
+            return NextResponse.json({ error: "Problem not found" }, { status: 404 });
+        }
+
+        await ProblemService.deleteProblem(Number(id));
+        return NextResponse.json({ message: "Problem deleted successfully" }, { status: 200 });
+    } catch (error: any) {
+        console.error("Error deleting problem:", error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+}, [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN]);

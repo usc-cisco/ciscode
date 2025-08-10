@@ -5,6 +5,7 @@ import DifficultyEnum, { getDifficultyColor } from '@/lib/types/enums/difficulty
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import MarkdownEditor from '@/components/shared/markdown-editor';
+import { Trash2Icon } from 'lucide-react';
 
 interface AdminProblemBarProps {
     problem: {
@@ -14,10 +15,11 @@ interface AdminProblemBarProps {
     };
     onProblemChange: (field: string, value: string | DifficultyEnum) => void;
     onSave: () => void;
+    onDelete?: () => void;
     canSubmit: boolean;
 }
 
-const AdminProblemBar: React.FC<AdminProblemBarProps> = ({ problem, onProblemChange, onSave, canSubmit }) => {
+const AdminProblemBar: React.FC<AdminProblemBarProps> = ({ problem, onProblemChange, onSave, onDelete, canSubmit }) => {
   const { title, difficulty, description } = problem;
   return (
     <ProblemCard className='overflow-hidden hide-scrollbar relative'>
@@ -38,8 +40,9 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({ problem, onProblemCha
             </div>
         </div>
 
-        <div className='px-4 h-14 absolute bottom-0 w-full border-t border-gray-200 dark:border-gray-700 flex flex-col justify-center items-center bg-vscode-light dark:bg-vscode-dark z-10'>
-          <Button className={`w-full bg-primary py-2 rounded-lg cursor-pointer ${canSubmit ? 'opacity-100' : 'opacity-40 pointer-events-none'}`} onClick={onSave}>Save Problem</Button>
+        <div className='px-2 h-14 absolute bottom-0 w-full border-t border-gray-200 dark:border-gray-700 flex justify-center items-center bg-vscode-light dark:bg-vscode-dark z-10 gap-2'>
+          <Button className={`bg-primary py-2 rounded-lg cursor-pointer flex-1 ${canSubmit ? 'opacity-100' : 'opacity-40 pointer-events-none'}`} onClick={onSave}>Save Problem</Button>
+          {onDelete && <Button className='bg-red-400 hover:bg-red-500 dark:bg-red-700 dark:hover:bg-red-600 transition-colors py-2 rounded-lg cursor-pointer' onClick={onDelete}><Trash2Icon /></Button>}
         </div>
     </ProblemCard>
   )

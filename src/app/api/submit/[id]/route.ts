@@ -69,6 +69,7 @@ export async function POST(req: NextRequest, context: { params: { id: string } }
             await SubmissionService.updateSubmission(submission.id, {
                 status: submissionStatus
             } as UpdateSubmissionType);
+            submission.status = submissionStatus;
         }
 
         // Return the results
