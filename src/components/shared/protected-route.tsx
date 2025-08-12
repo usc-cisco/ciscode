@@ -33,7 +33,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requireAdmin,
             console.log('User is not a super admin, redirecting to home page');
             redirect('/');
         }
-    }, [loading, isAuthenticated, isAdmin, isSuperAdmin]);
+    }, [loading, isAuthenticated, isAdmin, isSuperAdmin, requireAdmin, requireSuperAdmin]);
 
     return (
         <div className="min-h-[calc(100vh-4rem)]">

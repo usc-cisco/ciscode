@@ -78,8 +78,8 @@ export async function POST(req: NextRequest, context: { params: { id: string } }
             testCaseSubmissions: results
         } });
 
-    } catch (error: any) {
+    } catch (error) {
         console.error("Error updating problem:", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: (error as { message: string }).message }, { status: 500 });
     }
 }

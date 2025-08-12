@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '../ui/pagination'
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '../ui/pagination'
 
 interface CustomPaginationProps {
   currentPage: number;

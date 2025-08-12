@@ -4,7 +4,6 @@ import { ProblemSchemaResponseType } from '@/dtos/problem.dto';
 import { Badge } from '../ui/badge';
 import { getDifficultyColor } from '@/lib/types/enums/difficulty.enum';
 import { cn } from '@/lib/utils';
-import Markdown from '../shared/markdown';
 
 interface ProblemBarProps {
     problem: ProblemSchemaResponseType;

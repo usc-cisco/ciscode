@@ -3,7 +3,6 @@
 import LoginForm from "@/components/landing/login-form";
 import SignupForm from "@/components/landing/signup-form";
 import { useAuth } from "@/contexts/auth.context";
-import { toastr } from "@/lib/toastr";
 import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";

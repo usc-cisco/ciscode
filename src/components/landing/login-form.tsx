@@ -3,7 +3,6 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { loginUser } from '@/lib/fetchers/user.fetchers';
 import { useForm } from 'react-hook-form';
-import Link from 'next/link';
 import { useAuth } from '@/contexts/auth.context';
 import { Info } from 'lucide-react';
 import { toastr } from '@/lib/toastr';
@@ -18,7 +17,7 @@ interface LoginFormProps {
     handleSuccess: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSetSignup, handleSuccess }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ handleSuccess }) => {
     const { setAuth } = useAuth();
     const {
         register,
@@ -31,9 +30,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSetSignup, handleSuccess }) => 
           const response = await loginUser(data);
           setAuth(response.token);
           handleSuccess();
-      } catch (error: any) {
+      } catch (error) {
           console.error(error);
-          toastr.error(error.message || "An error occurred while logging in");
+          toastr.error((error as { message: string }).message || "An error occurred while logging in");
       }
     };
 

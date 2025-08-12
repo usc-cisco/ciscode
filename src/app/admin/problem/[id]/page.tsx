@@ -6,14 +6,14 @@ import AdminTestCaseBar from '@/components/admin/problem/admin-test-case-bar'
 import SplitView from '@/components/shared/split-view'
 import { useAuth } from '@/contexts/auth.context'
 import { RunCodeResponseType } from '@/dtos/code.dto'
-import { AddProblemSchemaType, ProblemSchemaResponseType } from '@/dtos/problem.dto'
+import { AddProblemSchemaType } from '@/dtos/problem.dto'
 import { AddTestCaseSchemaType } from '@/dtos/testcase.dto'
 import { runCode } from '@/lib/fetchers/code.fetchers'
-import { addProblem, deleteProblem, fetchProblem, fetchProblemWithSolution, updateProblem } from '@/lib/fetchers/problem.fetchers'
+import { deleteProblem, fetchProblemWithSolution, updateProblem } from '@/lib/fetchers/problem.fetchers'
 import { toastr } from '@/lib/toastr'
 import DifficultyEnum from '@/lib/types/enums/difficulty.enum'
 import TestCaseSubmissionStatusEnum from '@/lib/types/enums/submissionstatus.enum'
-import { useParams, useRouter } from 'next/navigation'
+import { redirect, useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 const UpdateProblem = () => {
@@ -22,8 +22,7 @@ const UpdateProblem = () => {
 
     const params = useParams();
     if (!params.id) {
-        router.push("/admin");
-        return null;
+        redirect("/admin");
     }
 
     const [loading, setLoading] = useState<boolean>(true);
@@ -109,9 +108,10 @@ const UpdateProblem = () => {
             setAllToPending();
         }
 
-        isSolution
-            ? handleProblemChange('solutionCode', value ?? "")
-            : handleProblemChange('defaultCode', value ?? "");
+        if (isSolution)
+            handleProblemChange('solutionCode', value ?? "")
+        else
+            handleProblemChange('defaultCode', value ?? "");
     };
 
     const handleChangeIsSolution = (value: boolean) => () => {
@@ -189,7 +189,7 @@ const UpdateProblem = () => {
         };
 
         fetchProblemData();
-    }, [token]);
+    }, [token, params.id, router]);
 
     useEffect(() => {
         if (testCases.length > 0) {
@@ -232,4 +232,3 @@ const UpdateProblem = () => {
 }
 
 export default UpdateProblem
-useParams

@@ -43,7 +43,7 @@ export async function GET(req: NextRequest, context: { params: { id: string } })
                 ...problem,
                 solutionCode: undefined,
                 answerCode: submission ? submission.code : null,
-                testCases: problem.testCases.map((testCase, index) => {
+                testCases: problem.testCases.map((testCase) => {
                     const testCaseSubmission = testCaseSubmissions.filter(submission => submission.testCaseId === testCase.id);
 
                     return {
@@ -54,9 +54,9 @@ export async function GET(req: NextRequest, context: { params: { id: string } })
                 })
             }),
         }, { status: 200 });
-    } catch (error: any) {
+    } catch (error) {
         console.error("Error fetching problem:", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: (error as { message: string }).message }, { status: 500 });
     }
 }
 
@@ -66,8 +66,6 @@ export const PUT = requireRole(async (req: NextRequest, context: { params: { id:
     if (!userIdString || isNaN(Number(userIdString))) {
         return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
     }
-
-    const userId = Number(userIdString);
 
     try {
         const problem = await ProblemService.getProblemById(Number(id));
@@ -109,9 +107,9 @@ export const PUT = requireRole(async (req: NextRequest, context: { params: { id:
 
         const updatedProblem = await ProblemService.updateProblem(Number(id), parsedData);
         return NextResponse.json({ message: "Problem updated successfully", data: updatedProblem }, { status: 200 });
-    } catch (error: any) {
+    } catch (error) {
         console.error("Error updating problem:", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: (error as { message: string }).message }, { status: 500 });
     }
 }, [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN]);
 
@@ -126,8 +124,8 @@ export const DELETE = requireRole(async (_: NextRequest, context: { params: { id
 
         await ProblemService.deleteProblem(Number(id));
         return NextResponse.json({ message: "Problem deleted successfully" }, { status: 200 });
-    } catch (error: any) {
+    } catch (error) {
         console.error("Error deleting problem:", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: (error as { message: string }).message }, { status: 500 });
     }
 }, [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN]);

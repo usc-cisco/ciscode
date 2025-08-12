@@ -1,19 +1,7 @@
 "use client";
 
-import DropDownSelect from '@/components/home/drop-down-select';
-import ProblemTable from '@/components/shared/problem-table';
-import SearchBar from '@/components/home/search-bar';
-import CustomPagination from '@/components/shared/custom-pagination';
 import ProtectedRoute from '@/components/shared/protected-route';
-import { useAuth } from '@/contexts/auth.context';
-import { ProblemSchemaDisplayResponseType } from '@/dtos/problem.dto';
-import env from '@/lib/env';
-import { fetchProblems } from '@/lib/fetchers/problem.fetchers';
-import DifficultyEnum from '@/lib/types/enums/difficulty.enum';
-import { create } from 'domain';
-import { useRouter, useSearchParams } from 'next/navigation';
-import React, { FormEventHandler, useCallback, useEffect, useState } from 'react'
-import { set } from 'zod';
+import React from 'react'
 import ProblemContainer from '@/components/shared/problem-container';
 
 export default function Home() {

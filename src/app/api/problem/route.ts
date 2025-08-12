@@ -24,9 +24,9 @@ export const GET = async (req: NextRequest) => {
             totalCount
         } }, { status: 200 });
     }
-    catch (error: any) {
+    catch (error) {
         console.error("Error fetching problems:", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: (error as { message: string }).message }, { status: 500 });
     }
 };
 
@@ -56,8 +56,8 @@ export const POST = requireRole(async (req: NextRequest) => {
             testCases
         } }, { status: 201 });
     }
-    catch (error: any) {
+    catch (error) {
         console.error("Error running code:", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: (error as { message: string }).message }, { status: 500 });
     }
 }, [RoleEnum.SUPER_ADMIN, RoleEnum.ADMIN]);

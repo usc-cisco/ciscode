@@ -1,10 +1,9 @@
-import Markdown from '@/components/shared/markdown';
 import { Button } from '@/components/ui/button';
 import { RunCodeResponseType } from '@/dtos/code.dto';
 import { AddTestCaseSchemaType } from '@/dtos/testcase.dto';
 import TestCaseSubmissionStatusEnum from '@/lib/types/enums/submissionstatus.enum';
 import { cn } from '@/lib/utils';
-import { ChevronDown, ChevronUp, Circle, CircleCheck, CircleX, Delete, DeleteIcon, Trash } from 'lucide-react';
+import { Circle, CircleCheck, CircleX, Trash } from 'lucide-react';
 import React, { useState } from 'react'
 import { FaPlay } from "react-icons/fa";
 import { ClipLoader } from 'react-spinners';

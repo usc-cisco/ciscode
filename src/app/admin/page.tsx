@@ -3,7 +3,6 @@
 import AdminCard from "@/components/admin/admin-card";
 import UserContainer from "@/components/admin/user-container";
 import ProblemContainer from "@/components/shared/problem-container";
-import ProtectedRoute from "@/components/shared/protected-route";
 import { useAuth } from "@/contexts/auth.context";
 import { fetchProblemCount } from "@/lib/fetchers/problem.fetchers";
 import { fetchUserCount } from "@/lib/fetchers/user.fetchers";
@@ -47,7 +46,11 @@ export default function Admin() {
         const getProblemData = async (verified: boolean) => {
             try {
                 const response = await fetchProblemCount(token, verified);
-                verified ? setVerifiedProblemCounts(response.data) : setUnverifiedProblemCounts(response.data);
+                if (verified) {
+                    setVerifiedProblemCounts(response.data);
+                } else {
+                    setUnverifiedProblemCounts(response.data);
+                }
             }
             catch (error) {
                 console.error("Error fetching problem count:", error);

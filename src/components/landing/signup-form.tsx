@@ -2,8 +2,9 @@ import React from 'react'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { Info } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { FieldValues, useForm } from 'react-hook-form';
 import { registerUser } from '@/lib/fetchers/user.fetchers';
+import { RegisterRequestSchemaType } from '@/dtos/user.dto';
 
 interface SignupFormProps {
     onSetLogin: () => void;
@@ -16,9 +17,9 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSetLogin, handleSuccess }) =>
         handleSubmit,
     } = useForm();
 
-    const onSubmit = async (data: any) => {
+    const onSubmit = async (data: FieldValues) => {
         try {
-            await registerUser(data);
+            await registerUser(data as RegisterRequestSchemaType);
             handleSuccess();
         } catch (error) {
             console.error("Signup failed:", error);

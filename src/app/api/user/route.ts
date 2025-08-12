@@ -4,7 +4,7 @@ import RoleEnum from "@/lib/types/enums/role.enum";
 import UserService from "@/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req: NextRequest) => {
+export const GET = requireRole(async (req: NextRequest) => {
     try {
         const searchParams = req.nextUrl.searchParams;
         const offset = searchParams.get("offset") ? Number(searchParams.get("offset")) : 0;
@@ -21,11 +21,11 @@ export const GET = async (req: NextRequest) => {
             totalCount
         } }, { status: 200 });
     }
-    catch (error: any) {
+    catch (error) {
         console.error("Error fetching problems:", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: (error as { message: string }).message }, { status: 500 });
     }
-};
+}, [RoleEnum.SUPER_ADMIN, RoleEnum.ADMIN]);
 
 export const POST = requireRole(async (req: NextRequest) => {
     try {
@@ -47,7 +47,7 @@ export const POST = requireRole(async (req: NextRequest) => {
         }
 
         return NextResponse.json({ user }, { status: 201 });
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    } catch (error) {
+        return NextResponse.json({ error: (error as { message: string }).message }, { status: 500 });
     }
 }, [RoleEnum.SUPER_ADMIN, RoleEnum.ADMIN])

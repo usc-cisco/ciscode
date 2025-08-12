@@ -1,10 +1,14 @@
+import Image from "next/image";
+
 export default function Footer() {
   return (
     <footer className="bg-primary p-6 pb-4 text-xl">
-      <img
+      <Image
         className="mx-auto h-6 w-auto"
         src="/cisco-logo-white.png"
         alt="White transparent picture of the CISCO logo"
+        width={1000}
+        height={1000}
       />
 
       <p className="pt-2 text-center text-sm text-white">

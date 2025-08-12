@@ -71,7 +71,7 @@ const UserContainer = () => {
         };
 
         getUsers();
-    }, [token, page, rolesFilter, filter]);
+    }, [token, page, rolesFilter, filter, createQueryString, router]);
 
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();

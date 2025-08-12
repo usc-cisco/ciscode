@@ -27,8 +27,8 @@ export async function runCCode(code: string, input: string): Promise<{ output: s
   try {
     await exec(`gcc ${codePath} -o ${binaryPath}`);
     await chmod(binaryPath, 0o755);
-  } catch (err: any) {
-    return { output: null, error: "Compilation failed: " + err.stderr };
+  } catch (err) {
+    return { output: null, error: "Compilation failed: " + (err as { stderr: string }).stderr };
   }
 
   return new Promise((resolve) => {

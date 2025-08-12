@@ -2,8 +2,7 @@
 
 import RoleEnum from "@/lib/types/enums/role.enum";
 import { jwtDecode } from "jwt-decode"
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { set } from "zod";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 export interface AuthContextType {
   loading: boolean;
@@ -34,8 +33,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  
-  const setAuth = (token: string) => {
+
+  const setAuth = useCallback((token: string) => {
     const decodedToken = jwtDecode<{ userId: number, role: RoleEnum, exp: number }>(token);
 
     if (Date.now() > decodedToken.exp * 1000) {
@@ -56,8 +55,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsAuthenticated(true);
     setIsAdmin(decodedToken.role !== RoleEnum.USER);
     setIsSuperAdmin(decodedToken.role === RoleEnum.SUPER_ADMIN);
-  }
-  
+  }, []);
+
   const clearAuth = () => {
     localStorage.removeItem("__jwt_token__");
 
@@ -83,7 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     setLoading(false);
-  }, []);
+  }, [setAuth]);
   
   const value = useMemo(() => ({
     loading,
@@ -94,7 +93,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isSuperAdmin,
     setAuth,
     clearAuth,
-  }), [loading, token, userInfo, isAuthenticated, isAdmin]);
+  }), [loading, token, userInfo, isAuthenticated, isAdmin, isSuperAdmin, setAuth]);
   
   return (
     <AuthContext.Provider value={value}>

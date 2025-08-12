@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import DifficultyEnum, { getDifficultyColor } from '@/lib/types/enums/difficulty.enum';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import MarkdownEditor from '@/components/shared/markdown-editor';
 import { Trash2Icon } from 'lucide-react';
 
 interface AdminProblemBarProps {

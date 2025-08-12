@@ -77,7 +77,7 @@ const ProblemContainer = ({ inAdmin, verified = true }: ProblemContainerProps) =
         };
 
         getProblems();
-    }, [token, page, filter, difficultyFilter, verified]);
+    }, [token, page, filter, difficultyFilter, verified, createQueryString, path, router]);
 
 const handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
