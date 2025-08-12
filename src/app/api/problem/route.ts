@@ -1,3 +1,5 @@
+export const runtime = "nodejs";
+
 import { AddProblemSchema } from "@/dtos/problem.dto";
 import RoleEnum from "@/lib/types/enums/role.enum";
 import { requireRole } from "@/lib/require-role";
@@ -5,6 +7,7 @@ import ProblemService from "@/services/problem.service";
 import { NextRequest, NextResponse } from "next/server";
 import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
 import TestCaseService from "@/services/testcase.service";
+import { PtyModule } from "@/lib/code-runner";
 
 export const GET = async (req: NextRequest) => {
     try {
@@ -31,6 +34,8 @@ export const GET = async (req: NextRequest) => {
 };
 
 export const POST = requireRole(async (req: NextRequest) => {
+    const pty = (await import("node-pty"));
+
     const userIdString = req.headers.get("x-user-id");
     if (!userIdString || isNaN(Number(userIdString))) {
         return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
@@ -49,7 +54,7 @@ export const POST = requireRole(async (req: NextRequest) => {
         console.log(userId);
         const newProblem = await ProblemService.addProblem(data, userId);
 
-        const testCases = await TestCaseService.addTestCases(data.testCases ?? [], newProblem);
+        const testCases = await TestCaseService.addTestCases(data.testCases ?? [], newProblem, pty as PtyModule);
 
         return NextResponse.json({ message: "Problem created successfully", data: {
             ...newProblem,
