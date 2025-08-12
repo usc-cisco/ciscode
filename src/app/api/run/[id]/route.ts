@@ -6,8 +6,8 @@ import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enu
 import SubmissionService from "@/services/submission.service";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 
-export async function POST(req: NextRequest, context: { params: { id: string } }) {
-    const { id } = context.params;
+export async function POST(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+    const { id } = await context.params;
     if (!id || isNaN(Number(id))) {
         return NextResponse.json({ error: "Invalid problem ID" }, { status: 400 });
     }

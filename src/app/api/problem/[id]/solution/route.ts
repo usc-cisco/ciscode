@@ -5,8 +5,8 @@ import ProblemService from "@/services/problem.service";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = requireRole<
-  [{ params: { id: string } }]
->(async (req: NextRequest, context: { params: { id: string } }) => {
+  [{ params: Promise<{ id: string }> }]
+>(async (req: NextRequest, context: { params: Promise<{ id: string }> }) => {
     const { id } = await context.params;
     if (!id || isNaN(Number(id))) {
         return NextResponse.json({ error: "Invalid problem ID" }, { status: 400 });
