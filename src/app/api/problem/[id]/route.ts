@@ -60,7 +60,9 @@ export async function GET(req: NextRequest, context: { params: { id: string } })
     }
 }
 
-export const PUT = requireRole(async (req: NextRequest, context: { params: { id: string } }) => {
+export const PUT = requireRole<
+  [{ params: { id: string } }]
+>(async (req: NextRequest, context: { params: { id: string } }) => {
     const { id } = context.params;
     const userIdString = req.headers.get("x-user-id");
     if (!userIdString || isNaN(Number(userIdString))) {
