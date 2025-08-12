@@ -8,7 +8,7 @@ import TestCaseSubmissionService from "@/services/testcase-submission.service";
 import TestCaseService from "@/services/testcase.service";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest, context: { params: { id: string } }) {
+export async function POST(req: NextRequest, context: { params: Promise<{ id: string }> }) {
     const { id } = await context.params;
     if (!id || isNaN(Number(id))) {
         return NextResponse.json({ error: "Invalid problem ID" }, { status: 400 });

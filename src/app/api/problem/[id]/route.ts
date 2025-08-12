@@ -10,7 +10,7 @@ import TestCaseSubmissionService from "@/services/testcase-submission.service";
 import TestCaseService from "@/services/testcase.service";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest, context: { params: { id: string } }) {
+export async function GET(req: NextRequest, context: { params: Promise<{ id: string }> }) {
     const { id } = await context.params;
     if (!id || isNaN(Number(id))) {
         return NextResponse.json({ error: "Invalid problem ID" }, { status: 400 });
@@ -61,9 +61,9 @@ export async function GET(req: NextRequest, context: { params: { id: string } })
 }
 
 export const PUT = requireRole<
-  [{ params: { id: string } }]
->(async (req: NextRequest, context: { params: { id: string } }) => {
-    const { id } = context.params;
+  [{ params: Promise<{ id: string }> }]
+>(async (req: NextRequest, context: { params: Promise<{ id: string }> }) => {
+    const { id } = await context.params;
     const userIdString = req.headers.get("x-user-id");
     if (!userIdString || isNaN(Number(userIdString))) {
         return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
@@ -115,8 +115,10 @@ export const PUT = requireRole<
     }
 }, [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN]);
 
-export const DELETE = requireRole(async (_: NextRequest, context: { params: { id: string } }) => {
-    const { id } = context.params;
+export const DELETE = requireRole<
+  [{ params: Promise<{ id: string }> }] 
+>(async (_: NextRequest, context: { params: Promise<{ id: string }> }) => {
+    const { id } = await context.params;
 
     try {
         const problem = await ProblemService.getProblemById(Number(id));
