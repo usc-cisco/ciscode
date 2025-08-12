@@ -1,5 +1,4 @@
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
-import { TestCaseSubmission } from "@/models/testcase-submission.model";
 import z from "zod";
 import { TestCaseSubmissionResponse } from "./testcase-submission.dto";
 

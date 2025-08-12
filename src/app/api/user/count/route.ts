@@ -1,8 +1,8 @@
 
 import UserService from "@/services/user.service";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export const GET = async (_: NextRequest) => {
+export const GET = async () => {
     try {
         const count = await UserService.getTotalCount();
         const lastMonthCount = await UserService.getLastMonthCount();

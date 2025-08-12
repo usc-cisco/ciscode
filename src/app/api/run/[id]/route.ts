@@ -1,5 +1,5 @@
 import { runCCode } from "@/lib/code-runner";
-import { CheckCodeResponseSchema, RunCodeSchema } from "@/dtos/code.dto";
+import { CheckCodeResponseSchema } from "@/dtos/code.dto";
 import { NextRequest, NextResponse } from "next/server";
 import TestCaseService from "@/services/testcase.service";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";

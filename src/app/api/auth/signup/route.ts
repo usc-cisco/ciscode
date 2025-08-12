@@ -1,4 +1,3 @@
-import { RunCodeSchema } from "@/dtos/code.dto";
 import { RegisterRequestSchema } from "@/dtos/user.dto";
 import RoleEnum from "@/lib/types/enums/role.enum";
 import UserService from "@/services/user.service";
@@ -21,7 +20,7 @@ export async function POST(request: Request) {
         }
 
         return NextResponse.json({ user }, { status: 201 });
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    } catch (error) {
+        return NextResponse.json({ error: (error as { message: string }).message }, { status: 500 });
     }
 }

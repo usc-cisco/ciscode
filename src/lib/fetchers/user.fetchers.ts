@@ -2,7 +2,7 @@ import { LoginRequestSchemaType, LoginResponseSchemaType, RegisterRequestSchemaT
 import instance from "../axios";
 import ApiResponse from "../types/interface/api-response.interface";
 import AdminCount from "../types/interface/admin-count.interface";
-import { toastr } from "../toastr";
+import axios from "axios";
 
 export const loginUser = async (payload: LoginRequestSchemaType) => {
     try {
@@ -11,9 +11,14 @@ export const loginUser = async (payload: LoginRequestSchemaType) => {
         const { data } = response.data;
 
         return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+            console.error("Error logging in user:", error);
+            throw new Error(error.response?.data?.error || "Failed to login user");
+        }
+
         console.error("Error logging in user:", error);
-        throw new Error(error.response?.data?.error || "Failed to login user");
+        throw error;
     }
 }
 
@@ -21,15 +26,19 @@ export const registerUser = async (data: RegisterRequestSchemaType) => {
     try {
         const response = await instance.post("/auth/signup", data);
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+            throw new Error(error.response?.data?.error || "Failed to register user");
+        }
+
         console.error("Error registering user:", error);
-        throw new Error(error.response?.data?.error || "Failed to register user");
+        throw error;
     }
 }
 
 export const fetchUsers = async (token: string, page: number = 1, limit: number = 10, search: string = "", role: string | null = null, verified: boolean = true) => {
     try {
-        const params: any = { offset: page - 1, limit, search, verified };
+        const params: { offset: number; limit: number; search: string; verified: boolean; role?: string | null } = { offset: page - 1, limit, search, verified };
         if (role) {
             params.role = role;
         }
@@ -41,9 +50,13 @@ export const fetchUsers = async (token: string, page: number = 1, limit: number 
         const response = await instance.get("/user", { params });
 
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+            throw new Error(error.response?.data?.error || "Failed to fetch users");
+        }
+
         console.error("Error fetching users:", error);
-        throw new Error(error.response?.data?.error || "Failed to fetch users");
+        throw error;
     }
 };
 
@@ -55,9 +68,13 @@ export const addUserAsAdmin = async (data: RegisterRequestSchemaType, token: str
             }
         });
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+            throw new Error(error.response?.data?.error || "Failed to register user");
+        }
+
         console.error("Error registering user:", error);
-        throw new Error(error.response?.data?.error || "Failed to register user");
+        throw error;
     }
 }
 
@@ -70,8 +87,12 @@ export const fetchUserCount = async (token: string): Promise<ApiResponse<AdminCo
         const response = await instance.get("/user/count");
 
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+            throw new Error(error.response?.data?.error || "Failed to fetch user count");
+        }
+
         console.error("Error fetching user count:", error);
-        throw new Error(error.response?.data?.error || "Failed to fetch user count");
+        throw error;
     }
 }

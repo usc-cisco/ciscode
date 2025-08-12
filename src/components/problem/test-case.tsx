@@ -1,13 +1,11 @@
-import { CheckCodeResponseType, RunCodeResponseType } from '@/dtos/code.dto';
+import { CheckCodeResponseType } from '@/dtos/code.dto';
 import { TestCaseResponseType } from '@/dtos/testcase.dto';
 import TestCaseSubmissionStatusEnum from '@/lib/types/enums/submissionstatus.enum';
 import { cn } from '@/lib/utils';
-import { stat } from 'fs';
-import { ChevronDown, Circle, CircleCheck, CircleX, Play } from 'lucide-react';
+import { Circle, CircleCheck, CircleX } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { FaPlay } from "react-icons/fa";
 import { ClipLoader } from 'react-spinners';
-import { set } from 'zod';
 
 
 interface TestCaseProps {
@@ -76,7 +74,7 @@ const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange,
             onChange('actualOutput', "Loading...");
         }
 
-    }, [submitted]);
+    }, [submitted, onChange]);
 
   return (
     <div className={`w-full flex flex-col justify-center rounded-xl shadow-md bg-vscode dark:bg-vscode-dark transition-all duration-200 relative`}>

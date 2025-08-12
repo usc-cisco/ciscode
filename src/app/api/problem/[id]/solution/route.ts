@@ -1,12 +1,7 @@
 import { sequelize } from "@/db/sequelize";
-import { ProblemSchemaResponseWithTestCases } from "@/dtos/problem.dto";
-import { TestCaseSubmissionResponseType } from "@/dtos/testcase-submission.dto";
 import { requireRole } from "@/lib/require-role";
 import RoleEnum from "@/lib/types/enums/role.enum";
-import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
 import ProblemService from "@/services/problem.service";
-import SubmissionService from "@/services/submission.service";
-import TestCaseSubmissionService from "@/services/testcase-submission.service";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = requireRole(async (req: NextRequest, context: { params: { id: string } }) => {
@@ -31,8 +26,8 @@ export const GET = requireRole(async (req: NextRequest, context: { params: { id:
             message: "Problem fetched successfully", 
             data: problem,
         }, { status: 200 });
-    } catch (error: any) {
+    } catch (error) {
         console.error("Error fetching problem:", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: (error as { message: string }).message }, { status: 500 });
     }
 }, [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN]);

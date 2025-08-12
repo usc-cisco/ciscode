@@ -102,9 +102,10 @@ const AddProblemPage = () => {
             setAllToPending();
         }
 
-        isSolution
-            ? handleProblemChange('solutionCode', value ?? "")
-            : handleProblemChange('defaultCode', value ?? "");
+        if (isSolution)
+            handleProblemChange('solutionCode', value ?? "")
+        else
+            handleProblemChange('defaultCode', value ?? "");
     };
 
     const handleChangeIsSolution = (value: boolean) => () => {

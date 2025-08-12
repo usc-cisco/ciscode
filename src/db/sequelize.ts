@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 import { SequelizeOptions } from "sequelize-typescript";
 import env from "@/lib/env";
+import * as mysql2 from "mysql2";
 
 const options: SequelizeOptions = {
   host: env.DB_HOST,
@@ -11,6 +12,6 @@ const options: SequelizeOptions = {
   dialect: "mysql",
 }
 
-options.dialectModule = require("mysql2");
+options.dialectModule = mysql2;
 
 export const sequelize = new Sequelize(options);

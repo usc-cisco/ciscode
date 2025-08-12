@@ -1,4 +1,4 @@
-import { CheckCodeResponseType, RunCodeResponseType } from "@/dtos/code.dto";
+import { CheckCodeResponseType } from "@/dtos/code.dto";
 import { TestCaseSubmissionResponseType } from "@/dtos/testcase-submission.dto";
 import { TestCaseSubmission } from "@/models/testcase-submission.model";
 import { Model } from "sequelize";

@@ -15,7 +15,7 @@ import { submitCode } from "@/lib/fetchers/submission.fetchers";
 import { toastr } from "@/lib/toastr";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
-import { useParams, useRouter } from "next/navigation";
+import { redirect, useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Problem() {
@@ -27,8 +27,7 @@ export default function Problem() {
 
   const params = useParams();
   if (!params.id) {
-    router.push("/home");
-    return null;
+    redirect("/home");
   }
 
   const [problem, setProblem] = useState<ProblemSchemaResponseType | null>(null);
@@ -39,12 +38,6 @@ export default function Problem() {
   const handleCodeChange = (value: string | undefined) => {
     setCode(value || "");
   };
-
-  const handleRestoreDefaultCode = () => {
-    if (problem) {
-      setCode(problem.defaultCode || "");
-    }
-  }
 
   const handleEditTestCase = (index: number) => (field: string, value: string | boolean) => {
       setTestCases(prev => {
@@ -141,7 +134,7 @@ export default function Problem() {
     };
 
     fetchProblemData();
-  }, [token]);
+  }, [token, params.id, router]);
 
   if (loading) {
     return (

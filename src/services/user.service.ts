@@ -20,7 +20,9 @@ class UserService {
                     {
                         name: {
                             [Op.like]: `%${search}%`
-                        },
+                        }
+                    },
+                    {
                         username: {
                             [Op.like]: `%${search}%`
                         }

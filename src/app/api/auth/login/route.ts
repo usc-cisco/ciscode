@@ -23,8 +23,8 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ message: "Login successful", data: { token, role: user.role } }, { status: 200 });
     }
-    catch (error: any) {
+    catch (error) {
         console.error("Error during login:", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: (error as { message: string }).message }, { status: 500 });
     }
 }
