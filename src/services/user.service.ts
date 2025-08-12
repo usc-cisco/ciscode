@@ -56,6 +56,26 @@ class UserService {
             throw new Error("Passwords do not match");
         }
 
+        const existingUser = await User.findOne({ where: { username: data.username } });
+        if (existingUser) {
+            throw new Error("User already exists");
+        }
+
+        const hashedPassword = await bcrypt.hash(data.password, 10);
+        const user = await User.create({
+            ...data,
+            role: RoleEnum.USER,
+            password: hashedPassword,
+        });
+
+        return UserResponseSchema.parse(user);
+    }
+
+    static async updateUser(data: RegisterRequestSchemaType): Promise<UserResponseSchemaType> {
+        if (data.password !== data.confirmPassword) {
+            throw new Error("Passwords do not match");
+        }
+
         const existingUser = await User.findOne({ where: { username: data.username, password: null } });
         if (!existingUser) {
             throw new Error("Invalid Student ID");
