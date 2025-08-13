@@ -1,10 +1,11 @@
 import { AddProblemSchemaType, ProblemSchemaDisplayResponse, ProblemSchemaDisplayResponseType, ProblemSchemaResponse, ProblemSchemaResponseType, ProblemSchemaResponseWithTestCases, ProblemSchemaResponseWithTestCasesType } from "@/dtos/problem.dto";
-import { UserResponseSchema } from "@/dtos/user.dto";
+import { UserResponseSchema, UserResponseSchemaType } from "@/dtos/user.dto";
 import UserService from "./user.service";
 import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
-import { Op } from "sequelize";
+import { Model, Op } from "sequelize";
 import TestCaseService from "./testcase.service";
 import { Problem } from "@/models/problem.model";
+import SubmissionService from "./submission.service";
 
 class ProblemService {
     static async getProblemById(id: number, withHidden: boolean = false): Promise<ProblemSchemaResponseWithTestCasesType | null> {
@@ -44,15 +45,18 @@ class ProblemService {
                 ],
                 ...(difficulty && { difficulty })
             },
-        });
+        }) as (Model & ProblemSchemaResponseType)[];
 
         const parsedProblems = problems.map(async (problem) => {
-            const parsedProblem = ProblemSchemaResponse.parse(problem);
+            const user = await UserService.getUserById(problem.authorId) as Model & UserResponseSchemaType;
+            problem.author = user ? UserResponseSchema.parse(user).name : "Unknown";
 
-            const user = await UserService.getUserById(parsedProblem.authorId);
-            parsedProblem.author = user ? UserResponseSchema.parse(user).name : "Unknown";
+            if (user) {
+                const existingSubmission = await SubmissionService.getSubmissionByProblemIdAndUserId(problem.id, user.id);
+                problem.status = existingSubmission ? existingSubmission.status : undefined;
+            }
 
-            return ProblemSchemaDisplayResponse.parse(parsedProblem);
+            return ProblemSchemaDisplayResponse.parse(problem);
         });
 
         return Promise.all(parsedProblems);

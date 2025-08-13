@@ -6,6 +6,8 @@ import { Badge } from '@/components/ui/badge'
 import { ProblemSchemaDisplayResponseType } from '@/dtos/problem.dto'
 import { useRouter } from 'next/navigation';
 import { getDifficultyColor } from '@/lib/types/enums/difficulty.enum';
+import { Check, CheckIcon } from 'lucide-react';
+import SubmissionStatusEnum from '@/lib/types/enums/problemstatus.enum';
 
 interface ProblemTableProps {
   problems: ProblemSchemaDisplayResponseType[]
@@ -26,7 +28,12 @@ const ProblemTable = ({ problems, inAdmin = false, loading }: ProblemTableProps)
             <Table>
                 <TableHeader>
                 <TableRow>
+                    {inAdmin 
+                    ? 
                     <TableHead className="w-16">#</TableHead>
+                    :
+                    <TableHead className="w-3"></TableHead>
+                    }
                     <TableHead>Title</TableHead>
                     <TableHead className='w-40'>Author</TableHead>
                     <TableHead className='w-40'>Difficulty</TableHead>
@@ -40,7 +47,7 @@ const ProblemTable = ({ problems, inAdmin = false, loading }: ProblemTableProps)
                         ||
                         problems.map((problem, index) => (
                             <TableRow key={index} onClick={() => handleRowClick(problem.id)} className="cursor-pointer odd:bg-neutral-100 odd:dark:bg-neutral-800">
-                                <TableCell className="font-medium">{problem.id}</TableCell>
+                                <TableCell className="font-medium">{inAdmin ? problem.id : (problem.status === SubmissionStatusEnum.SOLVED && <CheckIcon className='text-green-500 size-4' />)}</TableCell>
                                 <TableCell className='truncate table-fixed flex-1'>
                                     <div className="font-medium">{problem.title}</div>
                                 </TableCell>

@@ -105,7 +105,8 @@ export default function Problem() {
             toastr.success("All test cases passed");
             break;
           case SubmissionStatusEnum.ATTEMPTED:
-            toastr.error("Some test cases failed");
+            const numberOfPassed = response.testCaseSubmissions.filter(testCase => testCase.status === TestCaseSubmissionStatusEnum.COMPLETED).length;
+            toastr.error(`${numberOfPassed === 0 ? "All test cases failed." : `Passed only ${numberOfPassed} out of ${testCases.length}`}`);
             break;
           default:
             console.log("Unknown status");
