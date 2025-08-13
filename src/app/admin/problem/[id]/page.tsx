@@ -13,7 +13,7 @@ import { deleteProblem, fetchProblemWithSolution, updateProblem } from '@/lib/fe
 import { toastr } from '@/lib/toastr'
 import DifficultyEnum from '@/lib/types/enums/difficulty.enum'
 import TestCaseSubmissionStatusEnum from '@/lib/types/enums/submissionstatus.enum'
-import { redirect, useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 const UpdateProblem = () => {
