@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from '@/contexts/auth.context';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react'
 
 interface ProtectedRouteProps {
@@ -12,6 +12,7 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requireAdmin, requireSuperAdmin }) => {
     const { loading, isAuthenticated, isAdmin, isSuperAdmin } = useAuth();
+    const router = useRouter();
 
     useEffect(() => {
         if (loading) {
@@ -21,19 +22,19 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requireAdmin,
 
         if (!isAuthenticated) {
             console.log('User not authenticated, redirecting to auth page');
-            redirect('/');
+            router.push('/');
         } 
 
         if (requireAdmin && !isAdmin) {
             console.log('User is not an admin, redirecting to home page');
-            redirect('/');
+            router.push('/');
         }
 
         if (requireSuperAdmin && !isSuperAdmin) {
             console.log('User is not a super admin, redirecting to home page');
-            redirect('/');
+            router.push('/');
         }
-    }, [loading, isAuthenticated, isAdmin, isSuperAdmin, requireAdmin, requireSuperAdmin]);
+    }, [loading, isAuthenticated, isAdmin, isSuperAdmin, requireAdmin, requireSuperAdmin, router]);
 
     return (
         <div className="min-h-[calc(100vh-4rem)]">

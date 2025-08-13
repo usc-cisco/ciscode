@@ -3,7 +3,7 @@
 import LoginForm from "@/components/landing/login-form";
 import SignupForm from "@/components/landing/signup-form";
 import { useAuth } from "@/contexts/auth.context";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -31,9 +31,9 @@ export default function Auth() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      redirect("/home");
+      router.push("/home");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, router]);
 
   return (
     <div className="h-[calc(100vh-4rem)] flex gap-4 items-center justify-evenly">

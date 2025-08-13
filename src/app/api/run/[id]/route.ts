@@ -1,4 +1,6 @@
-import { runCCode } from "@/lib/code-runner";
+export const runtime = "nodejs";
+
+import { PtyModule, runCCode } from "@/lib/code-runner";
 import { CheckCodeResponseSchema } from "@/dtos/code.dto";
 import { NextRequest, NextResponse } from "next/server";
 import TestCaseService from "@/services/testcase.service";
@@ -7,6 +9,8 @@ import SubmissionService from "@/services/submission.service";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 
 export async function POST(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+    const pty = (await import("node-pty"));
+
     const { id } = await context.params;
     if (!id || isNaN(Number(id))) {
         return NextResponse.json({ error: "Invalid problem ID" }, { status: 400 });
@@ -40,7 +44,7 @@ export async function POST(req: NextRequest, context: { params: Promise<{ id: st
         }, false);
 
 
-        const result = await runCCode(code, testCase.input || "");
+        const result = await runCCode(code, testCase.input || "", pty as PtyModule);
         
         let status = TestCaseSubmissionStatusEnum.COMPLETED;
 

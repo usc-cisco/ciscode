@@ -1,8 +1,13 @@
-import { runCCode } from "@/lib/code-runner";
+export const runtime = "nodejs";
+
+
+import { PtyModule, runCCode } from "@/lib/code-runner";
 import { RunCodeResponseSchema, RunCodeSchema } from "@/dtos/code.dto";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
+    const pty = (await import("node-pty"));
+
     try {
         const body = await req.json();
         const parsedData = await RunCodeSchema.safeParseAsync(body);
@@ -12,7 +17,7 @@ export async function POST(req: NextRequest) {
 
         const { code, input } = parsedData.data;
 
-        const result = await runCCode(code, input || "");
+        const result = await runCCode(code, input || "", pty as PtyModule);
 
         return NextResponse.json({
             message: "Code executed successfully",

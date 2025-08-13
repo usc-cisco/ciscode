@@ -6,18 +6,19 @@ import Brand from './brand'
 import { useAuth } from '@/contexts/auth.context';
 import { LogOutIcon } from 'lucide-react';
 import { Button } from '../ui/button';
-import { redirect } from 'next/navigation';
 import { Badge } from '../ui/badge';
 import RoleEnum from '@/lib/types/enums/role.enum';
+import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
   const { isAuthenticated, clearAuth, userInfo, isAdmin } = useAuth();
+  const router = useRouter();
 
   const { role } = userInfo;
 
   const handleLogout = () => {
     clearAuth();
-    redirect('/auth');
+    router.push('/auth');
   }
 
   return (
@@ -26,7 +27,7 @@ const Navbar = () => {
       <div className='flex items-center gap-4'>
         {
           isAuthenticated && role !== null && (
-            <Badge onClick={isAdmin ? () => redirect('/admin') : () => {}} variant={'default'} className={`text-xs bg-primary-foreground text-primary rounded-xl ${isAdmin ? 'cursor-pointer' : 'pointer-events-none'}`}>
+            <Badge onClick={isAdmin ? () => router.push('/admin') : () => {}} variant={'default'} className={`text-xs bg-primary-foreground text-primary rounded-xl ${isAdmin ? 'cursor-pointer' : 'pointer-events-none'}`}>
               {
                 role === RoleEnum.USER ?
                 "STUDENT"
