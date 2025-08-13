@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { ProblemSchemaDisplayResponseType } from '@/dtos/problem.dto'
 import { useRouter } from 'next/navigation';
 import { getDifficultyColor } from '@/lib/types/enums/difficulty.enum';
-import { Check, CheckIcon } from 'lucide-react';
+import { CheckIcon } from 'lucide-react';
 import SubmissionStatusEnum from '@/lib/types/enums/problemstatus.enum';
 
 interface ProblemTableProps {

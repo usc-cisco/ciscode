@@ -35,7 +35,7 @@ class UserService {
         return users;
     }
 
-    static async getTotalCount(offset: number = 0, limit: number = 10, search: string = "", role: RoleEnum | null = null): Promise<number> {
+    static async getTotalCount(search: string = "", role: RoleEnum | null = null): Promise<number> {
         const count = await User.count({
             where: {
                 [Op.or]: [
