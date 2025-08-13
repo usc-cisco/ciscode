@@ -33,7 +33,7 @@ export default function Auth() {
     if (isAuthenticated) {
       router.push("/home");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, router]);
 
   return (
     <div className="h-[calc(100vh-4rem)] flex gap-4 items-center justify-evenly">
