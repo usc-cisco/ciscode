@@ -1,17 +1,16 @@
 name: Deployment
 
 on: 
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: "0 8 * * *"
   workflow_dispatch:
 
 jobs:
   build:
-    name: Deploy Ciscode
+    name: Clean up tmp
     runs-on: ubuntu-latest
     steps:
-      - name: Build & Deploy
+      - name: Clean up tmp .c files
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{secrets.DCISM_HOST}}
@@ -20,8 +19,4 @@ jobs:
           port: ${{secrets.DCISM_PORT}}
           script: |
             cd ~/ciscode.dcism.org
-            git reset --hard && git clean -fd && git pull origin main
-            npm i
-            pm2 stop ciscode || true
-            npm run build
-            pm2 reload ciscode
+            rm -rf tmp/
