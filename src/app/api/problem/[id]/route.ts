@@ -1,6 +1,9 @@
+export const runtime = "nodejs";
+
 import { sequelize } from "@/db/sequelize";
 import { AddProblemSchema, ProblemSchemaResponseType, ProblemSchemaResponseWithTestCases } from "@/dtos/problem.dto";
 import { TestCaseSubmissionResponseType } from "@/dtos/testcase-submission.dto";
+import { PtyModule } from "@/lib/code-runner";
 import { requireRole } from "@/lib/require-role";
 import RoleEnum from "@/lib/types/enums/role.enum";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
@@ -63,6 +66,8 @@ export async function GET(req: NextRequest, context: { params: Promise<{ id: str
 export const PUT = requireRole<
   [{ params: Promise<{ id: string }> }]
 >(async (req: NextRequest, context: { params: Promise<{ id: string }> }) => {
+    const pty = (await import("node-pty"));
+
     const { id } = await context.params;
     const userIdString = req.headers.get("x-user-id");
     if (!userIdString || isNaN(Number(userIdString))) {
@@ -90,7 +95,7 @@ export const PUT = requireRole<
             const deletedTestCases = problemTestCases.filter(testCase => !parsedData.testCases!.find(tc => tc.id === testCase.id));
 
             // Add new test cases
-            await TestCaseService.addTestCases(newTestCases, problem as ProblemSchemaResponseType);
+            await TestCaseService.addTestCases(newTestCases, problem as ProblemSchemaResponseType, pty as PtyModule);
 
             // Update existing test cases
             await Promise.all(updatedTestCases.map(testCase => {

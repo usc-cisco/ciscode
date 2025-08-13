@@ -1,6 +1,6 @@
 import { ProblemSchemaResponseType } from "@/dtos/problem.dto";
 import { AddTestCaseSchemaType, TestCaseResponse, TestCaseResponseType } from "@/dtos/testcase.dto";
-import { runCCode } from "@/lib/code-runner";
+import { PtyModule, runCCode } from "@/lib/code-runner";
 import { TestCase } from "@/models/testcase.model";
 
 class TestCaseService {
@@ -12,10 +12,10 @@ class TestCaseService {
         return newTestCaseResponse;
     }
 
-    static async addTestCases(testCases: AddTestCaseSchemaType[], problem: ProblemSchemaResponseType): Promise<TestCaseResponseType[]> {
+    static async addTestCases(testCases: AddTestCaseSchemaType[], problem: ProblemSchemaResponseType, pty: PtyModule): Promise<TestCaseResponseType[]> {
         try {
             const updatedTestCases = await Promise.all(testCases.map(async testCase => {
-                const { output, error } = await runCCode(problem.solutionCode ?? "", testCase.input || "");
+                const { output, error } = await runCCode(problem.solutionCode ?? "", testCase.input || "", pty);
 
                 if (error) {
                     throw new Error(error);

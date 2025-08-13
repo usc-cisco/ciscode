@@ -1,12 +1,15 @@
 import { chmod, unlink, writeFile } from "fs/promises";
 import { promisify } from "util";
 import { exec as rawExec } from "child_process";
-import pty from "node-pty";
 import { existsSync, mkdirSync } from "fs";
 
 const exec = promisify(rawExec);
 
-export async function runCCode(code: string, input: string): Promise<{ output: string | null; error: string | null }> {
+export async function runCCode(
+  code: string, 
+  input: string, 
+  pty: PtyModule
+): Promise<{ output: string | null; error: string | null }> {
   const tmpDir = "./tmp";
   if (!existsSync(tmpDir)) {
     mkdirSync(tmpDir);
@@ -87,3 +90,22 @@ export async function runCCode(code: string, input: string): Promise<{ output: s
     });
   });
 }
+
+export type PtyModule = {
+  spawn: (
+    file: string,
+    args?: string[],
+    options?: {
+      name?: string;
+      cols?: number;
+      rows?: number;
+      cwd?: string;
+      env?: NodeJS.ProcessEnv;
+    }
+  ) => {
+    write(data: string): void;
+    onData(cb: (data: string) => void): void;
+    onExit(cb: (event: { exitCode: number }) => void): void;
+    kill(signal?: string | number): void;
+  };
+};
