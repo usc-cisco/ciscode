@@ -23,6 +23,7 @@ export const ProblemSchemaResponse = z.object({
     answerCode: z.string().optional().nullable().default(null),
     authorId: z.number(),
     author: z.string().min(2).max(50).optional(),
+    status: z.enum(SubmissionStatusEnum).optional(),
 });
 
 export const ProblemSchemaResponseWithTestCases = ProblemSchemaResponse.extend({
