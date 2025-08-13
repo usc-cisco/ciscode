@@ -8,7 +8,7 @@ import { fetchProblemCount } from "@/lib/fetchers/problem.fetchers";
 import { fetchUserCount } from "@/lib/fetchers/user.fetchers";
 import AdminCount from "@/lib/types/interface/admin-count.interface";
 import { Code2, CodeIcon, User } from "lucide-react";
-import { redirect, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 enum AdminTableEnum {
@@ -20,6 +20,7 @@ enum AdminTableEnum {
 export default function Admin() {
     const { token } = useAuth();
     const params = useSearchParams();
+    const router = useRouter();
 
     const [currentAdminTable, setCurrentAdminTable] = useState<AdminTableEnum>(params.get("table") as AdminTableEnum || AdminTableEnum.VERIFIED_PROBLEMS);
     const [verifiedProblemCounts, setVerifiedProblemCounts] = useState<AdminCount>({
@@ -37,7 +38,7 @@ export default function Admin() {
 
     const handleTableChange = (table: AdminTableEnum) => () => {
         if (currentAdminTable === table) return; // Prevent unnecessary state updates
-        redirect("/admin?table=" + table); // Clear search params
+        router.push("/admin?table=" + table); // Clear search params
     };
 
     useEffect(() => {

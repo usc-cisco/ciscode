@@ -22,7 +22,7 @@ const UpdateProblem = () => {
 
     const params = useParams();
     if (!params.id) {
-        redirect("/admin");
+        router.push("/admin");
     }
 
     const [loading, setLoading] = useState<boolean>(true);

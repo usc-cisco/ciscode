@@ -15,7 +15,7 @@ import { submitCode } from "@/lib/fetchers/submission.fetchers";
 import { toastr } from "@/lib/toastr";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
-import { redirect, useParams, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Problem() {
@@ -27,7 +27,7 @@ export default function Problem() {
 
   const params = useParams();
   if (!params.id) {
-    redirect("/home");
+    router.push("/home");
   }
 
   const [problem, setProblem] = useState<ProblemSchemaResponseType | null>(null);
