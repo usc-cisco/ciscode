@@ -76,6 +76,13 @@ export default function Problem() {
     }
 
     setSubmitted(true);
+    setTestCases(prev => {
+      return prev.map(testCase => ({
+        ...testCase,
+        status: TestCaseSubmissionStatusEnum.PENDING,
+        actualOutput: "Loading..."
+      }));
+    });
 
     try {
       const response = await submitCode(code, Number(params.id), token);

@@ -68,13 +68,7 @@ const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange,
 
     useEffect(() => {
         setChecking(submitted);
-
-        if (submitted) {
-            onChange('status', TestCaseSubmissionStatusEnum.PENDING);
-            onChange('actualOutput', "Loading...");
-        }
-
-    }, [submitted, onChange]);
+    }, [submitted]);
 
   return (
     <div className={`w-full flex flex-col justify-center rounded-xl shadow-md bg-vscode dark:bg-vscode-dark transition-all duration-200 relative`}>
