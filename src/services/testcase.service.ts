@@ -2,6 +2,7 @@ import { ProblemSchemaResponseType } from "@/dtos/problem.dto";
 import { AddTestCaseSchemaType, TestCaseResponse, TestCaseResponseType } from "@/dtos/testcase.dto";
 import { PtyModule, runCCode } from "@/lib/code-runner";
 import { TestCase } from "@/models/testcase.model";
+import { Model } from "sequelize";
 
 class TestCaseService {
     static async addTestCase(testCase: AddTestCaseSchemaType): Promise<TestCaseResponseType>  {
@@ -28,9 +29,9 @@ class TestCaseService {
                 };
             }));
 
-            const newTestCases = await TestCase.bulkCreate(updatedTestCases);
+            const newTestCases = await TestCase.bulkCreate(updatedTestCases) as (Model & TestCaseResponseType)[];
 
-            return newTestCases.map(testCase => TestCaseResponse.parse(testCase));
+            return newTestCases;
         } catch (error) {
             console.error("Error adding test cases:", error);
             throw new Error("Failed to add test cases");

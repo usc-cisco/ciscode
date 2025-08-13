@@ -33,7 +33,7 @@ export default function RootLayout({
               <main className="flex-1">
                 {children}
               </main>
-              <Toaster richColors={true} />
+              <Toaster richColors={true} closeButton position="bottom-right"/>
               <Footer />
             </ThemeProvider>
          </AuthProvider>
