@@ -12,7 +12,7 @@ class UserService {
 
     static async getUsers(offset: number = 0, limit: number = 10, search: string = "", role: RoleEnum | null = null): Promise<UserResponseSchemaType[]> {
         const users = await User.findAll({
-            order: [["id", "ASC"]],
+            order: [["username", "ASC"]],
             offset: (offset) * limit,
             limit,
             where: {
