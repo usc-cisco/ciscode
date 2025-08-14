@@ -43,6 +43,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --height-cscreen: calc(100vh - 4rem)
 }
 
 :root {
@@ -147,6 +148,10 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  /* Customizes screen */
+  min-h-csreen {
+    @apply min-h-[calc(100vh-4rem)]
   }
 }
 

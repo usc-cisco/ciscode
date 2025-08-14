@@ -81,6 +81,8 @@ const AddProblemPage = () => {
             return;
         }
 
+        setCanSubmit(false);
+
         try {
             await addProblem({
                 ...problem,
@@ -93,6 +95,9 @@ const AddProblemPage = () => {
         } catch (error) {
             toastr.error("Error saving problem");
             console.error("Error saving problem:", error);
+        }
+        finally {
+            setCanSubmit(true);
         }
     }
 

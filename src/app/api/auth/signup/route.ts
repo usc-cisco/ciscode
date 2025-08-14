@@ -1,11 +1,11 @@
 import { RegisterRequestSchema } from "@/dtos/user.dto";
 import RoleEnum from "@/lib/types/enums/role.enum";
 import UserService from "@/services/user.service";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
     try {
-        const body = await request.json();
+        const body = await req.json();
         const parsedData = await RegisterRequestSchema.safeParseAsync(body);
         if (!parsedData.success) {
             return NextResponse.json({ error: parsedData.error }, { status: 400 });

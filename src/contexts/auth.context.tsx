@@ -1,5 +1,6 @@
 "use client";
 
+import { UserResponseSchemaType } from "@/dtos/user.dto";
 import RoleEnum from "@/lib/types/enums/role.enum";
 import { jwtDecode } from "jwt-decode"
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
@@ -7,10 +8,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 export interface AuthContextType {
   loading: boolean;
   token: string | null;
-  userInfo: {
-    id: number | null;
-    role: RoleEnum | null;
-  }
+  userInfo: UserResponseSchemaType
   isAuthenticated: boolean;
   isAdmin: boolean;
   isSuperAdmin: boolean;
@@ -23,19 +21,18 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState<string | null>(null);
-  const [userInfo, setUserInfo] = useState<{
-    id: number | null;
-    role: RoleEnum | null;
-  }>({
-    id: null,
-    role: null,
+  const [userInfo, setUserInfo] = useState<UserResponseSchemaType>({
+    id: -1,
+    name: '',
+    username: '',
+    role: RoleEnum.USER,
   });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
   const setAuth = useCallback((token: string) => {
-    const decodedToken = jwtDecode<{ userId: number, role: RoleEnum, exp: number }>(token);
+    const decodedToken = jwtDecode<UserResponseSchemaType & { exp: number }>(token);
 
     if (Date.now() > decodedToken.exp * 1000) {
       console.log("Token expired, clearing auth");
@@ -43,10 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     
-    setUserInfo({
-      id: decodedToken.userId,
-      role: decodedToken.role,
-    });
+    setUserInfo(decodedToken);
 
     console.log(decodedToken);
     
@@ -62,8 +56,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     setToken(null);
     setUserInfo({
-      id: null,
-      role: null,
+      id: -1,
+      name: '',
+      username: '',
+      role: RoleEnum.USER,
     });
     setIsAuthenticated(false);
     setIsAdmin(false);
