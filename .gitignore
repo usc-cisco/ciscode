@@ -44,3 +44,5 @@ next-env.d.ts
 /src/generated/prisma
 
 /tmp
+
+.htaccess
