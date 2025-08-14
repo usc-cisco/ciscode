@@ -9,7 +9,7 @@ import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import RoleEnum from '@/lib/types/enums/role.enum';
 import { useRouter } from 'next/navigation';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem } from '../ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuLabel } from '../ui/dropdown-menu';
 
 const Navbar = () => {
   const { isAuthenticated, clearAuth, userInfo, isAdmin } = useAuth();
@@ -19,7 +19,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     clearAuth();
-    router.push('/auth');
+    router.push('/');
   }
 
   return (
@@ -40,10 +40,6 @@ const Navbar = () => {
         }
         <ThemeToggle />
         {isAuthenticated && (
-          // <Button onClick={handleLogout} size="icon" className="bg-primary hover:bg-primary hover:brightness-80 ring-0 hover:ring-0 shadow-none text-primary-foreground hover:text-primary-foreground cursor-pointer">
-          //   <LogOutIcon className='size-4'/>
-          // </Button>
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="icon" className="bg-primary hover:bg-primary hover:brightness-80 ring-0 hover:ring-0 shadow-none text-primary-foreground hover:text-primary-foreground cursor-pointer">
@@ -51,6 +47,10 @@ const Navbar = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className='bg-vscode-light dark:bg-vscode-dark text-sm' align="end">
+              <DropdownMenuLabel className='text-xs text-neutral-400 dark:text-neutral-600'>
+                {userInfo.name}
+              </DropdownMenuLabel>
+              <hr className='mb-1'/>
               <DropdownMenuItem onClick={() => router.push('/profile')}>
                 Profile
               </DropdownMenuItem>

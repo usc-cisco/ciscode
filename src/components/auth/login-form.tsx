@@ -13,7 +13,6 @@ type LoginFormInputs = {
 };
 
 interface LoginFormProps {
-    onSetSignup: () => void;
     handleSuccess: () => void;
 }
 
