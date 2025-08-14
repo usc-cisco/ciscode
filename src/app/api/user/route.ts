@@ -13,7 +13,7 @@ export const GET = requireRole(async (req: NextRequest) => {
         const role = searchParams.get("role") || null;
 
         const users = await UserService.getUsers(offset, limit, search, role ? role as RoleEnum : null);
-        const totalCount = await UserService.getTotalCount();
+        const totalCount = await UserService.getTotalCount(search, role ? role as RoleEnum : null);
 
         return NextResponse.json({ data: {
             users: users,
