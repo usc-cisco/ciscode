@@ -15,7 +15,7 @@ export default function Footer() {
         <span>
           © {new Date().getFullYear()}{" "}
           <a
-            href="/"
+            href="https://github.com/usc-cisco/ciscode/"
             className="rounded-md underline ring-white focus:outline-none focus:ring-1 focus:ring-opacity-75"
             target="_blank"
             rel="noopener noreferrer"

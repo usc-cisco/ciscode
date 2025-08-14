@@ -1,0 +1,22 @@
+name: Deployment
+
+on: 
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Clean up tmp
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clean up tmp .c files
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{secrets.DCISM_HOST}}
+          username: ${{secrets.DCISM_USERNAME}}
+          password: ${{secrets.DCISM_PASSWORD}}
+          port: ${{secrets.DCISM_PORT}}
+          script: |
+            cd ~/ciscode.dcism.org
+            rm -rf tmp/
