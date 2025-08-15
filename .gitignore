@@ -46,3 +46,5 @@ next-env.d.ts
 /tmp
 
 .htaccess
+
+src/db/data/students.txt
