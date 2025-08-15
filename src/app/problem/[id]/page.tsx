@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/app/loading";
 import CodeEditor from "@/components/problem/code-editor";
 import ProblemBar from "@/components/problem/problem-bar";
 import TestCaseBar from "@/components/problem/test-case-bar";
@@ -172,9 +173,7 @@ export default function Problem() {
   if (loading) {
     return (
       <ProtectedRoute>
-        <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-          <div className="text-lg text-gray-500">Loading problem...</div>
-        </div>
+        <Loading />
       </ProtectedRoute>
     );
   }

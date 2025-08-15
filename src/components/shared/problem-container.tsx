@@ -161,7 +161,7 @@ const ProblemContainer = ({
         {inAdmin && verified && (
           <Button
             type="button"
-            className="cursor-pointer w-full md:w-32"
+            className="cursor-pointer flex-1 md:flex-0 md:w-32"
             onClick={() => router.push("/admin/problem/add")}
           >
             Add Problem

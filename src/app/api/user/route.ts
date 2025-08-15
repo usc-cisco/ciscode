@@ -52,6 +52,8 @@ export const GET = requireRole(
 export const POST = requireRole(
   async (req: NextRequest) => {
     try {
+      const role = req.headers.get("x-user-role") as RoleEnum;
+
       const body = await req.json();
       const parsedData = await RegisterRequestSchema.safeParseAsync(body);
       if (!parsedData.success) {
@@ -62,6 +64,16 @@ export const POST = requireRole(
         return NextResponse.json(
           { error: "Cannot register as super admin" },
           { status: 400 },
+        );
+      }
+
+      if (
+        parsedData.data.role === RoleEnum.ADMIN &&
+        role !== RoleEnum.SUPER_ADMIN
+      ) {
+        return NextResponse.json(
+          { error: "Only super admin can register admin users" },
+          { status: 403 },
         );
       }
 

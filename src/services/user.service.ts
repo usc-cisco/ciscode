@@ -1,6 +1,7 @@
 import {
   LoginRequestSchemaType,
   RegisterRequestSchemaType,
+  UpdateUserSchemaType,
   UserResponseSchema,
   UserResponseSchemaType,
   UserResponseSchemaWithPassword,
@@ -101,28 +102,45 @@ class UserService {
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const user = await User.create({
       ...data,
-      role: RoleEnum.USER,
       password: hashedPassword,
     });
 
     return UserResponseSchema.parse(user);
   }
 
-  static async updateUser(
+  static async updateUserById(
+    userId: number,
+    data: Partial<UpdateUserSchemaType>,
+  ): Promise<UserResponseSchemaType> {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const updatedUser = await User.update(data, {
+      where: { id: userId },
+      returning: true,
+    });
+
+    const userAfterUpdate = (await User.findByPk(userId)) as Model &
+      UserResponseSchemaType;
+
+    return userAfterUpdate;
+  }
+
+  static async updateUserByUsername(
     data: RegisterRequestSchemaType,
   ): Promise<UserResponseSchemaType> {
     if (data.password !== data.confirmPassword) {
       throw new Error("Passwords do not match");
     }
 
-    const existingUser = await User.findOne({
+    const existingUser = (await User.findOne({
       where: { username: data.username },
-    });
+    })) as Model & UserResponseSchemaType;
     if (!existingUser) {
       throw new Error("Invalid User");
     }
-
-    const user = UserResponseSchema.parse(existingUser);
 
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
@@ -132,12 +150,12 @@ class UserService {
         password: hashedPassword,
       },
       {
-        where: { id: user.id },
+        where: { id: existingUser.id },
         returning: true,
       },
     );
 
-    return user;
+    return existingUser;
   }
 
   static async login(

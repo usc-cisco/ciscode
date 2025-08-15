@@ -1,3 +1,5 @@
+import { requireRole } from "@/lib/require-role";
+import RoleEnum from "@/lib/types/enums/role.enum";
 import SubmissionService from "@/services/submission.service";
 import UserService from "@/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
@@ -32,61 +34,36 @@ export const GET = async (
   );
 };
 
-export const PATCH = async (
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) => {
-  try {
-    const userId = parseInt((await params).id);
-    if (isNaN(userId)) {
-      return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
-    }
+export const PATCH = requireRole(
+  async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+    try {
+      const userId = parseInt((await params).id);
+      if (isNaN(userId)) {
+        return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
+      }
 
-    const body = await req.json();
+      const body = await req.json();
 
-    const { currentPassword, newPassword, confirmPassword } = body;
+      const user = await UserService.getUserById(userId);
+      if (!user) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
+      }
 
-    if (!currentPassword || !newPassword || !confirmPassword) {
+      const updatedUser = await UserService.updateUserById(userId, body);
+
       return NextResponse.json(
-        { error: "All fields are required" },
-        { status: 400 },
+        {
+          message: "User updated successfully",
+          data: updatedUser,
+        },
+        { status: 200 },
+      );
+    } catch (error) {
+      return NextResponse.json(
+        { error: (error as { message: string }).message },
+        { status: 500 },
       );
     }
-
-    const user = await UserService.getUserById(userId);
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    const loggedInUser = await UserService.login({
-      username: user.username,
-      password: currentPassword,
-    });
-
-    if (!loggedInUser) {
-      return NextResponse.json(
-        { error: "Invalid credentials" },
-        { status: 401 },
-      );
-    }
-
-    await UserService.updateUser({
-      username: user.username,
-      role: user.role,
-      password: newPassword,
-      confirmPassword,
-    });
-
-    return NextResponse.json(
-      {
-        message: "User updated successfully",
-      },
-      { status: 200 },
-    );
-  } catch (error) {
-    return NextResponse.json(
-      { error: (error as { message: string }).message },
-      { status: 500 },
-    );
-  }
-};
+  },
+  [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN],
+);

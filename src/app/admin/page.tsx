@@ -9,7 +9,8 @@ import { fetchUserCount } from "@/lib/fetchers/user.fetchers";
 import AdminCount from "@/lib/types/interface/admin-count.interface";
 import { Code2, CodeIcon, User } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
+import Loading from "../loading";
 
 enum AdminTableEnum {
   VERIFIED_PROBLEMS = "Verified Problems",
@@ -22,6 +23,7 @@ export default function Admin() {
   const params = useSearchParams();
   const router = useRouter();
 
+  const [loading, setLoading] = useState<boolean>(true);
   const [currentAdminTable, setCurrentAdminTable] = useState<AdminTableEnum>(
     (params.get("table") as AdminTableEnum) || AdminTableEnum.VERIFIED_PROBLEMS,
   );
@@ -70,9 +72,20 @@ export default function Admin() {
       }
     };
 
-    getProblemData(true);
-    getUserData();
-    getProblemData(false);
+    const getAllData = async () => {
+      try {
+        await Promise.all([
+          getProblemData(true),
+          getUserData(),
+          getProblemData(false),
+        ]);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
+    };
+
+    getAllData();
   }, [token]);
 
   useEffect(() => {
@@ -113,6 +126,10 @@ export default function Admin() {
         return null;
     }
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <section className="py-8">
