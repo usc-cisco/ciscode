@@ -110,7 +110,7 @@ const UserContainer = () => {
                         { value: RoleEnum.USER, label: 'Student' },
                     ]}
                 />
-                <Button type='button' className="cursor-pointer w-32" onClick={() => router.push("/admin/user/add")}>
+                <Button type='button' className="cursor-pointer w-full md:w-32" onClick={() => router.push("/admin/user/add")}>
                     Add User
                 </Button>
             </form>

@@ -7,12 +7,13 @@ import { cn } from '@/lib/utils';
 
 interface ProblemBarProps {
     problem: ProblemSchemaResponseType;
+    className?: string;
 }
 
-const ProblemBar: React.FC<ProblemBarProps> = ({ problem }) => {
+const ProblemBar: React.FC<ProblemBarProps> = ({ problem, className }) => {
   const { title, difficulty, author, description } = problem;
   return (
-    <ProblemCard className='p-6 overflow-y-auto hide-scrollbar'>
+    <ProblemCard className={cn('p-6 overflow-y-auto hide-scrollbar', className)}>
         <h1 className='text-xl font-semibold'>{title}</h1>
         <div className='flex gap-2 justify-between'>
           <p className='text-sm text-muted-foreground truncate'>By {author}</p>

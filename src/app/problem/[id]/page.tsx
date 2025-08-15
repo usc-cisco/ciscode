@@ -3,8 +3,10 @@
 import CodeEditor from "@/components/problem/code-editor";
 import ProblemBar from "@/components/problem/problem-bar";
 import TestCaseBar from "@/components/problem/test-case-bar";
+import ProblemLayout from "@/components/shared/problem-layout";
 import ProtectedRoute from "@/components/shared/protected-route";
 import SplitView from "@/components/shared/split-view";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/auth.context";
 import { CheckCodeResponseType } from "@/dtos/code.dto";
 import { ProblemSchemaResponseType } from "@/dtos/problem.dto";
@@ -13,6 +15,7 @@ import { runTestCase } from "@/lib/fetchers/code.fetchers";
 import { fetchProblem } from "@/lib/fetchers/problem.fetchers";
 import { submitCode } from "@/lib/fetchers/submission.fetchers";
 import { toastr } from "@/lib/toastr";
+import { ProblemPageEnum } from "@/lib/types/enums/problempage.enum";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
 import { useParams, useRouter } from "next/navigation";
@@ -34,6 +37,7 @@ export default function Problem() {
   const [testCases, setTestCases] = useState<TestCaseResponseType[]>([]);
   const [code, setCode] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
+  const [problemPage, setProblemPage] = useState<ProblemPageEnum>(ProblemPageEnum.DETAILS);
 
   const handleCodeChange = (value: string | undefined) => {
     setCode(value || "");
@@ -166,26 +170,24 @@ export default function Problem() {
   return (
     <ProtectedRoute>
       <div>
-        <div>
-          <SplitView
-            sizes={[25, 50, 25]}
-          >
-            <ProblemBar problem={problem}/>
-            <CodeEditor
-              code={code}
-              onCodeChange={handleCodeChange}
-              handleReset={handleReset}
-            />
-            <TestCaseBar 
-              testCases={testCases} 
-              onSubmit={handleSubmit} 
-              onEditTestCase={handleEditTestCase} 
-              onCheckCode={handleCheckCode}
-              submitted={submitted}
-              sending={!code || sending}
-            />
-          </SplitView>
-        </div>
+        <ProblemLayout
+          problemPage={problemPage}
+          handleChangeProblemPage={setProblemPage}
+          Details={<ProblemBar problem={problem} />}
+          Code={<CodeEditor
+            code={code}
+            onCodeChange={handleCodeChange}
+            handleReset={handleReset}
+          />}
+          TestCases={<TestCaseBar
+            testCases={testCases}
+            onSubmit={handleSubmit}
+            onEditTestCase={handleEditTestCase}
+            onCheckCode={handleCheckCode}
+            submitted={submitted}
+            sending={!code || sending}
+          />}
+        />
       </div>
     </ProtectedRoute>
   );

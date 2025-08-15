@@ -114,7 +114,7 @@ export default function Admin() {
             <p>Overview of key metrics and statistics</p>
             </div>
 
-            <div className="grid grid-cols-3 gap-2 mb-8">
+            <div className="grid grid-rows-3 md:grid-cols-3 md:grid-rows-1 gap-2 mb-8">
                 <AdminCard title="Verified Problems" value={verifiedProblemCounts.count} lastMonth={verifiedProblemCounts.lastMonthCount} Icon={Code2} handleView={handleTableChange(AdminTableEnum.VERIFIED_PROBLEMS)}/>
                 <AdminCard title="Active Users" value={userCounts.count} lastMonth={userCounts.lastMonthCount} Icon={User} handleView={handleTableChange(AdminTableEnum.ACTIVE_USERS)}/>
                 <AdminCard title="Offered Problems" value={unverifiedProblemCounts.count} lastMonth={unverifiedProblemCounts.lastMonthCount} Icon={CodeIcon} handleView={handleTableChange(AdminTableEnum.OFFERED_PROBLEMS)}/>
