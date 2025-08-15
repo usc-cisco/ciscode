@@ -23,10 +23,10 @@ export default function Auth() {
   }, [isAuthenticated, router]);
 
   return (
-    <div className="h-cscreen flex gap-4 items-center justify-evenly">
-      <div className="-mt-24 max-w-2/5">
-        <h1 className="text-primary font-semibold text-6xl">ciscode</h1>
-        <p className="font-normal text-xl">Code your problems away...</p>
+    <div className="h-cscreen flex flex-col justify-center items-center gap-8 px-2 md:flex-row md:items-center md:justify-evenly">
+      <div className="-mt-24  md:max-w-2/5">
+        <h1 className="text-primary text-center md:text-start font-semibold text-6xl">ciscode</h1>
+        <p className="font-normal text-center md:text-start text-xl">Code your problems away...</p>
       </div>
 
       <LoginForm handleSuccess={handleLoginSuccess}/> 

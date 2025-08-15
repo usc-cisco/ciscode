@@ -3,6 +3,7 @@
 import AdminCodeEditor from '@/components/admin/problem/admin-code-editor'
 import AdminProblemBar from '@/components/admin/problem/admin-problem-bar'
 import AdminTestCaseBar from '@/components/admin/problem/admin-test-case-bar'
+import ProblemLayout from '@/components/shared/problem-layout'
 import SplitView from '@/components/shared/split-view'
 import { useAuth } from '@/contexts/auth.context'
 import { RunCodeResponseType } from '@/dtos/code.dto'
@@ -12,6 +13,7 @@ import { runCode } from '@/lib/fetchers/code.fetchers'
 import { addProblem } from '@/lib/fetchers/problem.fetchers'
 import { toastr } from '@/lib/toastr'
 import DifficultyEnum from '@/lib/types/enums/difficulty.enum'
+import { ProblemPageEnum } from '@/lib/types/enums/problempage.enum'
 import TestCaseSubmissionStatusEnum from '@/lib/types/enums/submissionstatus.enum'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -23,6 +25,7 @@ const AddProblemPage = () => {
     const [isSolution, setIsSolution] = useState(true);
     const [checked, setChecked] = useState(false);
     const [canSubmit, setCanSubmit] = useState(false);
+    const [problemPage, setProblemPage] = useState(ProblemPageEnum.DETAILS);
 
     const [problem, setProblem] = useState({
         title: "",
@@ -149,22 +152,19 @@ const AddProblemPage = () => {
 
     return (
         <div>
-            <div>
-            <SplitView
-                sizes={[25, 50, 25]}
-            >
-                <AdminProblemBar problem={problem} onProblemChange={handleProblemChange} onSave={handleSaveProblem} canSubmit={canSubmit} />
-                <AdminCodeEditor
+            <ProblemLayout
+                problemPage={problemPage}
+                handleChangeProblemPage={setProblemPage}
+                Details={<AdminProblemBar problem={problem} onProblemChange={handleProblemChange} onSave={handleSaveProblem} canSubmit={canSubmit} />}
+                Code={<AdminCodeEditor
                     defaultCode={problem.defaultCode}
                     solutionCode={problem.solutionCode}
                     onCodeChange={handleCodeChange}
                     isSolution={isSolution}
                     handleChangeIsSolution={handleChangeIsSolution}
-                />
-                <AdminTestCaseBar testCases={testCases} onAddTestCase={handleAddTestCase} onTestCaseChange={handleEditTestCase} onDeleteTestCase={handleDeleteTestCase} handleCheckCode
-                ={handleCheckCode}/>
-            </SplitView>
-            </div>
+                />}
+                TestCases={<AdminTestCaseBar testCases={testCases} onAddTestCase={handleAddTestCase} onTestCaseChange={handleEditTestCase} onDeleteTestCase={handleDeleteTestCase} handleCheckCode={handleCheckCode} />}
+            />
         </div>
     )
 }
