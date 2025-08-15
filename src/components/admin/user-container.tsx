@@ -98,7 +98,7 @@ const UserContainer = () => {
     return (
         <>
             <form className="flex flex-col sm:flex-row gap-4 mb-6" onSubmit={handleSubmit}>
-                <SearchBar searchTerm={displayFilter} handleChange={setDisplayFilter} placeholder='Search problems...' />
+                <SearchBar searchTerm={displayFilter} handleChange={setDisplayFilter} placeholder='Search users...' />
                 <DropDownSelect
                     value={rolesFilter}
                     handleValueChange={handleValueChange}
