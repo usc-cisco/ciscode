@@ -37,7 +37,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requireAdmin,
     }, [loading, isAuthenticated, isAdmin, isSuperAdmin, requireAdmin, requireSuperAdmin, router]);
 
     return (
-        <div className="min-h-[calc(100vh-4rem)]">
+        <div className='min-h-cscreen'>
             {!loading && isAuthenticated && (requireAdmin ? isAdmin : true) && (requireSuperAdmin ? isSuperAdmin : true) && children}
         </div>
     );

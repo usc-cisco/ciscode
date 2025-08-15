@@ -11,12 +11,13 @@ import RoleEnum from "@/lib/types/enums/role.enum";
   const studentDataText = await readFile(join(__dirname, "data", "students.txt"), "utf-8")
 
   const students = studentDataText.split("\n").map(line => {
-    const [name, id] = line.split(",").map(field => field.trim());
-    const lastName = name.split(" ").pop() ?? "";
+    const [lastname, firstname, id] = line.split(",").map(field => field.trim());
+
+
     return { 
       username: Number(id), 
-      name,
-      password: bcrypt.hashSync(lastName.toLowerCase() + id, 10),
+      name: firstname + " " + lastname,
+      password: bcrypt.hashSync(lastname.toLowerCase() + id, 10),
       role: RoleEnum.USER,
     };
   });

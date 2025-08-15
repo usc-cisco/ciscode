@@ -1,6 +1,7 @@
-import { SubmissionResponseType, UpdateSubmissionType } from "@/dtos/submission.dto";
+import { SubmissionActivityType, SubmissionResponseType, UpdateSubmissionType } from "@/dtos/submission.dto";
 import { Submission } from "@/models/submission.model";
 import { Model } from "sequelize";
+import ProblemService from "./problem.service";
 
 class SubmissionService {
     static async getSubmissionById(id: number): Promise<SubmissionResponseType | null> {
@@ -14,6 +15,28 @@ class SubmissionService {
                 userId
             }
         }) as Model & SubmissionResponseType;
+    }
+
+    static async getRecentUserSubmissions(userId: number, limit: number = 10): Promise<SubmissionActivityType[]> {
+        const submissions = await Submission.findAll({
+            where: { userId },
+            order: [["updatedAt", "DESC"]],
+            limit
+        }) as (Model & SubmissionResponseType & { updatedAt: string })[];
+
+        const submissionActivities = await Promise.all(submissions.map(async (submission) => {
+            const problem = await ProblemService.getProblemById(submission.problemId);
+            return {
+                id: submission.id,
+                userId: submission.userId,
+                problemId: submission.problemId,
+                status: submission.status,
+                title: problem?.title || "Unknown",
+                updatedAt: submission.updatedAt
+            };
+        }));
+
+        return submissionActivities;
     }
 
     static async addSubmission(problemId: number, userId: number, payload: UpdateSubmissionType): Promise<SubmissionResponseType> {
