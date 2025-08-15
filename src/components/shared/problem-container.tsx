@@ -114,7 +114,7 @@ return (
                 ]}
             />
             {inAdmin && verified && (
-                <Button type='button' className="cursor-pointer w-32" onClick={() => router.push("/admin/problem/add")}>
+                <Button type='button' className="cursor-pointer w-full md:w-32" onClick={() => router.push("/admin/problem/add")}>
                     Add Problem
                 </Button>
             )}
