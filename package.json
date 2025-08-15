@@ -9,7 +9,8 @@
     "lint": "next lint",
     "db:sync": "bun run src/db/sync.ts",
     "db:seed": "bun run src/db/seed.ts",
-    "db:reset": "bun run src/db/sync.ts && bun run src/db/seed.ts"
+    "db:reset": "bun run src/db/sync.ts && bun run src/db/seed.ts",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
@@ -30,6 +31,7 @@
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "katex": "^0.16.22",
+    "lint-staged": "^16.1.5",
     "lucide-react": "^0.525.0",
     "mysql2": "^3.14.2",
     "next": "15.4.3",
@@ -64,8 +66,16 @@
     "dotenv-cli": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.4.3",
+    "husky": "^8.0.3",
+    "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.5",
     "typescript": "^5"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,css}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
   }
 }
