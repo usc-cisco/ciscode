@@ -1,10 +1,9 @@
 "use client"
 
 import LoginForm from "@/components/auth/login-form";
-import SignupForm from "@/components/auth/signup-form";
 import { useAuth } from "@/contexts/auth.context";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 
 export default function Auth() {

@@ -1,4 +1,4 @@
-import { JWTPayload, SignJWT, jwtVerify } from "jose";
+import { SignJWT, jwtVerify } from "jose";
 import env from "@/lib/env";
 import { UserResponseSchemaType } from "@/dtos/user.dto";
 

@@ -5,8 +5,6 @@ import ProblemBar from "@/components/problem/problem-bar";
 import TestCaseBar from "@/components/problem/test-case-bar";
 import ProblemLayout from "@/components/shared/problem-layout";
 import ProtectedRoute from "@/components/shared/protected-route";
-import SplitView from "@/components/shared/split-view";
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/auth.context";
 import { CheckCodeResponseType } from "@/dtos/code.dto";
 import { ProblemSchemaResponseType } from "@/dtos/problem.dto";

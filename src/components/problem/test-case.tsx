@@ -133,11 +133,11 @@ const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange,
                     {testCase.status === TestCaseSubmissionStatusEnum.FAILED && 
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button className='mt-2 cursor-pointer w-full bg-red-500 dark:bg-red-900 hover:dark:bg-red-800 text-white hover:bg-red-600'>See what's wrong</Button>
+                            <Button className='mt-2 cursor-pointer w-full bg-red-500 dark:bg-red-900 hover:dark:bg-red-800 text-white hover:bg-red-600'>See what&apos;s wrong</Button>
                         </DialogTrigger>
                         <DialogContent className='bg-vscode-light dark:bg-vscode-dark'>
                             <DialogTitle asChild>
-                                <p className='font-semibold'>What's wrong?</p>
+                                <p className='font-semibold'>What&apos;s wrong?</p>
                             </DialogTitle>
                             <p>Actual output:</p>
                             <div className='bg-neutral-100 dark:bg-neutral-800 rounded-sm p-2 text-gray-400 overflow-x-auto min-h-2'>

@@ -4,7 +4,7 @@ import React from 'react'
 import { ThemeToggle } from './theme-toggle'
 import Brand from './brand'
 import { useAuth } from '@/contexts/auth.context';
-import { LogOutIcon, User } from 'lucide-react';
+import { User } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import RoleEnum from '@/lib/types/enums/role.enum';
