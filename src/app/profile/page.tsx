@@ -97,13 +97,13 @@ const Profile = () => {
                 </div>
               </div>
               <div className="w-full px-4 text-sm flex flex-col gap-1">
-                <div className="flex justify-between text-neutral-600 dark:text-neutral-400">
+                <div className="flex justify-between text-neutral-600 dark:text-neutral-400 gap-2">
                   <p>Username: </p>
-                  <p>{userInfo.username}</p>
+                  <p className="text-end">{userInfo.username}</p>
                 </div>
-                <div className="flex justify-between text-neutral-600 dark:text-neutral-400">
+                <div className="flex justify-between text-neutral-600 dark:text-neutral-400 gap-2">
                   <p>Name: </p>
-                  <p>{userInfo.name}</p>
+                  <p className="text-end">{userInfo.name}</p>
                 </div>
                 <div className="flex justify-between text-neutral-600 dark:text-neutral-400">
                   <p>Role: </p>
