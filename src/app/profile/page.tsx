@@ -4,7 +4,7 @@ import ProtectedRoute from '@/components/shared/protected-route'
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/auth.context';
 import { SubmissionActivityType } from '@/dtos/submission.dto';
@@ -25,9 +25,11 @@ const Profile = () => {
     const {
         register,
         handleSubmit,
-        reset
+        reset,
+        formState: { errors }
     } = useForm<{ currentPassword: string, newPassword: string, confirmPassword: string }>();
 
+    const [loading, setLoading] = useState(true);
     const [submissions, setSubmissions] = useState<SubmissionActivityType[]>([]);
     const [open, setOpen] = useState(false);
 
@@ -54,6 +56,9 @@ const Profile = () => {
                 }
             } catch (error) {
                 console.error("Error fetching user info:", error);
+            }
+            finally {
+                setLoading(false);
             }
         }
 
@@ -96,25 +101,27 @@ const Profile = () => {
                                         Change Password
                                     </Button>
                                 </DialogTrigger>
-                                    <DialogContent className='bg-vscode-light dark:bg-vscode-dark'>
-                                        <form onSubmit={handleSubmit(handleChangePassword)}>
-                                            <DialogTitle>Change Password</DialogTitle>
-                                            <DialogDescription className='flex flex-col gap-2 py-6'>
-                                                <Input type="password" placeholder="Current Password" className="py-5" {...register("currentPassword", { required: "Current Password is required" })} />
-                                                <Input type="password" placeholder="New Password" className="py-5" {...register("newPassword", { required: "New Password is required" })} />
-                                                <Input type="password" placeholder="Confirm Password" className="py-5" {...register("confirmPassword", { required: "Confirm Password is required" })} />
-                                                <div className='text-gray-400 dark:text-gray-600 flex  gap-1 items-start justify-center mt-2 px-2'>
-                                                    <Info className='size-3 mt-[0.125rem]'/>
-                                                    <p className='text-xs'>Important: For your safety, avoid using your usual secure passwords. Pick something unique just for this app.</p>
-                                                </div>
-                                            </DialogDescription>
+                                <DialogContent className='bg-vscode-light dark:bg-vscode-dark'>
+                                    <form onSubmit={handleSubmit(handleChangePassword)}>
+                                        <DialogTitle>Change Password</DialogTitle>
+                                        <div className='my-4 flex flex-col gap-2'>
+                                            <Input type="password" placeholder="Current Password" className="py-5" {...register("currentPassword", { required: "Current Password is required" })} />
+                                            <p className='text-red-500 text-xs'>{errors.currentPassword?.message}</p>
+                                            <Input type="password" placeholder="New Password" className="py-5" {...register("newPassword", { required: "New Password is required" })} />
+                                            <p className='text-red-500 text-xs'>{errors.newPassword?.message}</p>
+                                            <Input type="password" placeholder="Confirm Password" className="py-5" {...register("confirmPassword", { required: "Confirm Password is required" })} />
+                                            <p className='text-red-500 text-xs'>{errors.confirmPassword?.message}</p>
+                                            <div className='text-gray-400 dark:text-gray-600 flex  gap-1 items-start justify-center mt-2 px-2'>
+                                                <Info className='size-3 mt-[0.125rem]'/>
+                                                <p className='text-xs'>Important: For your safety, avoid using your usual secure passwords. Pick something unique just for this app.</p>
+                                            </div>
+                                        </div>
 
-                                            <DialogFooter>
-
-                                                <Button type="submit" className='w-full'>Save Changes</Button>
-                                            </DialogFooter>
-                                        </form>
-                                    </DialogContent>
+                                        <DialogFooter>
+                                            <Button type="submit" className='w-full cursor-pointer'>Save Changes</Button>
+                                        </DialogFooter>
+                                    </form>
+                                </DialogContent>
                             </Dialog>
                         </div>
                     </div>
@@ -128,11 +135,14 @@ const Profile = () => {
                     <CardTitle className='text-lg font-semibold'>Recent Submissions</CardTitle>
                     <CardContent className='p-0'>
                         <div className='w-full flex flex-col gap-2'>
-                            {submissions.length === 0 ? (
-                                <p className='text-gray-500 text-sm'>No submissions so far...</p>
-                            ) : (
-                                submissions.map((submission) => {
-                                    const Icon = submission.status === SubmissionStatusEnum.SOLVED ? <Check className='text-green-500 size-4'/> : <X className='text-red-500 size-4'/>;
+                            {loading ? (
+                                <p className='text-gray-500 text-sm'>Loading...</p>
+                            ) : 
+                                submissions.length === 0 ? (
+                                    <p className='text-gray-500 text-sm'>No submissions so far...</p>
+                                ) : (
+                                    submissions.map((submission) => {
+                                        const Icon = submission.status === SubmissionStatusEnum.SOLVED ? <Check className='text-green-500 size-4'/> : <X className='text-red-500 size-4'/>;
 
                                     return (
                                         <div onClick={() => router.push(`/problem/${submission.problemId}`)} key={submission.id} className={`py-4 px-4 rounded-sm border flex justify-between items-center cursor-pointer transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-900`}>

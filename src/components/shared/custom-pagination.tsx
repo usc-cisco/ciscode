@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '../ui/pagination'
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 
 interface CustomPaginationProps {
   currentPage: number;
@@ -12,6 +17,22 @@ interface CustomPaginationProps {
 const CustomPagination = ({ currentPage, totalPages, onPageChange, createQueryString, path }: CustomPaginationProps) => {
   const [isFirstPage, setIsFirstPage] = useState(currentPage === 1);
   const [isLastPage, setIsLastPage] = useState(currentPage === totalPages);
+  const [open, setOpen] = useState(false);
+
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<{ page: number }>()
+
+  const handlePageChange = (data: { page: number }) => {
+    setOpen(false);
+    onPageChange(Number(data.page))();
+
+    router.push(`${path}?${createQueryString([{ name: "page", value: String(data.page) }])}`);
+  }
 
   useEffect(() => {
     setIsFirstPage(currentPage === 1);
@@ -26,7 +47,23 @@ const CustomPagination = ({ currentPage, totalPages, onPageChange, createQuerySt
             </PaginationItem>
 
             <PaginationItem>
-              <PaginationLink onClick={onPageChange(currentPage)} isActive href={`${path}?${createQueryString([{name: "page", value: String(currentPage)}])}`}>{currentPage}</PaginationLink>
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild>
+                  <Button className='cursor-pointer'>{currentPage}</Button>
+                </DialogTrigger>
+                <DialogContent className='bg-vscode-light dark:bg-vscode-dark'>
+                  <form onSubmit={handleSubmit(handlePageChange)}>
+                    <DialogTitle>Page {currentPage} out of {totalPages}</DialogTitle>
+                    <div className='my-4 flex flex-col gap-1'>
+                      <p>Go to page</p>
+                      <Input type="number" defaultValue={currentPage} className='w-full' {...register("page", { required: "Page number is required", min: { value: 1, message: "Page number must be at least 1" }, max: { value: totalPages, message: `Page number must be at most ${totalPages}` } })} />
+                      <p className='text-red-500 text-xs'>{errors.page?.message}</p>
+                    </div>
+
+                    <Button type="submit" className='w-full'>Go</Button>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </PaginationItem>
 
             <PaginationItem>
