@@ -6,6 +6,11 @@ import { Circle, CircleCheck, CircleX } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { FaPlay } from "react-icons/fa";
 import { ClipLoader } from 'react-spinners';
+import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
+import { Button } from '../ui/button';
+import { getHighlightedDiff } from '../shared/diff';
+import { DialogTitle } from '@radix-ui/react-dialog';
+import Info from '../shared/info';
 
 
 interface TestCaseProps {
@@ -125,6 +130,25 @@ const TestCase: React.FC<TestCaseProps> = ({ testCaseNumber, testCase, onChange,
                             <p className='text-neutral-400 dark:text-neutral-600 pb-2'>No output provided.</p>
                         }
                     </div>
+                    {testCase.status === TestCaseSubmissionStatusEnum.FAILED && 
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button className='mt-2 cursor-pointer w-full bg-red-500 dark:bg-red-900 hover:dark:bg-red-800 text-white hover:bg-red-600'>See what's wrong</Button>
+                        </DialogTrigger>
+                        <DialogContent className='bg-vscode-light dark:bg-vscode-dark'>
+                            <DialogTitle asChild>
+                                <p className='font-semibold'>What's wrong?</p>
+                            </DialogTitle>
+                            <p>Actual output:</p>
+                            <div className='bg-neutral-100 dark:bg-neutral-800 rounded-sm p-2 text-gray-400 overflow-x-auto min-h-2'>
+                                <p className='whitespace-pre text-foreground min-h-3 max-h-80 font-mono'>
+                                    {getHighlightedDiff(testCase.output ?? '', testCase.actualOutput ?? '')}
+                                </p>
+                            </div>
+                            <Info text="The actual output must match the expected output exactly." className='mt-2' />
+                        </DialogContent>
+                    </Dialog>
+                    }
                 </div>
             )
         }

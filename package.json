@@ -25,6 +25,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "devicons-react": "^1.4.1",
+    "diff": "^8.0.2",
     "jose": "^6.0.12",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",

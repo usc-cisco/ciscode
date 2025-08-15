@@ -4,8 +4,8 @@ import { Button } from '../ui/button'
 import { loginUser } from '@/lib/fetchers/user.fetchers';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '@/contexts/auth.context';
-import { Info } from 'lucide-react';
 import { toastr } from '@/lib/toastr';
+import Info from '../shared/info';
 
 type LoginFormInputs = {
   username: string;
@@ -42,11 +42,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleSuccess }) => {
         <Input className='py-5' placeholder='Password' type='password' {...register('password', { required: 'Password is required' })} />
         <p className='text-red-500 text-xs'>{errors.password?.message}</p>
         <Button className='py-5 cursor-pointer' type='submit'>Log In</Button>
-        
-        <div className='text-gray-400 dark:text-gray-600 flex gap-1 items-center justify-center mt-2'>
-          <Info className='size-3'/>
-          <p className='text-xs text-center'>Contact a CISCO member if you are unable to log in.</p>
-        </div>
+
+        <Info text="Contact a CISCO member if you are unable to log in." />
 
     </form>
   )

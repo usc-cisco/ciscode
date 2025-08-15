@@ -1,5 +1,6 @@
 "use client";
 
+import Info from '@/components/shared/info';
 import ProtectedRoute from '@/components/shared/protected-route'
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,7 @@ import { toastr } from '@/lib/toastr';
 import SubmissionStatusEnum from '@/lib/types/enums/problemstatus.enum';
 import RoleEnum, { getRoleColor } from '@/lib/types/enums/role.enum';
 import { cn } from '@/lib/utils';
-import { Check, Info, X } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
@@ -111,10 +112,7 @@ const Profile = () => {
                                             <p className='text-red-500 text-xs'>{errors.newPassword?.message}</p>
                                             <Input type="password" placeholder="Confirm Password" className="py-5" {...register("confirmPassword", { required: "Confirm Password is required" })} />
                                             <p className='text-red-500 text-xs'>{errors.confirmPassword?.message}</p>
-                                            <div className='text-gray-400 dark:text-gray-600 flex  gap-1 items-start justify-center mt-2 px-2'>
-                                                <Info className='size-3 mt-[0.125rem]'/>
-                                                <p className='text-xs'>Important: For your safety, avoid using your usual secure passwords. Pick something unique just for this app.</p>
-                                            </div>
+                                            <Info text="Important: For your safety, avoid using your usual secure passwords. Pick something unique just for this app." />
                                         </div>
 
                                         <DialogFooter>
@@ -126,10 +124,7 @@ const Profile = () => {
                         </div>
                     </div>
 
-                    <div className='text-gray-400 dark:text-gray-600 flex gap-1 items-center justify-center mt-2 px-2'>
-                        <Info className='size-3'/>
-                        <p className='text-xs'>Incorrect details? Contact CISCO.</p>
-                    </div>
+                    <Info text="Incorrect details? Contact CISCO." />
                 </Card>
                 <Card className='w-full p-6 autoflow-y-auto'>
                     <CardTitle className='text-lg font-semibold'>Recent Submissions</CardTitle>
