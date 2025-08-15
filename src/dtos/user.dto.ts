@@ -30,8 +30,15 @@ export const UserResponseSchemaWithPassword = UserResponseSchema.extend({
   password: z.string(),
 });
 
+export const UpdateUserSchema = z.object({
+  username: z.string().min(2).max(100),
+  name: z.string().optional(),
+  role: z.enum(RoleEnum).optional(),
+});
+
 export type LoginRequestSchemaType = z.infer<typeof LoginRequestSchema>;
 export type RegisterRequestSchemaType = z.infer<typeof RegisterRequestSchema>;
 
 export type LoginResponseSchemaType = z.infer<typeof LoginResponseSchema>;
 export type UserResponseSchemaType = z.infer<typeof UserResponseSchema>;
+export type UpdateUserSchemaType = z.infer<typeof UpdateUserSchema>;

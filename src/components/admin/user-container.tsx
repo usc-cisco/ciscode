@@ -23,13 +23,27 @@ import {
   TableRow,
 } from "../ui/table";
 import { Badge } from "../ui/badge";
-import { UserResponseSchemaType } from "@/dtos/user.dto";
-import { fetchUsers } from "@/lib/fetchers/user.fetchers";
+import {
+  RegisterRequestSchemaType,
+  UserResponseSchemaType,
+} from "@/dtos/user.dto";
+import { addUserAsAdmin, fetchUsers } from "@/lib/fetchers/user.fetchers";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { Input } from "../ui/input";
+import { useForm } from "react-hook-form";
+import { toastr } from "@/lib/toastr";
 
 const UserContainer = () => {
-  const { token } = useAuth();
+  const { token, isSuperAdmin } = useAuth();
   const router = useRouter();
   const params = useSearchParams();
+  const { register, handleSubmit, reset } =
+    useForm<RegisterRequestSchemaType>();
 
   const [loading, setLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(Number(params.get("page")) || 1);
@@ -42,6 +56,11 @@ const UserContainer = () => {
     params.get("filter") || "",
   );
   const [users, setUsers] = useState<UserResponseSchemaType[]>([]);
+  const [dropdownPair, setDropdownPair] = useState<
+    { value: RoleEnum; label: string }[]
+  >([]);
+  const [open, setOpen] = useState(false);
+  const [addUserRole, setAddUserRole] = useState<RoleEnum>(RoleEnum.USER);
 
   const createQueryString = useCallback(
     (data: { name: string; value: string }[]) => {
@@ -90,7 +109,18 @@ const UserContainer = () => {
     getUsers();
   }, [token, page, rolesFilter, filter, createQueryString, router]);
 
-  const handleSubmit: FormEventHandler = (e) => {
+  useEffect(() => {
+    if (isSuperAdmin) {
+      setDropdownPair([
+        { value: RoleEnum.ADMIN, label: "Admin" },
+        { value: RoleEnum.USER, label: "Student" },
+      ]);
+    } else {
+      setDropdownPair([{ value: RoleEnum.USER, label: "Student" }]);
+    }
+  }, [isSuperAdmin]);
+
+  const handleSearch: FormEventHandler = (e) => {
     e.preventDefault();
     setPage(1); // Reset to first page on filter change
     setFilter(displayFilter);
@@ -118,11 +148,34 @@ const UserContainer = () => {
     router.push(`/admin/user/${userId}`);
   };
 
+  const handleAddUser = async (data: RegisterRequestSchemaType) => {
+    if (!token) return;
+
+    try {
+      await addUserAsAdmin(
+        {
+          ...data,
+          role: addUserRole,
+        },
+        token,
+      );
+      toastr.success("User added successfully");
+      setOpen(false);
+      setAddUserRole(RoleEnum.USER);
+      reset();
+    } catch (error) {
+      console.error("Error adding user:", error);
+      toastr.error(
+        (error as { message: string }).message || "Error adding user",
+      );
+    }
+  };
+
   return (
     <>
       <form
         className="flex flex-col sm:flex-row gap-4 mb-6"
-        onSubmit={handleSubmit}
+        onSubmit={handleSearch}
       >
         <SearchBar
           searchTerm={displayFilter}
@@ -140,13 +193,57 @@ const UserContainer = () => {
             { value: RoleEnum.USER, label: "Student" },
           ]}
         />
-        <Button
-          type="button"
-          className="cursor-pointer w-full md:w-32"
-          onClick={() => router.push("/admin/user/add")}
-        >
-          Add User
-        </Button>
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button
+              type="button"
+              className="cursor-pointer flex-1 md:flex-0 md:w-32"
+            >
+              Add User
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-vscode-light dark:bg-vscode-dark">
+            <form onSubmit={handleSubmit(handleAddUser)}>
+              <DialogTitle>Add New User</DialogTitle>
+              <div className="flex flex-col gap-2 mt-4 w-full">
+                <Input
+                  className="py-5"
+                  placeholder="Username"
+                  {...register("username")}
+                />
+                <Input
+                  className="py-5"
+                  placeholder="Name"
+                  {...register("name")}
+                />
+                <Input
+                  type="password"
+                  className="py-5"
+                  placeholder="Password"
+                  {...register("password")}
+                />
+                <Input
+                  type="password"
+                  className="py-5"
+                  placeholder="Confirm Password"
+                  {...register("confirmPassword")}
+                />
+                <DropDownSelect
+                  className="md:w-full py-5"
+                  value={addUserRole}
+                  handleValueChange={(value) =>
+                    setAddUserRole(value as RoleEnum)
+                  }
+                  placeholder="Role"
+                  pairs={dropdownPair}
+                />
+                <Button type="submit" className="mt-2 cursor-pointer">
+                  Add User
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
       </form>
 
       {/* Problems Table */}

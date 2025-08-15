@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/app/loading";
 import AdminCodeEditor from "@/components/admin/problem/admin-code-editor";
 import AdminProblemBar from "@/components/admin/problem/admin-problem-bar";
 import AdminTestCaseBar from "@/components/admin/problem/admin-test-case-bar";
@@ -247,9 +248,7 @@ const UpdateProblem = () => {
   if (loading) {
     return (
       <>
-        <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-          <div className="text-lg text-gray-500">Loading problem...</div>
-        </div>
+        <Loading />
       </>
     );
   }

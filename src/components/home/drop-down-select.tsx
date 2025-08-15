@@ -5,6 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 import React from "react";
 
 interface DropDownSelectProps {
@@ -12,6 +13,7 @@ interface DropDownSelectProps {
   handleValueChange: (value: string) => void;
   placeholder: string;
   pairs: { value: string; label: string }[];
+  className?: string;
 }
 
 const DropDownSelect = ({
@@ -19,10 +21,16 @@ const DropDownSelect = ({
   handleValueChange,
   placeholder,
   pairs,
+  className,
 }: DropDownSelectProps) => {
   return (
     <Select value={value} onValueChange={handleValueChange}>
-      <SelectTrigger className="w-full sm:w-[180px] bg-vscode-light dark:bg-vscode-dark">
+      <SelectTrigger
+        className={cn(
+          "w-full md:w-[12rem] bg-vscode-light dark:bg-vscode-dark",
+          className,
+        )}
+      >
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent className="bg-vscode-light dark:bg-vscode-dark">

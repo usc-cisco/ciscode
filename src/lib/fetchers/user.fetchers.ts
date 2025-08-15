@@ -2,6 +2,7 @@ import {
   LoginRequestSchemaType,
   LoginResponseSchemaType,
   RegisterRequestSchemaType,
+  UpdateUserSchemaType,
   UserResponseSchemaType,
 } from "@/dtos/user.dto";
 import instance from "../axios";
@@ -152,6 +153,32 @@ export const fetchUserInfo = async (token: string, userId: number) => {
   }
 };
 
+export const updateUser = async (
+  token: string,
+  userId: number,
+  payload: UpdateUserSchemaType,
+) => {
+  try {
+    if (token) {
+      instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+
+    const response = await instance.patch<ApiResponse<UserResponseSchemaType>>(
+      `/user/${userId}`,
+      payload,
+    );
+
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.error || "Failed to update user");
+    }
+
+    console.error("Error updating user:", error);
+    throw error;
+  }
+};
+
 export const updatePassword = async (
   token: string,
   userId: number,
@@ -166,7 +193,38 @@ export const updatePassword = async (
       instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     }
 
-    const response = await instance.patch(`/user/${userId}`, payload);
+    const response = await instance.patch(`/user/${userId}/password`, payload);
+
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(
+        error.response?.data?.error || "Failed to update password",
+      );
+    }
+
+    console.error("Error updating password:", error);
+    throw error;
+  }
+};
+
+export const updatePasswordAsAdmin = async (
+  token: string,
+  userId: number,
+  payload: {
+    newPassword: string;
+    confirmPassword: string;
+  },
+) => {
+  try {
+    if (token) {
+      instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+
+    const response = await instance.patch(
+      `/user/${userId}/password/admin`,
+      payload,
+    );
 
     return response.data;
   } catch (error: unknown) {
