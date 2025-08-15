@@ -26,6 +26,11 @@ class SubmissionService {
 
         const submissionActivities = await Promise.all(submissions.map(async (submission) => {
             const problem = await ProblemService.getProblemById(submission.problemId);
+
+            if (!problem) {
+                return undefined;
+            }
+
             return {
                 id: submission.id,
                 userId: submission.userId,
@@ -36,7 +41,7 @@ class SubmissionService {
             };
         }));
 
-        return submissionActivities;
+        return submissionActivities.filter((submissionActivity): submissionActivity is SubmissionActivityType => submissionActivity !== undefined);
     }
 
     static async addSubmission(problemId: number, userId: number, payload: UpdateSubmissionType): Promise<SubmissionResponseType> {

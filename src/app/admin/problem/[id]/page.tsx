@@ -147,11 +147,9 @@ const UpdateProblem = () => {
         }
 
         try {
-            if (confirm("Are you sure you want to delete this problem?")) {
-                await deleteProblem(params.id as string, token);
-                router.push("/admin");
-                toastr.success("Problem deleted successfully");
-            }
+            await deleteProblem(params.id as string, token);
+            router.push("/admin");
+            toastr.success("Problem deleted successfully");
         } catch (error) {
             console.error("Error deleting problem:", error);
             toastr.error("Error deleting problem");

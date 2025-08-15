@@ -69,6 +69,10 @@ export default function Problem() {
       }
   };
 
+  const handleReset = () => {
+    setCode(problem?.defaultCode || "");
+  }
+
   const handleSubmit = async () => {
     if (!token) {
       console.error("User is not authenticated");
@@ -168,8 +172,9 @@ export default function Problem() {
           >
             <ProblemBar problem={problem}/>
             <CodeEditor
-              defaultCode={problem.answerCode || problem.defaultCode || ""}
+              code={code}
               onCodeChange={handleCodeChange}
+              handleReset={handleReset}
             />
             <TestCaseBar 
               testCases={testCases} 
