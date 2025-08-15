@@ -5,6 +5,7 @@ import DifficultyEnum, { getDifficultyColor } from '@/lib/types/enums/difficulty
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Trash2Icon } from 'lucide-react';
+import { Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 interface AdminProblemBarProps {
     problem: {
@@ -41,7 +42,22 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({ problem, onProblemCha
 
         <div className='px-2 h-14 absolute bottom-0 w-full border-t border-gray-200 dark:border-gray-700 flex justify-center items-center bg-vscode-light dark:bg-vscode-dark z-10 gap-2'>
           <Button className={`bg-primary py-2 rounded-lg cursor-pointer flex-1 ${canSubmit ? 'opacity-100' : 'opacity-40 pointer-events-none'}`} onClick={onSave}>Save Problem</Button>
-          {onDelete && <Button className='bg-red-400 hover:bg-red-500 dark:bg-red-700 dark:hover:bg-red-600 transition-colors py-2 rounded-lg cursor-pointer' onClick={onDelete}><Trash2Icon /></Button>}
+          {onDelete && (
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button className='bg-red-400 hover:bg-red-500 dark:bg-red-700 dark:hover:bg-red-600 transition-colors py-2 rounded-lg cursor-pointer'><Trash2Icon /></Button>
+                </DialogTrigger>
+                <DialogContent className='bg-vscode-light dark:bg-vscode-dark'>
+                    <DialogTitle>Are you sure you want to delete this problem?</DialogTitle>
+                    <div className='grid grid-cols-2 gap-x-2'>
+                        <DialogClose asChild>
+                            <Button className='w-full mt-4 bg-neutral-400 hover:bg-neutral-500 dark:bg-neutral-700 dark:hover:bg-neutral-600 cursor-pointer'>Cancel</Button>
+                        </DialogClose>
+                        <Button className='w-full mt-4 bg-red-400 hover:bg-red-500 dark:bg-red-700 dark:hover:bg-red-600 cursor-pointer' onClick={onDelete}>Delete</Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
+          )}
         </div>
     </ProblemCard>
   )
