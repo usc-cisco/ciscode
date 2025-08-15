@@ -178,8 +178,16 @@ const Profile = () => {
 
               {/* Update details dialog */}
               <Dialog open={openDetails} onOpenChange={setOpenDetails}>
-                <DialogTrigger asChild>
-                  <Button type="button" className="cursor-pointer mt-4 w-full">
+                <DialogTrigger
+                  asChild
+                  disabled={
+                    !isSuperAdmin && userInfo?.role === RoleEnum.SUPER_ADMIN
+                  }
+                >
+                  <Button
+                    type="button"
+                    className="cursor-pointer mt-4 w-full disabled:opacity-50"
+                  >
                     Change Details
                   </Button>
                 </DialogTrigger>
@@ -226,10 +234,15 @@ const Profile = () => {
 
               {/* Update password dialog */}
               <Dialog open={openPassword} onOpenChange={setOpenPassword}>
-                <DialogTrigger asChild>
+                <DialogTrigger
+                  asChild
+                  disabled={
+                    !isSuperAdmin && userInfo?.role === RoleEnum.SUPER_ADMIN
+                  }
+                >
                   <Button
                     type="button"
-                    className="w-full mt-1 cursor-pointer bg-secondary"
+                    className="w-full mt-1 cursor-pointer bg-secondary disabled:opacity-50"
                   >
                     Change Password
                   </Button>

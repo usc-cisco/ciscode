@@ -1,3 +1,4 @@
+import RoleEnum from "@/lib/types/enums/role.enum";
 import UserService from "@/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -6,6 +7,11 @@ export const PATCH = async (
   { params }: { params: Promise<{ id: string }> },
 ) => {
   try {
+    const role = (await req.headers.get("x-user-role")) as RoleEnum;
+    if (!role) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
     const userId = parseInt((await params).id);
     if (isNaN(userId)) {
       return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
@@ -25,6 +31,10 @@ export const PATCH = async (
     const user = await UserService.getUserById(userId);
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    if (user.role === RoleEnum.SUPER_ADMIN && role !== RoleEnum.SUPER_ADMIN) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
     await UserService.updateUserByUsername({

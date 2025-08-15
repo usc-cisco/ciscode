@@ -37,6 +37,11 @@ export const GET = async (
 export const PATCH = requireRole(
   async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
     try {
+      const role = (await req.headers.get("x-user-role")) as RoleEnum;
+      if (!role) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+      }
+
       const userId = parseInt((await params).id);
       if (isNaN(userId)) {
         return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
@@ -47,6 +52,10 @@ export const PATCH = requireRole(
       const user = await UserService.getUserById(userId);
       if (!user) {
         return NextResponse.json({ error: "User not found" }, { status: 404 });
+      }
+
+      if (user.role === RoleEnum.SUPER_ADMIN && role !== RoleEnum.SUPER_ADMIN) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
       }
 
       const updatedUser = await UserService.updateUserById(userId, body);
