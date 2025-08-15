@@ -47,7 +47,7 @@ const ProblemTable = ({ problems, inAdmin = false, loading }: ProblemTableProps)
                         ||
                         problems.map((problem, index) => (
                             <TableRow key={index} onClick={() => handleRowClick(problem.id)} className="cursor-pointer odd:bg-neutral-100 odd:dark:bg-neutral-800">
-                                <TableCell className="font-medium">{inAdmin ? problem.id : (problem.status && problem.status === SubmissionStatusEnum.SOLVED && <CheckIcon className='text-green-500 size-4' />)}</TableCell>
+                                <TableCell className="font-medium truncate">{inAdmin ? problem.id : (problem.status && problem.status === SubmissionStatusEnum.SOLVED && <CheckIcon className='text-green-500 size-4' />)}</TableCell>
                                 <TableCell className='truncate table-fixed flex-1'>
                                     <div className="font-medium">{problem.title}</div>
                                 </TableCell>

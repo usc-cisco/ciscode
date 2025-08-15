@@ -68,11 +68,11 @@ const Profile = () => {
   return (
     <ProtectedRoute>
         <section className='min-h-cscreen flex flex-col'>
-            <div className='flex py-2 px-6 gap-2 h-full flex-1'>
-                <Card className='max-w-64 w-full flex flex-col justify-between'>
+            <div className='flex flex-col md:flex-row py-2 px-6 gap-2 h-full flex-1'>
+                <Card className='w-full md:max-w-64 flex flex-col justify-between'>
                     <div className='flex flex-col gap-4'>
-                        <div className='px-10'>
-                            <div className='rounded-full bg-primary flex items-center justify-center aspect-square w-full p-8'>
+                        <div className='px-4 flex justify-center w-full'>
+                            <div className='rounded-full bg-primary flex items-center justify-center aspect-square w-full max-w-44 p-8'>
                                 <Image
                                     src='/cisco-logo-white.png'
                                     alt='Profile Picture'
