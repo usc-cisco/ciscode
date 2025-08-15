@@ -22,7 +22,7 @@ export const ProblemSchemaResponse = z.object({
   solutionCode: z.string().optional().default("").optional(),
   answerCode: z.string().optional().nullable().default(null),
   authorId: z.number(),
-  author: z.string().min(2).max(50).optional(),
+  author: z.string().optional(),
   status: z.enum(SubmissionStatusEnum).optional(),
 });
 
@@ -31,14 +31,8 @@ export const ProblemSchemaResponseWithTestCases = ProblemSchemaResponse.extend({
 });
 
 export const AddProblemSchema = z.object({
-  title: z
-    .string()
-    .min(2, "Title must be at least 2 characters")
-    .max(100, "Title cannot exceed 100 characters"),
-  description: z
-    .string()
-    .min(2, "Description must be at least 2 characters")
-    .max(500, "Description cannot exceed 500 characters"),
+  title: z.string(),
+  description: z.string(),
   difficulty: z.enum(DifficultyEnum),
   defaultCode: z.string().optional().nullable().default(null),
   solutionCode: z.string().optional().default(""),

@@ -31,7 +31,7 @@ export const UserResponseSchemaWithPassword = UserResponseSchema.extend({
 });
 
 export const UpdateUserSchema = z.object({
-  username: z.string().min(2).max(100),
+  username: z.string(),
   name: z.string().optional(),
   role: z.enum(RoleEnum).optional(),
 });

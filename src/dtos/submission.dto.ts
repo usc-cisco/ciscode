@@ -22,7 +22,7 @@ export const SubmissionActivitySchema = z.object({
   id: z.number().int().positive(),
   userId: z.number().int().positive(),
   problemId: z.number().int().positive(),
-  title: z.string().min(2).max(100),
+  title: z.string(),
   status: z.enum(SubmissionStatusEnum).default(SubmissionStatusEnum.ATTEMPTED),
   updatedAt: z.string().optional().default(new Date().toISOString()),
 });
