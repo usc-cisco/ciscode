@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import CodeEditor from "@/components/problem/code-editor";
 import ProblemBar from "@/components/problem/problem-bar";
@@ -31,49 +31,64 @@ export default function Problem() {
     router.push("/home");
   }
 
-  const [problem, setProblem] = useState<ProblemSchemaResponseType | null>(null);
+  const [problem, setProblem] = useState<ProblemSchemaResponseType | null>(
+    null,
+  );
   const [testCases, setTestCases] = useState<TestCaseResponseType[]>([]);
   const [code, setCode] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
-  const [problemPage, setProblemPage] = useState<ProblemPageEnum>(ProblemPageEnum.DETAILS);
+  const [problemPage, setProblemPage] = useState<ProblemPageEnum>(
+    ProblemPageEnum.DETAILS,
+  );
 
   const handleCodeChange = (value: string | undefined) => {
     setCode(value || "");
   };
 
-  const handleEditTestCase = (index: number) => (field: string, value: string | boolean) => {
-      setTestCases(prev => {
-          const updatedTestCases = [...prev];
-          updatedTestCases[index] = {
-              ...updatedTestCases[index],
-              [field]: value
-          };
-          return updatedTestCases;
+  const handleEditTestCase =
+    (index: number) => (field: string, value: string | boolean) => {
+      setTestCases((prev) => {
+        const updatedTestCases = [...prev];
+        updatedTestCases[index] = {
+          ...updatedTestCases[index],
+          [field]: value,
+        };
+        return updatedTestCases;
       });
-  };
+    };
 
-  const handleCheckCode = async (testCase: TestCaseResponseType): Promise<CheckCodeResponseType> => {
-      if (!token) {
-          console.error("User is not authenticated");
-          return { output: null, error: "User is not authenticated", status: TestCaseSubmissionStatusEnum.FAILED };
-      }
+  const handleCheckCode = async (
+    testCase: TestCaseResponseType,
+  ): Promise<CheckCodeResponseType> => {
+    if (!token) {
+      console.error("User is not authenticated");
+      return {
+        output: null,
+        error: "User is not authenticated",
+        status: TestCaseSubmissionStatusEnum.FAILED,
+      };
+    }
 
-      setSending(true);
+    setSending(true);
 
-      try {
-          const response = await runTestCase(code, testCase.id, token);
-          setSending(false);
-          return response;
-      } catch (error) {
-          console.error("Error checking code:", error);
-          setSending(false);
-          return { output: null, error: "Error checking code", status: TestCaseSubmissionStatusEnum.FAILED };
-      }
+    try {
+      const response = await runTestCase(code, testCase.id, token);
+      setSending(false);
+      return response;
+    } catch (error) {
+      console.error("Error checking code:", error);
+      setSending(false);
+      return {
+        output: null,
+        error: "Error checking code",
+        status: TestCaseSubmissionStatusEnum.FAILED,
+      };
+    }
   };
 
   const handleReset = () => {
     setCode(problem?.defaultCode || "");
-  }
+  };
 
   const handleSubmit = async () => {
     if (!token) {
@@ -82,11 +97,11 @@ export default function Problem() {
     }
 
     setSubmitted(true);
-    setTestCases(prev => {
-      return prev.map(testCase => ({
+    setTestCases((prev) => {
+      return prev.map((testCase) => ({
         ...testCase,
         status: TestCaseSubmissionStatusEnum.PENDING,
-        actualOutput: "Loading..."
+        actualOutput: "Loading...",
       }));
     });
 
@@ -94,25 +109,30 @@ export default function Problem() {
       const response = await submitCode(code, Number(params.id), token);
       if (response) {
         console.log("Status: ", response.status);
-        setTestCases(prev => {
+        setTestCases((prev) => {
           const updatedTestCases = [...prev];
           response.testCaseSubmissions.forEach((testCase, index) => {
             updatedTestCases[index] = {
               ...updatedTestCases[index],
               status: testCase.status,
-              actualOutput: testCase.output ?? ""
+              actualOutput: testCase.output ?? "",
             };
           });
           return updatedTestCases;
         });
 
-        switch(response.status) {
+        switch (response.status) {
           case SubmissionStatusEnum.SOLVED:
             toastr.success("All test cases passed");
             break;
           case SubmissionStatusEnum.ATTEMPTED:
-            const numberOfPassed = response.testCaseSubmissions.filter(testCase => testCase.status === TestCaseSubmissionStatusEnum.COMPLETED).length;
-            toastr.error(`${numberOfPassed === 0 ? "All test cases failed." : `Passed only ${numberOfPassed} out of ${testCases.length}`}`);
+            const numberOfPassed = response.testCaseSubmissions.filter(
+              (testCase) =>
+                testCase.status === TestCaseSubmissionStatusEnum.COMPLETED,
+            ).length;
+            toastr.error(
+              `${numberOfPassed === 0 ? "All test cases failed." : `Passed only ${numberOfPassed} out of ${testCases.length}`}`,
+            );
             break;
           default:
             console.log("Unknown status");
@@ -120,8 +140,7 @@ export default function Problem() {
       }
     } catch (error) {
       console.error("Error submitting code:", error);
-    }
-    finally {
+    } finally {
       setSubmitted(false);
     }
   };
@@ -172,19 +191,23 @@ export default function Problem() {
           problemPage={problemPage}
           handleChangeProblemPage={setProblemPage}
           Details={<ProblemBar problem={problem} />}
-          Code={<CodeEditor
-            code={code}
-            onCodeChange={handleCodeChange}
-            handleReset={handleReset}
-          />}
-          TestCases={<TestCaseBar
-            testCases={testCases}
-            onSubmit={handleSubmit}
-            onEditTestCase={handleEditTestCase}
-            onCheckCode={handleCheckCode}
-            submitted={submitted}
-            sending={!code || sending}
-          />}
+          Code={
+            <CodeEditor
+              code={code}
+              onCodeChange={handleCodeChange}
+              handleReset={handleReset}
+            />
+          }
+          TestCases={
+            <TestCaseBar
+              testCases={testCases}
+              onSubmit={handleSubmit}
+              onEditTestCase={handleEditTestCase}
+              onCheckCode={handleCheckCode}
+              submitted={submitted}
+              sending={!code || sending}
+            />
+          }
         />
       </div>
     </ProtectedRoute>

@@ -2,13 +2,20 @@
 
 import { UserResponseSchemaType } from "@/dtos/user.dto";
 import RoleEnum from "@/lib/types/enums/role.enum";
-import { jwtDecode } from "jwt-decode"
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 export interface AuthContextType {
   loading: boolean;
   token: string | null;
-  userInfo: UserResponseSchemaType
+  userInfo: UserResponseSchemaType;
   isAuthenticated: boolean;
   isAdmin: boolean;
   isSuperAdmin: boolean;
@@ -23,8 +30,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<UserResponseSchemaType>({
     id: -1,
-    name: '',
-    username: '',
+    name: "",
+    username: "",
     role: RoleEnum.USER,
   });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -32,18 +39,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAdmin, setIsAdmin] = useState(false);
 
   const setAuth = useCallback((token: string) => {
-    const decodedToken = jwtDecode<UserResponseSchemaType & { exp: number }>(token);
+    const decodedToken = jwtDecode<UserResponseSchemaType & { exp: number }>(
+      token,
+    );
 
     if (Date.now() > decodedToken.exp * 1000) {
       console.log("Token expired, clearing auth");
       clearAuth();
       return;
     }
-    
+
     setUserInfo(decodedToken);
 
     console.log(decodedToken);
-    
+
     localStorage.setItem("__jwt_token__", token);
     setToken(token);
     setIsAuthenticated(true);
@@ -57,15 +66,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(null);
     setUserInfo({
       id: -1,
-      name: '',
-      username: '',
+      name: "",
+      username: "",
       role: RoleEnum.USER,
     });
     setIsAuthenticated(false);
     setIsAdmin(false);
     setIsSuperAdmin(false);
-  }
-  
+  };
+
   useEffect(() => {
     const localToken = localStorage.getItem("__jwt_token__");
 
@@ -79,28 +88,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     setLoading(false);
   }, [setAuth]);
-  
-  const value = useMemo(() => ({
-    loading,
-    token,
-    userInfo,
-    isAuthenticated,
-    isAdmin,
-    isSuperAdmin,
-    setAuth,
-    clearAuth,
-  }), [loading, token, userInfo, isAuthenticated, isAdmin, isSuperAdmin, setAuth]);
-  
-  return (
-    <AuthContext.Provider value={value}>
-        {children}
-    </AuthContext.Provider>
-    );
+
+  const value = useMemo(
+    () => ({
+      loading,
+      token,
+      userInfo,
+      isAuthenticated,
+      isAdmin,
+      isSuperAdmin,
+      setAuth,
+      clearAuth,
+    }),
+    [loading, token, userInfo, isAuthenticated, isAdmin, isSuperAdmin, setAuth],
+  );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 export function useAuth() {
-  const context = useContext(AuthContext)
+  const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider")
+    throw new Error("useAuth must be used within an AuthProvider");
   }
-  return context
+  return context;
 }

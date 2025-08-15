@@ -6,9 +6,9 @@ import { existsSync, mkdirSync } from "fs";
 const exec = promisify(rawExec);
 
 export async function runCCode(
-  code: string, 
-  input: string, 
-  pty: PtyModule
+  code: string,
+  input: string,
+  pty: PtyModule,
 ): Promise<{ output: string | null; error: string | null }> {
   const tmpDir = "./tmp";
   if (!existsSync(tmpDir)) {
@@ -22,7 +22,7 @@ export async function runCCode(
   // Inject fflush to ensure output is flushed immediately
   const modifiedCode = code.replace(
     /int\s+main\s*\([^)]*\)\s*{/,
-    match => match + `\n printf("\\n"); fflush(stdout);`
+    (match) => match + `\n printf("\\n"); fflush(stdout);`,
   );
 
   await writeFile(codePath, modifiedCode);
@@ -31,7 +31,10 @@ export async function runCCode(
     await exec(`gcc ${codePath} -o ${binaryPath}`);
     await chmod(binaryPath, 0o755);
   } catch (err) {
-    return { output: null, error: "Compilation failed: " + (err as { stderr: string }).stderr };
+    return {
+      output: null,
+      error: "Compilation failed: " + (err as { stderr: string }).stderr,
+    };
   }
 
   return new Promise((resolve) => {
@@ -101,7 +104,7 @@ export type PtyModule = {
       rows?: number;
       cwd?: string;
       env?: NodeJS.ProcessEnv;
-    }
+    },
   ) => {
     write(data: string): void;
     onData(cb: (data: string) => void): void;

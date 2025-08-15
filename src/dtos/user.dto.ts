@@ -2,32 +2,32 @@ import RoleEnum from "@/lib/types/enums/role.enum";
 import z from "zod";
 
 export const LoginRequestSchema = z.object({
-    username: z.string(),
-    password: z.string(),
+  username: z.string(),
+  password: z.string(),
 });
 
 export const RegisterRequestSchema = z.object({
-    username: z.string(),
-    password: z.string(),
-    confirmPassword: z.string(),
-    name: z.string().optional(),
-    role: z.enum(RoleEnum).optional().default(RoleEnum.USER),
+  username: z.string(),
+  password: z.string(),
+  confirmPassword: z.string(),
+  name: z.string().optional(),
+  role: z.enum(RoleEnum).optional().default(RoleEnum.USER),
 });
 
 export const LoginResponseSchema = z.object({
-    token: z.string(),
-    role: z.enum(RoleEnum),
+  token: z.string(),
+  role: z.enum(RoleEnum),
 });
 
 export const UserResponseSchema = z.object({
-    id: z.number(),
-    username: z.string(),
-    name: z.string().optional(),
-    role: z.enum(RoleEnum)
+  id: z.number(),
+  username: z.string(),
+  name: z.string().optional(),
+  role: z.enum(RoleEnum),
 });
 
 export const UserResponseSchemaWithPassword = UserResponseSchema.extend({
-    password: z.string(),
+  password: z.string(),
 });
 
 export type LoginRequestSchemaType = z.infer<typeof LoginRequestSchema>;

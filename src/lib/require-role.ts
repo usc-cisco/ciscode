@@ -3,7 +3,7 @@ import RoleEnum from "./types/enums/role.enum";
 
 export function requireRole<T extends unknown[]>(
   handler: (req: NextRequest, ...args: T) => Promise<NextResponse>,
-  roles: RoleEnum[]
+  roles: RoleEnum[],
 ) {
   return async (req: NextRequest, ...args: T) => {
     const role = req.headers.get("x-user-role");

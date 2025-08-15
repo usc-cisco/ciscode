@@ -5,7 +5,10 @@ import { UserResponseSchemaType } from "@/dtos/user.dto";
 const encoder = new TextEncoder();
 const secret = encoder.encode(env.JWT_SECRET);
 
-export async function signToken(payload: UserResponseSchemaType, expiresIn = "1h") {
+export async function signToken(
+  payload: UserResponseSchemaType,
+  expiresIn = "1h",
+) {
   const jwt = await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setExpirationTime(expiresIn)
@@ -14,7 +17,9 @@ export async function signToken(payload: UserResponseSchemaType, expiresIn = "1h
   return jwt;
 }
 
-export async function verifyToken(token: string): Promise<UserResponseSchemaType | null> {
+export async function verifyToken(
+  token: string,
+): Promise<UserResponseSchemaType | null> {
   try {
     const { payload } = await jwtVerify(token, secret);
     return payload as UserResponseSchemaType;

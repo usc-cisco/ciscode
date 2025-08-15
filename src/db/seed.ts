@@ -8,14 +8,18 @@ import RoleEnum from "@/lib/types/enums/role.enum";
 (async () => {
   await sequelize.sync(); // ensure DB is ready
 
-  const studentDataText = await readFile(join(__dirname, "data", "students.txt"), "utf-8")
+  const studentDataText = await readFile(
+    join(__dirname, "data", "students.txt"),
+    "utf-8",
+  );
 
-  const students = studentDataText.split("\n").map(line => {
-    const [lastname, firstname, id] = line.split(",").map(field => field.trim());
+  const students = studentDataText.split("\n").map((line) => {
+    const [lastname, firstname, id] = line
+      .split(",")
+      .map((field) => field.trim());
 
-
-    return { 
-      username: Number(id), 
+    return {
+      username: Number(id),
       name: firstname + " " + lastname,
       password: bcrypt.hashSync(lastname.toLowerCase() + id, 10),
       role: RoleEnum.USER,
@@ -23,7 +27,7 @@ import RoleEnum from "@/lib/types/enums/role.enum";
   });
 
   await User.bulkCreate(students, {
-    ignoreDuplicates: true
+    ignoreDuplicates: true,
   });
 
   console.log(`Seeded ${students.length} students.`);

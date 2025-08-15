@@ -10,7 +10,7 @@ const options: SequelizeOptions = {
   password: env.DB_PASSWORD,
   port: parseInt(env.DB_PORT, 10),
   dialect: "mysql",
-}
+};
 
 options.dialectModule = mysql2;
 

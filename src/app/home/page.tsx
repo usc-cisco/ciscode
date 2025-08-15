@@ -1,8 +1,8 @@
 "use client";
 
-import ProtectedRoute from '@/components/shared/protected-route';
-import React from 'react'
-import ProblemContainer from '@/components/shared/problem-container';
+import ProtectedRoute from "@/components/shared/protected-route";
+import React from "react";
+import ProblemContainer from "@/components/shared/problem-container";
 
 export default function Home() {
   return (
@@ -14,9 +14,9 @@ export default function Home() {
             <p>Choose from our curated collection of coding challenges</p>
           </div>
 
-          <ProblemContainer/>
+          <ProblemContainer />
         </div>
       </section>
     </ProtectedRoute>
-  )
+  );
 }

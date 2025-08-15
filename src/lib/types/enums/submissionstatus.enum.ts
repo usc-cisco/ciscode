@@ -1,7 +1,7 @@
 enum TestCaseSubmissionStatusEnum {
   PENDING = "PENDING",
   COMPLETED = "COMPLETED",
-  FAILED = "FAILED"
+  FAILED = "FAILED",
 }
 
 export default TestCaseSubmissionStatusEnum;

@@ -2,18 +2,20 @@ import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enu
 import z from "zod";
 
 export const RunCodeSchema = z.object({
-    code: z.string().min(1, "Code cannot be empty"),
-    input: z.string().optional(),
-})
+  code: z.string().min(1, "Code cannot be empty"),
+  input: z.string().optional(),
+});
 
 export const RunCodeResponseSchema = z.object({
-    id: z.number().int().positive().optional(),
-    output: z.string().nullable(),
-    error: z.string().nullable(),
+  id: z.number().int().positive().optional(),
+  output: z.string().nullable(),
+  error: z.string().nullable(),
 });
 
 export const CheckCodeResponseSchema = RunCodeResponseSchema.extend({
-    status: z.enum(TestCaseSubmissionStatusEnum).default(TestCaseSubmissionStatusEnum.PENDING),
+  status: z
+    .enum(TestCaseSubmissionStatusEnum)
+    .default(TestCaseSubmissionStatusEnum.PENDING),
 });
 
 export type RunCodeSchemaType = z.infer<typeof RunCodeSchema>;
