@@ -11,6 +11,13 @@ import { PtyModule } from "@/lib/code-runner";
 
 export const GET = async (req: NextRequest) => {
     try {
+        const userIdString = req.headers.get("x-user-id");
+        if (!userIdString || isNaN(Number(userIdString))) {
+            return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
+        }
+
+        const userId = Number(userIdString);
+
         const searchParams = req.nextUrl.searchParams;
         const verified = searchParams.get("verified") !== "false";
         const offset = searchParams.get("offset") ? Number(searchParams.get("offset")) : 0;
@@ -18,7 +25,7 @@ export const GET = async (req: NextRequest) => {
         const search = searchParams.get("search") || "";
         const difficulty = searchParams.get("difficulty") || null;
 
-        const problems = await ProblemService.getProblems(verified, offset, limit, search, difficulty ? difficulty as DifficultyEnum : null);
+        const problems = await ProblemService.getProblems(verified, offset, limit, search, difficulty ? difficulty as DifficultyEnum : null, userId);
         const totalCount = await ProblemService.getTotalCount(verified, search, difficulty ? difficulty as DifficultyEnum : null);
 
         return NextResponse.json({ data: {

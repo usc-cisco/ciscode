@@ -29,7 +29,7 @@ class ProblemService {
         return response;
     }
 
-    static async getProblems(verified: boolean = true, offset: number = 0, limit: number = 10, search: string = "", difficulty: DifficultyEnum | null = null): Promise<ProblemSchemaDisplayResponseType[]> {
+    static async getProblems(verified: boolean = true, offset: number = 0, limit: number = 10, search: string = "", difficulty: DifficultyEnum | null = null, userId?: number): Promise<ProblemSchemaDisplayResponseType[]> {
         const problems = await Problem.findAll({
             order: [["id", "ASC"]],
             offset: (offset) * limit,
@@ -48,11 +48,11 @@ class ProblemService {
         }) as (Model & ProblemSchemaResponseType)[];
 
         const parsedProblems = problems.map(async (problem) => {
-            const user = await UserService.getUserById(problem.authorId) as Model & UserResponseSchemaType;
-            problem.author = user ? UserResponseSchema.parse(user).name : "Unknown";
+            const author = await UserService.getUserById(problem.authorId) as Model & UserResponseSchemaType;
+            problem.author = author ? UserResponseSchema.parse(author).name : "Unknown";
 
-            if (user) {
-                const existingSubmission = await SubmissionService.getSubmissionByProblemIdAndUserId(problem.id, user.id);
+            if (userId) {
+                const existingSubmission = await SubmissionService.getSubmissionByProblemIdAndUserId(problem.id, userId);
                 problem.status = existingSubmission ? existingSubmission.status : undefined;
             }
 

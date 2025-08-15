@@ -6,13 +6,13 @@ import { Model, Op } from "sequelize";
 
 class UserService {
     static async getUserById(userId: number) {
-        const user = await User.findByPk(userId);
+        const user = await User.findByPk(userId) as Model & UserResponseSchemaType;
         return user;
     }
 
     static async getUsers(offset: number = 0, limit: number = 10, search: string = "", role: RoleEnum | null = null): Promise<UserResponseSchemaType[]> {
         const users = await User.findAll({
-            order: [["id", "ASC"]],
+            order: [["username", "ASC"]],
             offset: (offset) * limit,
             limit,
             where: {
@@ -94,9 +94,9 @@ class UserService {
             throw new Error("Passwords do not match");
         }
 
-        const existingUser = await User.findOne({ where: { username: data.username, password: null } });
+        const existingUser = await User.findOne({ where: { username: data.username } });
         if (!existingUser) {
-            throw new Error("Invalid Student ID");
+            throw new Error("Invalid User");
         }
 
         const user = UserResponseSchema.parse(existingUser);

@@ -1,8 +1,9 @@
-import { LoginRequestSchemaType, LoginResponseSchemaType, RegisterRequestSchemaType } from "@/dtos/user.dto";
+import { LoginRequestSchemaType, LoginResponseSchemaType, RegisterRequestSchemaType, UserResponseSchemaType } from "@/dtos/user.dto";
 import instance from "../axios";
 import ApiResponse from "../types/interface/api-response.interface";
 import AdminCount from "../types/interface/admin-count.interface";
 import axios from "axios";
+import { SubmissionActivityType } from "@/dtos/submission.dto";
 
 export const loginUser = async (payload: LoginRequestSchemaType) => {
     try {
@@ -93,6 +94,44 @@ export const fetchUserCount = async (token: string): Promise<ApiResponse<AdminCo
         }
 
         console.error("Error fetching user count:", error);
+        throw error;
+    }
+}
+
+export const fetchUserInfo = async (token: string, userId: number) => {
+    try {
+        if (token) {
+            instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        }
+
+        const response = await instance.get<ApiResponse<{ user: UserResponseSchemaType, submissionActivities: SubmissionActivityType[] }>>(`/user/${userId}`);
+
+        return response.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+            throw new Error(error.response?.data?.error || "Failed to fetch user info");
+        }
+
+        console.error("Error fetching user info:", error);
+        throw error;
+    }
+}
+
+export const updatePassword = async (token: string, userId: number, payload: { currentPassword: string, newPassword: string, confirmPassword: string }) => {
+    try {
+        if (token) {
+            instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        }
+
+        const response = await instance.patch(`/user/${userId}`, payload);
+
+        return response.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+            throw new Error(error.response?.data?.error || "Failed to update password");
+        }
+
+        console.error("Error updating password:", error);
         throw error;
     }
 }

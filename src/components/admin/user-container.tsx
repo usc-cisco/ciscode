@@ -120,7 +120,6 @@ const UserContainer = () => {
                 <Table>
                     <TableHeader>
                     <TableRow>
-                        <TableHead className="w-16">#</TableHead>
                         <TableHead>Username</TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Role</TableHead>
@@ -132,7 +131,6 @@ const UserContainer = () => {
                             ||
                             users.map((user, index) => (
                                 <TableRow key={index} onClick={() => handleRowClick(user.id)} className="cursor-pointer odd:bg-neutral-100 odd:dark:bg-neutral-800">
-                                    <TableCell className="font-medium">{user.id}</TableCell>
                                     <TableCell className='truncate table-fixed flex-1'>
                                         <div className="font-medium">{user.username}</div>
                                     </TableCell>
