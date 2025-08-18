@@ -44,12 +44,16 @@ export const fetchSubmissionsByProblemId = async (
 ): Promise<{
   problem: ProblemSchemaResponseWithTestCasesType;
   submissions: SubmissionResponseWithTestCaseSubmissionAndUserType[];
+  submissionCount: number;
+  totalPages: number;
 }> => {
   try {
     const response = await instance.get<
       ApiResponse<{
         problem: ProblemSchemaResponseWithTestCasesType;
         submissions: SubmissionResponseWithTestCaseSubmissionAndUserType[];
+        submissionCount: number;
+        totalPages: number;
       }>
     >(`/problem/${problemId}/submission`, {
       headers: {
@@ -57,7 +61,7 @@ export const fetchSubmissionsByProblemId = async (
       },
       params: {
         status,
-        page,
+        offset: page - 1,
         limit,
       },
     });

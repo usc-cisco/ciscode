@@ -9,6 +9,7 @@ const env = {
   JWT_SECRET: process.env.JWT_SECRET || "default_secret_key",
 
   PROBLEM_LIMIT_PER_PAGE: 10,
+  SUBMISSION_LIMIT_PER_PAGE: 10,
 };
 
 export default env;

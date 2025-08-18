@@ -29,7 +29,7 @@ class SubmissionService {
         ...(status && { status }),
       },
       limit,
-      offset,
+      offset: offset * limit,
     })) as (Model & SubmissionResponseType)[];
 
     return submissions.map(
@@ -43,6 +43,19 @@ class SubmissionService {
           updatedAt: submission.updatedAt,
         }) as SubmissionResponseType,
     );
+  }
+
+  static async getSubmissionCountByProblemId(
+    problemId: number,
+    status: SubmissionStatusEnum | null = null,
+  ): Promise<number> {
+    const count = await Submission.count({
+      where: {
+        problemId,
+        ...(status && { status }),
+      },
+    });
+    return count;
   }
 
   static async getSubmissionByProblemIdAndUserId(
@@ -92,17 +105,6 @@ class SubmissionService {
       (submissionActivity): submissionActivity is SubmissionActivityType =>
         submissionActivity !== undefined,
     );
-  }
-
-  static async getSubmissionCountByProblemId(
-    problemId: number,
-  ): Promise<number> {
-    const count = await Submission.count({
-      where: {
-        problemId,
-      },
-    });
-    return count;
   }
 
   static async addSubmission(

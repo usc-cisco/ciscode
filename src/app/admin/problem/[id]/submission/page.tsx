@@ -6,6 +6,7 @@ import DropDownSelect from "@/components/home/drop-down-select";
 import CodeEditor from "@/components/problem/code-editor";
 import ProblemCard from "@/components/problem/problem-card";
 import TestCaseBar from "@/components/problem/test-case-bar";
+import CustomPagination from "@/components/shared/custom-pagination";
 import ProblemLayout from "@/components/shared/problem-layout";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/auth.context";
@@ -13,6 +14,7 @@ import { CheckCodeResponseType } from "@/dtos/code.dto";
 import { ProblemSchemaResponseType } from "@/dtos/problem.dto";
 import { SubmissionResponseWithTestCaseSubmissionAndUserType } from "@/dtos/submission.dto";
 import { TestCaseResponseType } from "@/dtos/testcase.dto";
+import env from "@/lib/env";
 import { runTestCase } from "@/lib/fetchers/code.fetchers";
 import { fetchSubmissionsByProblemId } from "@/lib/fetchers/submission.fetchers";
 import DifficultyEnum, {
@@ -24,13 +26,20 @@ import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enu
 import { cn } from "@/lib/utils";
 import { ArrowLeft, Check, X } from "lucide-react";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
+import React, { useCallback, useEffect, useState } from "react";
 
 const Submissions = () => {
   const { token } = useAuth();
   const params = useParams();
   const searchParams = useSearchParams();
+  const path = usePathname();
+  const router = useRouter();
 
   const [submissions, setSubmissions] = useState<
     SubmissionResponseWithTestCaseSubmissionAndUserType[]
@@ -48,8 +57,24 @@ const Submissions = () => {
   const [submissionIndex, setSubmissionIndex] = useState<number>(0);
   const [problemPage, setProblemPage] = useState(ProblemPageEnum.DETAILS);
   const [sending, setSending] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(
+    searchParams.get("page") ? Number(searchParams.get("page")) : 1,
+  );
+  const [totalPages, setTotalPages] = useState<number>(0);
   const [submissionStatus, setSubmissionStatus] = useState<string | "all">(
     searchParams.get("status") || "all",
+  );
+
+  const createQueryString = useCallback(
+    (data: { name: string; value: string }[]) => {
+      const newParams = new URLSearchParams(searchParams.toString());
+      data.forEach(({ name, value }) => {
+        newParams.set(name, value);
+      });
+
+      return newParams.toString();
+    },
+    [searchParams],
   );
 
   const setFromSubmissions = (
@@ -129,6 +154,13 @@ const Submissions = () => {
   const handleChangeStatus = (value: string) => {
     setSubmissionIndex(0);
     setSubmissionStatus(value);
+
+    router.push(
+      `${path}?${createQueryString([
+        { name: "status", value: String(value) },
+        { name: "page", value: String(1) },
+      ])}`,
+    );
   };
 
   useEffect(() => {
@@ -140,21 +172,30 @@ const Submissions = () => {
           Number(params.id),
           token,
           submissionStatus === "all" ? null : submissionStatus,
-          1,
-          100,
+          currentPage,
+          // env.SUBMISSION_LIMIT_PER_PAGE
+          2,
         );
 
         setSubmissions(response.submissions);
         setProblem(response.problem);
         setTestCases(response.problem.testCases);
         setFromSubmissions(response.submissions);
+        setTotalPages(response.totalPages);
+
+        if (response.submissions.length === 0 && currentPage !== 1) {
+          setCurrentPage(1);
+          router.push(
+            `${path}?${createQueryString([{ name: "page", value: String(1) }])}`,
+          );
+        }
       } catch (error) {
         console.error("Error fetching submissions:", error);
       }
     };
 
     fetchSubmissions();
-  }, [params.id, submissionStatus]);
+  }, [params.id, submissionStatus, currentPage]);
 
   useEffect(() => {
     if (submissions.length > 0) {
@@ -256,6 +297,20 @@ const Submissions = () => {
                     <p className="text-sm text-muted-foreground text-center mt-2">
                       No submissions found.
                     </p>
+                  )}
+
+                  {totalPages > 1 && (
+                    <div className="mt-4">
+                      <CustomPagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={(page: number) => () => {
+                          setCurrentPage(page);
+                        }}
+                        createQueryString={createQueryString}
+                        path={path}
+                      />
+                    </div>
                   )}
                 </div>
               </div>

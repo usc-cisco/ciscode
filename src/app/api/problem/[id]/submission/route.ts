@@ -73,6 +73,9 @@ export async function GET(
       }),
     );
 
+    const submissionCount =
+      await SubmissionService.getSubmissionCountByProblemId(Number(id), status);
+
     // Return the enriched submissions
     return NextResponse.json(
       {
@@ -80,6 +83,8 @@ export async function GET(
         data: {
           problem: problem as ProblemSchemaResponseWithTestCasesType,
           submissions: submissionsWithTestCaseSubmissionsAndUsers,
+          totalPages: Math.ceil(submissionCount / limit),
+          submissionCount,
         },
       },
       { status: 200 },
