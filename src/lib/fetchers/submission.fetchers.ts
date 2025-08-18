@@ -15,7 +15,7 @@ export const submitCode = async (
     const response = await instance.post<
       ApiResponse<SubmissionResponseWithTestCaseSubmissionType>
     >(
-      `/submit/${problemId}`,
+      `/problem/${problemId}/submission`,
       { code },
       {
         headers: {
