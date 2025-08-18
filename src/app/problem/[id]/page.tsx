@@ -80,7 +80,7 @@ export default function Problem() {
     setSending(true);
 
     try {
-      const response = await runTestCase(code, testCase.id, token);
+      const response = await runTestCase(code, testCase.id, token, true);
       setSending(false);
       return response;
     } catch (error) {

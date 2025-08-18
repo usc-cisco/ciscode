@@ -43,6 +43,7 @@ export const runTestCase = async (
   code: string,
   testCaseId: number,
   token: string,
+  save: boolean = false,
 ): Promise<CheckCodeResponseType> => {
   try {
     const response = await instance.post<ApiResponse<CheckCodeResponseType>>(
@@ -51,6 +52,9 @@ export const runTestCase = async (
       {
         headers: {
           Authorization: `Bearer ${token}`,
+        },
+        params: {
+          save,
         },
       },
     );

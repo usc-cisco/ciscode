@@ -34,6 +34,9 @@ export async function POST(
       return NextResponse.json({ error: "Code is required" }, { status: 400 });
     }
 
+    const searchParams = req.nextUrl.searchParams;
+    const save = searchParams.get("save") === "true";
+
     // Fetch the test case by ID
     const testCase = await TestCaseService.getTestCaseById(testCaseId);
     if (!testCase) {
@@ -43,16 +46,18 @@ export async function POST(
       );
     }
 
-    // Update code in submission
-    await SubmissionService.saveSubmission(
-      testCase.problemId,
-      userId,
-      {
-        code,
-        status: SubmissionStatusEnum.ATTEMPTED,
-      },
-      false,
-    );
+    if (save) {
+      // Update code in submission
+      await SubmissionService.saveSubmission(
+        testCase.problemId,
+        userId,
+        {
+          code,
+          status: SubmissionStatusEnum.ATTEMPTED,
+        },
+        false,
+      );
+    }
 
     const result = await runCCode(code, testCase.input || "", pty as PtyModule);
 
