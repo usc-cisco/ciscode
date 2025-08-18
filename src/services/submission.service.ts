@@ -65,7 +65,7 @@ class SubmissionService {
       where: { userId },
       order: [["updatedAt", "DESC"]],
       limit,
-    })) as (Model & SubmissionResponseType & { updatedAt: string })[];
+    })) as (Model & SubmissionResponseType & { updatedAt: Date })[];
 
     const submissionActivities = await Promise.all(
       submissions.map(async (submission) => {

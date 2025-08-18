@@ -9,7 +9,7 @@ export const SubmissionResponse = z.object({
   problemId: z.number().int().positive(),
   code: z.string().optional().default(""),
   status: z.enum(SubmissionStatusEnum).default(SubmissionStatusEnum.ATTEMPTED),
-  updatedAt: z.string().optional().default(new Date().toISOString()),
+  updatedAt: z.date().optional().default(new Date()),
 });
 
 export const SubmissionResponseWithTestCaseSubmission =
@@ -31,7 +31,7 @@ export const SubmissionActivitySchema = z.object({
   problemId: z.number().int().positive(),
   title: z.string(),
   status: z.enum(SubmissionStatusEnum).default(SubmissionStatusEnum.ATTEMPTED),
-  updatedAt: z.string().optional().default(new Date().toISOString()),
+  updatedAt: z.date().optional().default(new Date()),
 });
 
 export const UpdateSubmissionSchema = z.object({

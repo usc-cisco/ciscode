@@ -244,7 +244,11 @@ const Submissions = () => {
                           </div>
                         </div>
                         <p className="text-xs text-gray-500">
-                          {new Date(submission.updatedAt).toDateString()}
+                          {new Date(submission.updatedAt).getMonth() +
+                            "/" +
+                            new Date(submission.updatedAt).getDate() +
+                            "/" +
+                            new Date(submission.updatedAt).getFullYear()}
                         </p>
                       </div>
                     );
