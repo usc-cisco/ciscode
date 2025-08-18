@@ -141,7 +141,9 @@ export default function Problem() {
       console.error("Error submitting code:", error);
     } finally {
       setSubmitted(false);
-      setOpen(true);
+      setTimeout(() => {
+        setOpen(true);
+      }, 200);
     }
   };
 
