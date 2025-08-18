@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/app/loading";
 import AdminCodeEditor from "@/components/admin/problem/admin-code-editor";
 import AdminTestCaseBar from "@/components/admin/problem/admin-test-case-bar";
 import DropDownSelect from "@/components/home/drop-down-select";
@@ -57,6 +58,7 @@ const Submissions = () => {
   const [submissionIndex, setSubmissionIndex] = useState<number>(0);
   const [problemPage, setProblemPage] = useState(ProblemPageEnum.DETAILS);
   const [sending, setSending] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(
     searchParams.get("page") ? Number(searchParams.get("page")) : 1,
   );
@@ -189,6 +191,8 @@ const Submissions = () => {
         }
       } catch (error) {
         console.error("Error fetching submissions:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -200,6 +204,10 @@ const Submissions = () => {
       setFromSubmissions(submissions);
     }
   }, [submissionIndex]);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div>
