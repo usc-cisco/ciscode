@@ -2,6 +2,7 @@ import { sequelize } from "@/db/sequelize";
 import { requireRole } from "@/lib/require-role";
 import RoleEnum from "@/lib/types/enums/role.enum";
 import ProblemService from "@/services/problem.service";
+import SubmissionService from "@/services/submission.service";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = requireRole<[{ params: Promise<{ id: string }> }]>(
@@ -20,7 +21,6 @@ export const GET = requireRole<[{ params: Promise<{ id: string }> }]>(
     }
 
     try {
-      console.log("Sequelize dialect:", sequelize.getDialect());
       const problem = await ProblemService.getProblemById(Number(id), true);
       if (!problem) {
         return NextResponse.json(
@@ -29,10 +29,17 @@ export const GET = requireRole<[{ params: Promise<{ id: string }> }]>(
         );
       }
 
+      const count = await SubmissionService.getSubmissionCountByProblemId(
+        Number(id),
+      );
+
       return NextResponse.json(
         {
           message: "Problem fetched successfully",
-          data: problem,
+          data: {
+            ...problem,
+            numOfSubmissions: count,
+          },
         },
         { status: 200 },
       );

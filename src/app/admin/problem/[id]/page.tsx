@@ -53,6 +53,8 @@ const UpdateProblem = () => {
     },
   ]);
 
+  const [submissionCount, setSubmissionCount] = useState<number>(0);
+
   const setAllToPending = () => {
     setTestCases((prev) =>
       prev.map((testCase) => ({
@@ -218,6 +220,7 @@ const UpdateProblem = () => {
               status: TestCaseSubmissionStatusEnum.PENDING,
             })),
           );
+          setSubmissionCount(response.data.numOfSubmissions || 0);
         } else {
           console.error("Problem not found");
           router.push("/");
@@ -274,6 +277,7 @@ const UpdateProblem = () => {
             onCodeChange={handleCodeChange}
             isSolution={isSolution}
             handleChangeIsSolution={handleChangeIsSolution}
+            submissionCount={submissionCount}
           />
         }
         TestCases={

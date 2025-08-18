@@ -63,6 +63,17 @@ class SubmissionService {
     );
   }
 
+  static async getSubmissionCountByProblemId(
+    problemId: number,
+  ): Promise<number> {
+    const count = await Submission.count({
+      where: {
+        problemId,
+      },
+    });
+    return count;
+  }
+
   static async addSubmission(
     problemId: number,
     userId: number,

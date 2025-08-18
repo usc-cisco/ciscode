@@ -14,6 +14,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 interface AdminProblemBarProps {
   problem: {
@@ -93,12 +98,24 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({
       </div>
 
       <div className="px-2 h-14 absolute bottom-0 w-full border-t border-gray-200 dark:border-gray-700 flex justify-center items-center bg-vscode-light dark:bg-vscode-dark z-10 gap-2">
-        <Button
-          className={`bg-primary py-2 rounded-lg cursor-pointer flex-1 ${canSubmit ? "opacity-100" : "opacity-40 pointer-events-none"}`}
-          onClick={onSave}
-        >
-          Save Problem
-        </Button>
+        <HoverCard>
+          <HoverCardTrigger className="flex-1">
+            <Button
+              className={`bg-primary py-2 rounded-lg cursor-pointer w-full ${canSubmit ? "opacity-100" : "opacity-40 pointer-events-none"}`}
+              onClick={onSave}
+            >
+              Save Problem
+            </Button>
+          </HoverCardTrigger>
+          {canSubmit || (
+            <HoverCardContent>
+              <p className="text-xs">
+                Must check all test cases before submitting.
+              </p>
+            </HoverCardContent>
+          )}
+        </HoverCard>
+
         {onDelete && (
           <Dialog>
             <DialogTrigger asChild>

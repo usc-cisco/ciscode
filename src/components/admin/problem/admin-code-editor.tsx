@@ -2,7 +2,13 @@ import { Editor } from "@monaco-editor/react";
 import { useTheme } from "next-themes";
 import React from "react";
 import ProblemCard from "@/components/problem/problem-card";
-import { CodeXml } from "lucide-react";
+import { ClipboardList, CodeXml } from "lucide-react";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { Button } from "@/components/ui/button";
 
 interface AdminCodeEditorProps {
   defaultCode?: string;
@@ -10,6 +16,7 @@ interface AdminCodeEditorProps {
   isSolution: boolean;
   handleChangeIsSolution: (value: boolean) => () => void;
   onCodeChange: (value: string | undefined) => void;
+  submissionCount?: number;
 }
 
 const AdminCodeEditor: React.FC<AdminCodeEditorProps> = ({
@@ -18,11 +25,12 @@ const AdminCodeEditor: React.FC<AdminCodeEditorProps> = ({
   solutionCode,
   isSolution,
   handleChangeIsSolution,
+  submissionCount,
 }) => {
   const { resolvedTheme } = useTheme();
 
   return (
-    <ProblemCard className="overflow-hidden">
+    <ProblemCard className="overflow-hidden relative">
       <div className="px-2 py-2 rounded-t-xl border-b border-gray-200 dark:border-gray-700 flex items-center">
         <button
           onClick={handleChangeIsSolution(true)}
@@ -52,6 +60,24 @@ const AdminCodeEditor: React.FC<AdminCodeEditorProps> = ({
           lineNumbersMinChars: 2,
         }}
       />
+      {submissionCount !== undefined && (
+        <HoverCard>
+          <HoverCardTrigger className="absolute bottom-4 right-6">
+            <Button
+              onClick={() => {}}
+              className="rounded-full size-12 flex justify-center items-center transition-opacity cursor-pointer relative"
+            >
+              <ClipboardList />
+              <div className="absolute top-0 left-8 p-0.5 min-h-4 min-w-4 bg-red-500 rounded-full text-[0.6rem] flex items-center justify-center">
+                <p>{submissionCount}</p>
+              </div>
+            </Button>
+          </HoverCardTrigger>
+          <HoverCardContent>
+            <p className="text-xs">View submissions.</p>
+          </HoverCardContent>
+        </HoverCard>
+      )}
     </ProblemCard>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { loginUser } from "@/lib/fetchers/user.fetchers";
@@ -24,8 +24,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleSuccess }) => {
     formState: { errors },
   } = useForm<LoginFormInputs>();
 
+  const [loading, setLoading] = useState(false);
+
   const onSubmit = async (data: LoginFormInputs) => {
     try {
+      setLoading(true);
       const response = await loginUser(data);
       setAuth(response.token);
       handleSuccess();
@@ -35,6 +38,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleSuccess }) => {
         (error as { message: string }).message ||
           "An error occurred while logging in",
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,8 +61,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleSuccess }) => {
         {...register("password", { required: "Password is required" })}
       />
       <p className="text-red-500 text-xs">{errors.password?.message}</p>
-      <Button className="py-5 cursor-pointer" type="submit">
-        Log In
+      <Button className="py-5 cursor-pointer" type="submit" disabled={loading}>
+        {loading ? "Logging In..." : "Log In"}
       </Button>
 
       <Info text="Contact a CISCO member if you are unable to log in." />

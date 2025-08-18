@@ -28,6 +28,7 @@ export const ProblemSchemaResponse = z.object({
 
 export const ProblemSchemaResponseWithTestCases = ProblemSchemaResponse.extend({
   testCases: z.array(TestCaseResponse).optional().default([]),
+  numOfSubmissions: z.number().min(0).default(0),
 });
 
 export const AddProblemSchema = z.object({

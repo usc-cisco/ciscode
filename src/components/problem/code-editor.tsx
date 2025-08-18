@@ -48,7 +48,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
         <HoverCardTrigger className="absolute bottom-4 right-6">
           <Button
             onClick={handleReset}
-            className="rounded-full size-12 flex justify-center items-center opacity-50 hover:opacity-100 transition-opacity cursor-pointer"
+            className="rounded-full size-12 flex justify-center items-center transition-opacity cursor-pointer"
           >
             <RefreshCcw className="size-6" />
           </Button>
