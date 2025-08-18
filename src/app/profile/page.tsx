@@ -207,14 +207,18 @@ const Profile = () => {
                           router.push(`/problem/${submission.problemId}`)
                         }
                         key={submission.id}
-                        className={`py-4 px-4 rounded-sm border flex justify-between items-center cursor-pointer transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-900`}
+                        className={`py-4 px-4 rounded-sm border flex justify-between gap-4 items-center cursor-pointer transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-900`}
                       >
-                        <div className="flex items-center gap-2">
-                          {Icon}
-                          <p>{submission.title}</p>
+                        <div className="flex items-center gap-2 flex-1 w-0">
+                          <div>{Icon}</div>
+                          <p className="truncate">{submission.title}</p>
                         </div>
                         <p className="text-xs text-gray-500">
-                          {new Date(submission.updatedAt).toDateString()}
+                          {new Date(submission.updatedAt).getMonth() +
+                            "/" +
+                            new Date(submission.updatedAt).getDate() +
+                            "/" +
+                            new Date(submission.updatedAt).getFullYear()}
                         </p>
                       </div>
                     );

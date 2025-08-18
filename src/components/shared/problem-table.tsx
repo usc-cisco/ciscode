@@ -36,19 +36,19 @@ const ProblemTable = ({
   return (
     <>
       <div className="bg-vscode-light dark:bg-vscode-dark rounded-lg shadow overflow-hidden">
-        <Table>
+        <Table className="table-fixed w-full">
           <TableHeader>
             <TableRow>
               {inAdmin ? (
                 <TableHead className="w-16">#</TableHead>
               ) : (
-                <TableHead className="w-3"></TableHead>
+                <TableHead className="w-8"></TableHead>
               )}
               <TableHead>Title</TableHead>
-              <TableHead className="w-40">Author</TableHead>
-              <TableHead className="w-40">Difficulty</TableHead>
-              {/* <TableHead>Acceptance</TableHead> */}
-              {/* <TableHead>Status</TableHead> */}
+              <TableHead className="w-32 hidden md:table-cell">
+                Author
+              </TableHead>
+              <TableHead className="w-24">Difficulty</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -67,13 +67,13 @@ const ProblemTable = ({
                           <CheckIcon className="text-green-500 size-4" />
                         )}
                   </TableCell>
-                  <TableCell className="truncate table-fixed flex-1">
+                  <TableCell className="truncate w-full">
                     <div className="font-medium">{problem.title}</div>
                   </TableCell>
-                  <TableCell className="truncate table-fixed">
+                  <TableCell className="truncate hidden md:block">
                     <Badge variant="outline">{problem.author}</Badge>
                   </TableCell>
-                  <TableCell className="truncate table-fixed">
+                  <TableCell className="truncate">
                     <Badge className={getDifficultyColor(problem.difficulty)}>
                       {problem.difficulty}
                     </Badge>

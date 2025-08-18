@@ -6,6 +6,8 @@ import ProblemBar from "@/components/problem/problem-bar";
 import TestCaseBar from "@/components/problem/test-case-bar";
 import ProblemLayout from "@/components/shared/problem-layout";
 import ProtectedRoute from "@/components/shared/protected-route";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useAuth } from "@/contexts/auth.context";
 import { CheckCodeResponseType } from "@/dtos/code.dto";
 import { ProblemSchemaResponseType } from "@/dtos/problem.dto";
@@ -13,10 +15,10 @@ import { TestCaseResponseType } from "@/dtos/testcase.dto";
 import { runTestCase } from "@/lib/fetchers/code.fetchers";
 import { fetchProblem } from "@/lib/fetchers/problem.fetchers";
 import { submitCode } from "@/lib/fetchers/submission.fetchers";
-import { toastr } from "@/lib/toastr";
 import { ProblemPageEnum } from "@/lib/types/enums/problempage.enum";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -38,9 +40,13 @@ export default function Problem() {
   const [testCases, setTestCases] = useState<TestCaseResponseType[]>([]);
   const [code, setCode] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(false);
   const [problemPage, setProblemPage] = useState<ProblemPageEnum>(
     ProblemPageEnum.DETAILS,
   );
+  const [submissionStatus, setSubmissionStatus] =
+    useState<SubmissionStatusEnum>(SubmissionStatusEnum.ATTEMPTED);
+  const [numberOfPassed, setNumberOfPassed] = useState<number>(0);
 
   const handleCodeChange = (value: string | undefined) => {
     setCode(value || "");
@@ -121,28 +127,19 @@ export default function Problem() {
           });
           return updatedTestCases;
         });
-
-        switch (response.status) {
-          case SubmissionStatusEnum.SOLVED:
-            toastr.success("All test cases passed");
-            break;
-          case SubmissionStatusEnum.ATTEMPTED:
-            const numberOfPassed = response.testCaseSubmissions.filter(
-              (testCase) =>
-                testCase.status === TestCaseSubmissionStatusEnum.COMPLETED,
-            ).length;
-            toastr.error(
-              `${numberOfPassed === 0 ? "All test cases failed." : `Passed only ${numberOfPassed} out of ${testCases.length}`}`,
-            );
-            break;
-          default:
-            console.log("Unknown status");
-        }
+        setSubmissionStatus(response.status);
+        setNumberOfPassed(
+          response.testCaseSubmissions.filter(
+            (testCase) =>
+              testCase.status === TestCaseSubmissionStatusEnum.COMPLETED,
+          ).length,
+        );
       }
     } catch (error) {
       console.error("Error submitting code:", error);
     } finally {
       setSubmitted(false);
+      setOpen(true);
     }
   };
 
@@ -185,6 +182,65 @@ export default function Problem() {
 
   return (
     <ProtectedRoute>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="bg-vscode-light dark:bg-vscode-dark p-0 overflow-hidden border-none">
+          <div className="flex divide-x divide-neutral-300 dark:divide-neutral-700">
+            <div className="p-4 w-1/2">
+              {submissionStatus === SubmissionStatusEnum.SOLVED ? (
+                <>
+                  <DialogTitle className="text-xl font-semibold">
+                    Lovely! 🎉
+                  </DialogTitle>
+                  <p className="text-xs">You passed.</p>
+                </>
+              ) : (
+                <>
+                  <DialogTitle className="text-xl font-semibold">
+                    Oh no... 😭
+                  </DialogTitle>
+                  <p className="text-xs">You failed.</p>
+                </>
+              )}
+
+              <div className="flex justify-between text-sm mt-4 mb-12">
+                <p>Your score: </p>
+                <p
+                  className={`font-semibold ${numberOfPassed === testCases.length ? "text-green-500" : "text-red-500"}`}
+                >
+                  {numberOfPassed} / {testCases.length}
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center gap-2">
+                <Button
+                  className="w-full rounded-md cursor-pointer"
+                  onClick={() => setOpen(false)}
+                >
+                  {submissionStatus === SubmissionStatusEnum.SOLVED
+                    ? "Next Problem"
+                    : "Try Again"}
+                </Button>
+                <Button
+                  className="w-full rounded-md cursor-pointer"
+                  variant="outline"
+                  onClick={() => router.push("/home")}
+                >
+                  Return Home
+                </Button>
+              </div>
+            </div>
+            <div className="flex items-center justify-center w-1/2 p-4 bg-primary">
+              <Image
+                className="w-auto"
+                src="/cisco-logo-white.png"
+                alt="CISCO logo"
+                width={1000}
+                height={1000}
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
       <div>
         <ProblemLayout
           problemPage={problemPage}

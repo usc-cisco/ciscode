@@ -13,7 +13,6 @@ import { CheckCodeResponseType } from "@/dtos/code.dto";
 import { ProblemSchemaResponseType } from "@/dtos/problem.dto";
 import { SubmissionResponseWithTestCaseSubmissionAndUserType } from "@/dtos/submission.dto";
 import { TestCaseResponseType } from "@/dtos/testcase.dto";
-import { UserResponseSchemaType } from "@/dtos/user.dto";
 import { runTestCase } from "@/lib/fetchers/code.fetchers";
 import { fetchSubmissionsByProblemId } from "@/lib/fetchers/submission.fetchers";
 import DifficultyEnum, {
