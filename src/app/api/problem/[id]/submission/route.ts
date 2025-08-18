@@ -5,7 +5,6 @@ import { ProblemSchemaResponseWithTestCasesType } from "@/dtos/problem.dto";
 import {
   SubmissionResponse,
   SubmissionResponseWithTestCaseSubmissionAndUserType,
-  SubmissionResponseWithTestCaseSubmissionType,
   UpdateSubmissionType,
 } from "@/dtos/submission.dto";
 import { PtyModule, runCCode } from "@/lib/code-runner";
@@ -179,12 +178,15 @@ export async function POST(
       submission.status = submissionStatus;
     }
 
+    const nextProblemId = await ProblemService.getNextProblemId(Number(id));
+
     // Return the results
     return NextResponse.json({
       message: "Test cases executed",
       data: {
         ...SubmissionResponse.parse(submission),
         testCaseSubmissions: results,
+        nextProblemId,
       },
     });
   } catch (error) {

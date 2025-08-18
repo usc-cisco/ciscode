@@ -10,10 +10,14 @@ export const submitCode = async (
   code: string,
   problemId: number,
   token: string,
-): Promise<SubmissionResponseWithTestCaseSubmissionType> => {
+): Promise<
+  SubmissionResponseWithTestCaseSubmissionType & { nextProblemId: number }
+> => {
   try {
     const response = await instance.post<
-      ApiResponse<SubmissionResponseWithTestCaseSubmissionType>
+      ApiResponse<
+        SubmissionResponseWithTestCaseSubmissionType & { nextProblemId: number }
+      >
     >(
       `/problem/${problemId}/submission`,
       { code },

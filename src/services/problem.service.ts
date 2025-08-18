@@ -93,6 +93,20 @@ class ProblemService {
     return Promise.all(parsedProblems);
   }
 
+  static async getNextProblemId(problemId: number): Promise<number | null> {
+    const nextProblem = (await Problem.findOne({
+      where: {
+        id: {
+          [Op.gt]: problemId,
+        },
+        verified: true,
+      },
+      order: [["id", "ASC"]],
+    })) as ProblemSchemaResponseType | null;
+
+    return nextProblem ? nextProblem.id : null;
+  }
+
   static async getTotalCount(
     verified: boolean = true,
     search: string = "",

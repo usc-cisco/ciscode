@@ -47,6 +47,7 @@ export default function Problem() {
   const [submissionStatus, setSubmissionStatus] =
     useState<SubmissionStatusEnum>(SubmissionStatusEnum.ATTEMPTED);
   const [numberOfPassed, setNumberOfPassed] = useState<number>(0);
+  const [nextProblemId, setNextProblemId] = useState<number | null>(null);
 
   const handleCodeChange = (value: string | undefined) => {
     setCode(value || "");
@@ -134,6 +135,7 @@ export default function Problem() {
               testCase.status === TestCaseSubmissionStatusEnum.COMPLETED,
           ).length,
         );
+        setNextProblemId(response.nextProblemId);
       }
     } catch (error) {
       console.error("Error submitting code:", error);
@@ -212,14 +214,26 @@ export default function Problem() {
               </div>
 
               <div className="flex flex-col items-center gap-2">
-                <Button
-                  className="w-full rounded-md cursor-pointer"
-                  onClick={() => setOpen(false)}
-                >
-                  {submissionStatus === SubmissionStatusEnum.SOLVED
-                    ? "Next Problem"
-                    : "Try Again"}
-                </Button>
+                {submissionStatus === SubmissionStatusEnum.SOLVED ? (
+                  <Button
+                    className="w-full rounded-md cursor-pointer"
+                    onClick={() => {
+                      router.push(
+                        nextProblemId ? `/problem/${nextProblemId}` : "/home",
+                      );
+                    }}
+                  >
+                    Next Problem
+                  </Button>
+                ) : (
+                  <Button
+                    className="w-full rounded-md cursor-pointer"
+                    onClick={() => setOpen(false)}
+                  >
+                    Try Again
+                  </Button>
+                )}
+
                 <Button
                   className="w-full rounded-md cursor-pointer"
                   variant="outline"
