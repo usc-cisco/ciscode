@@ -55,10 +55,6 @@ export async function GET(
             submission.id,
           );
 
-        if (testCaseSubmissions.length === 0) {
-          throw new Error("Test case submissions not found");
-        }
-
         const user = await UserService.getUserById(submission.userId);
 
         if (!user) {
