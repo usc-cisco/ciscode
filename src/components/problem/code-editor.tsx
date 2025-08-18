@@ -12,13 +12,13 @@ import { Button } from "../ui/button";
 
 interface CodeEditorProps {
   code: string;
-  onCodeChange: (value: string | undefined) => void;
-  handleReset: () => void;
+  onCodeChange?: (value: string | undefined) => void;
+  handleReset?: () => void;
 }
 
 const CodeEditor: React.FC<CodeEditorProps> = ({
-  onCodeChange,
   code,
+  onCodeChange,
   handleReset,
 }) => {
   const { resolvedTheme } = useTheme();
@@ -42,21 +42,24 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           lineHeight: 22,
           minimap: { enabled: false },
           lineNumbersMinChars: 2,
+          readOnly: onCodeChange === undefined,
         }}
       />
-      <HoverCard>
-        <HoverCardTrigger className="absolute bottom-4 right-6">
-          <Button
-            onClick={handleReset}
-            className="rounded-full size-12 flex justify-center items-center transition-opacity cursor-pointer"
-          >
-            <RefreshCcw className="size-6" />
-          </Button>
-        </HoverCardTrigger>
-        <HoverCardContent>
-          <p className="text-xs">Reset the code to the default version.</p>
-        </HoverCardContent>
-      </HoverCard>
+      {handleReset && (
+        <HoverCard>
+          <HoverCardTrigger className="absolute bottom-4 right-6">
+            <Button
+              onClick={handleReset}
+              className="rounded-full size-12 flex justify-center items-center transition-opacity cursor-pointer"
+            >
+              <RefreshCcw className="size-6" />
+            </Button>
+          </HoverCardTrigger>
+          <HoverCardContent>
+            <p className="text-xs">Reset the code to the default version.</p>
+          </HoverCardContent>
+        </HoverCard>
+      )}
     </ProblemCard>
   );
 };

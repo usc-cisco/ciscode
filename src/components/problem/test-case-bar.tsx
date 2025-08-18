@@ -7,15 +7,16 @@ import { CheckCodeResponseType } from "@/dtos/code.dto";
 
 interface TestCaseBarProps {
   testCases: TestCaseResponseType[];
-  onSubmit: () => void;
+  onSubmit?: () => void;
   onEditTestCase: (
     index: number,
   ) => (field: string, value: string | boolean) => void;
   onCheckCode: (
     testCase: TestCaseResponseType,
   ) => Promise<CheckCodeResponseType>;
-  submitted: boolean;
+  submitted?: boolean;
   sending: boolean;
+  overrideHidden?: boolean;
 }
 
 const TestCaseBar: React.FC<TestCaseBarProps> = ({
@@ -25,6 +26,7 @@ const TestCaseBar: React.FC<TestCaseBarProps> = ({
   onCheckCode,
   submitted,
   sending,
+  overrideHidden = false,
 }) => {
   return (
     <ProblemCard className="relative overflow-hidden">
@@ -41,21 +43,24 @@ const TestCaseBar: React.FC<TestCaseBarProps> = ({
               testCase={testCase}
               onChange={onEditTestCase(index)}
               onCheckCode={onCheckCode}
-              submitted={submitted}
+              submitted={submitted ?? false}
               sending={sending}
+              overrideHidden={overrideHidden}
             />
           ))}
         </div>
       </div>
 
-      <div className="px-4 h-14 absolute bottom-0 w-full border-t border-gray-200 dark:border-gray-700 flex justify-center items-center bg-vscode-light dark:bg-vscode-dark">
-        <Button
-          className={`w-full bg-primary py-2 rounded-lg cursor-pointer ${(sending || submitted) && "pointer-events-none opacity-50"}`}
-          onClick={onSubmit}
-        >
-          Submit
-        </Button>
-      </div>
+      {onSubmit && (
+        <div className="px-4 h-14 absolute bottom-0 w-full border-t border-gray-200 dark:border-gray-700 flex justify-center items-center bg-vscode-light dark:bg-vscode-dark">
+          <Button
+            className={`w-full bg-primary py-2 rounded-lg cursor-pointer ${(sending || submitted) && "pointer-events-none opacity-50"}`}
+            onClick={onSubmit}
+          >
+            Submit
+          </Button>
+        </div>
+      )}
     </ProblemCard>
   );
 };

@@ -9,6 +9,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Button } from "@/components/ui/button";
+import { usePathname, useRouter } from "next/navigation";
 
 interface AdminCodeEditorProps {
   defaultCode?: string;
@@ -28,6 +29,8 @@ const AdminCodeEditor: React.FC<AdminCodeEditorProps> = ({
   submissionCount,
 }) => {
   const { resolvedTheme } = useTheme();
+  const router = useRouter();
+  const path = usePathname();
 
   return (
     <ProblemCard className="overflow-hidden relative">
@@ -64,8 +67,11 @@ const AdminCodeEditor: React.FC<AdminCodeEditorProps> = ({
         <HoverCard>
           <HoverCardTrigger className="absolute bottom-4 right-6">
             <Button
-              onClick={() => {}}
+              onClick={() => {
+                router.push(path + `/submission`);
+              }}
               className="rounded-full size-12 flex justify-center items-center transition-opacity cursor-pointer relative"
+              disabled={submissionCount === 0}
             >
               <ClipboardList />
               <div className="absolute top-0 left-8 p-0.5 min-h-4 min-w-4 bg-red-500 rounded-full text-[0.6rem] flex items-center justify-center">
@@ -74,7 +80,11 @@ const AdminCodeEditor: React.FC<AdminCodeEditorProps> = ({
             </Button>
           </HoverCardTrigger>
           <HoverCardContent>
-            <p className="text-xs">View submissions.</p>
+            <p className="text-xs">
+              {submissionCount > 0
+                ? `View submissions (${submissionCount})`
+                : "No submissions yet."}
+            </p>
           </HoverCardContent>
         </HoverCard>
       )}

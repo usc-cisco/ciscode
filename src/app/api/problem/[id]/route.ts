@@ -1,6 +1,5 @@
 export const runtime = "nodejs";
 
-import { sequelize } from "@/db/sequelize";
 import {
   AddProblemSchema,
   ProblemSchemaResponseType,
@@ -34,7 +33,6 @@ export async function GET(
   const userId = Number(userIdString);
 
   try {
-    console.log("Sequelize dialect:", sequelize.getDialect());
     const problem = await ProblemService.getProblemById(Number(id));
     if (!problem) {
       return NextResponse.json({ error: "Problem not found" }, { status: 404 });

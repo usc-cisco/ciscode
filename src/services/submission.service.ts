@@ -1,17 +1,48 @@
 import {
   SubmissionActivityType,
+  SubmissionResponse,
   SubmissionResponseType,
   UpdateSubmissionType,
 } from "@/dtos/submission.dto";
 import { Submission } from "@/models/submission.model";
-import { Model } from "sequelize";
+import { Model, Op } from "sequelize";
 import ProblemService from "./problem.service";
+import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 
 class SubmissionService {
   static async getSubmissionById(
     id: number,
   ): Promise<SubmissionResponseType | null> {
     return (await Submission.findByPk(id)) as Model & SubmissionResponseType;
+  }
+
+  static async getSubmissionsByProblemId(
+    problemId: number,
+    limit: number = 10,
+    offset: number = 0,
+    status: SubmissionStatusEnum | null = null,
+  ): Promise<SubmissionResponseType[]> {
+    const submissions = (await Submission.findAll({
+      order: [["updatedAt", "DESC"]],
+      where: {
+        problemId,
+        ...(status && { status }),
+      },
+      limit,
+      offset,
+    })) as (Model & SubmissionResponseType)[];
+
+    return submissions.map(
+      (submission) =>
+        ({
+          id: submission.id,
+          userId: submission.userId,
+          problemId: submission.problemId,
+          code: submission.code,
+          status: submission.status,
+          updatedAt: submission.updatedAt,
+        }) as SubmissionResponseType,
+    );
   }
 
   static async getSubmissionByProblemIdAndUserId(

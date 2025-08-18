@@ -21,6 +21,7 @@ interface TestCaseProps {
   ) => Promise<CheckCodeResponseType>;
   submitted: boolean;
   sending: boolean;
+  overrideHidden?: boolean;
 }
 
 const TestCase: React.FC<TestCaseProps> = ({
@@ -30,6 +31,7 @@ const TestCase: React.FC<TestCaseProps> = ({
   onCheckCode,
   submitted,
   sending,
+  overrideHidden,
 }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [checking, setChecking] = useState(submitted);
@@ -49,7 +51,7 @@ const TestCase: React.FC<TestCaseProps> = ({
   }
 
   const handleToggleDetails = () => {
-    if (!testCase.hidden) {
+    if (!testCase.hidden || overrideHidden) {
       setShowDetails(!showDetails);
     }
   };
@@ -90,7 +92,7 @@ const TestCase: React.FC<TestCaseProps> = ({
     >
       <button
         onClick={handleToggleDetails}
-        className={`flex items-center px-2 py-4 justify-between w-full h-full rounded-xl select-none ${testCase.hidden ? "cursor-not-allowed" : "hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer"}`}
+        className={`flex items-center px-2 py-4 justify-between w-full h-full rounded-xl select-none ${!overrideHidden && testCase.hidden ? "cursor-not-allowed" : "hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer"}`}
       >
         <div className="flex items-center gap-2 px-2 h-full">
           <StatusIcon className={cn("size-4", statusClassName)} />
@@ -114,7 +116,7 @@ const TestCase: React.FC<TestCaseProps> = ({
         </button>
       )}
 
-      {showDetails && !testCase.hidden && (
+      {showDetails && (!testCase.hidden || overrideHidden) && (
         <div className="flex flex-col gap-2 px-4 pt-2 pb-4 w-full text-xs">
           <div className="flex flex-col gap-2 h-full">
             <label className="font-semibold">Expected Output:</label>
