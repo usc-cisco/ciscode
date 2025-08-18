@@ -152,6 +152,7 @@ const Submissions = () => {
   };
 
   const handleChangeStatus = (value: string) => {
+    setCurrentPage(1);
     setSubmissionIndex(0);
     setSubmissionStatus(value);
 
@@ -173,8 +174,7 @@ const Submissions = () => {
           token,
           submissionStatus === "all" ? null : submissionStatus,
           currentPage,
-          // env.SUBMISSION_LIMIT_PER_PAGE
-          2,
+          env.SUBMISSION_LIMIT_PER_PAGE,
         );
 
         setSubmissions(response.submissions);
