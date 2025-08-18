@@ -313,7 +313,9 @@ const Profile = () => {
                   return (
                     <div
                       onClick={() =>
-                        router.push(`/problem/${submission.problemId}`)
+                        router.push(
+                          `/admin/problem/${submission.problemId}/submission`,
+                        )
                       }
                       key={submission.id}
                       className={`py-4 px-4 rounded-sm border flex justify-between gap-4 items-center cursor-pointer transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-900`}
