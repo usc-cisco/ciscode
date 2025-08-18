@@ -98,9 +98,7 @@ const Submissions = () => {
           status: matchingTestCase
             ? matchingTestCase.status
             : TestCaseSubmissionStatusEnum.PENDING,
-          actualOutput: matchingTestCase
-            ? matchingTestCase.output
-            : testCase.output,
+          actualOutput: matchingTestCase ? matchingTestCase.output : "",
         };
       });
     });
