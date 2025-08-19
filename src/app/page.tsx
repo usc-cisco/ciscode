@@ -22,17 +22,18 @@ export default function Auth() {
   }, [isAuthenticated, router]);
 
   return (
-    <div className="h-cscreen flex flex-col justify-center items-center gap-8 px-6 md:flex-row md:items-center md:justify-evenly">
-      <div className="-mt-24  md:max-w-2/5">
-        <h1 className="text-primary text-center md:text-start font-semibold text-6xl">
-          ciscode
-        </h1>
-        <p className="font-normal text-center md:text-start text-xl">
-          Code your problems away...
-        </p>
+    <div className="h-cscreen w-full flex flex-col items-center">
+      <div className="flex flex-col h-cscreen w-full max-w-4xl justify-center items-center gap-8 px-6 md:flex-row md:items-center md:justify-between">
+        <div className="-mt-24  md:max-w-2/5">
+          <h1 className="text-primary text-center md:text-start font-semibold text-6xl">
+            ciscode
+          </h1>
+          <p className="font-normal text-center md:text-start text-xl">
+            Code your problems away...
+          </p>
+        </div>
+        <LoginForm handleSuccess={handleLoginSuccess} />
       </div>
-
-      <LoginForm handleSuccess={handleLoginSuccess} />
     </div>
   );
 }
