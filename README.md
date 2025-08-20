@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Project Ciscode
 
-## Getting Started
+**Project Ciscode** is a student-built coding platform by **CISCO** that offers algorithm challenges to help students practice, improve, and master their problem-solving skills.  
 
-First, run the development server:
+The platform provides a collection of problems, ranging from beginner-friendly to advanced, designed to sharpen your coding abilities in a competitive yet supportive environment.
 
+---
+
+## 🚀 Tech Stack
+- **Fullstack Framework:** [Next.js](https://nextjs.org/) (frontend + API backend)  
+- **Database:** [MySQL](https://www.mysql.com/)  
+- **ORM:** [Sequelize](https://sequelize.org/)  
+
+---
+
+## 📂 Features
+- 🧑‍💻 Algorithm challenges across multiple difficulty levels  
+- 📊 Track progress and submitted solutions  
+- 🔍 Search and filter problems  
+- 👤 User authentication & accounts  
+- ⚡ Fast and modern UI powered by Next.js  
+
+---
+
+## ⚙️ Installation & Setup
+
+### Prerequisites
+- Node.js (>= 18)  
+- MySQL (installed and running)  
+- npm or yarn  
+
+### Clone the Repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/usc-cisco/ciscode.git
+cd ciscode
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Install Dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Start Development Server
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+App will be running on [http://localhost:3000](http://localhost:3000).
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🤝 Contributing
+Contributions are welcome! Feel free to fork the repo, submit issues, or open pull requests.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📜 License
+This project is for educational purposes under USC-CISCO.
