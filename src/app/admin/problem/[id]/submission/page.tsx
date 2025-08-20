@@ -16,7 +16,7 @@ import { ProblemSchemaResponseType } from "@/dtos/problem.dto";
 import { SubmissionResponseWithTestCaseSubmissionAndUserType } from "@/dtos/submission.dto";
 import { TestCaseResponseType } from "@/dtos/testcase.dto";
 import env from "@/lib/env";
-import { runTestCase } from "@/lib/fetchers/code.fetchers";
+import { runTestCaseAsAdmin } from "@/lib/fetchers/code.fetchers";
 import { fetchSubmissionsByProblemId } from "@/lib/fetchers/submission.fetchers";
 import DifficultyEnum, {
   getDifficultyColor,
@@ -133,7 +133,7 @@ const Submissions = () => {
     setSending(true);
 
     try {
-      const response = await runTestCase(
+      const response = await runTestCaseAsAdmin(
         problem.answerCode ?? "",
         testCase.id,
         token,

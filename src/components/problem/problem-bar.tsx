@@ -4,6 +4,8 @@ import { ProblemSchemaResponseType } from "@/dtos/problem.dto";
 import { Badge } from "../ui/badge";
 import { getDifficultyColor } from "@/lib/types/enums/difficulty.enum";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 interface ProblemBarProps {
   problem: ProblemSchemaResponseType;
@@ -16,6 +18,13 @@ const ProblemBar: React.FC<ProblemBarProps> = ({ problem, className }) => {
     <ProblemCard
       className={cn("p-6 overflow-y-auto hide-scrollbar", className)}
     >
+      <Link
+        href={`/home`}
+        className="flex items-center gap-1 hover:underline mb-2"
+      >
+        <ArrowLeft className="size-3" />
+        <p className="text-xs">Back to Home</p>
+      </Link>
       <h1 className="text-xl font-semibold">{title}</h1>
       <div className="flex gap-2 justify-between">
         <p className="text-sm text-muted-foreground truncate">By {author}</p>

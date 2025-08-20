@@ -6,7 +6,7 @@ import DifficultyEnum, {
 } from "@/lib/types/enums/difficulty.enum";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Trash2Icon } from "lucide-react";
+import { ArrowLeft, Trash2Icon } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -19,6 +19,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import Link from "next/link";
 
 interface AdminProblemBarProps {
   problem: {
@@ -43,6 +44,13 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({
   return (
     <ProblemCard className="overflow-hidden hide-scrollbar relative">
       <div className="p-6 max-h-full overflow-y-auto overflow-x-hidden pb-26">
+        <Link
+          href={`/admin`}
+          className="flex items-center gap-1 hover:underline mb-2"
+        >
+          <ArrowLeft className="size-3" />
+          <p className="text-xs">Back to Dashboard</p>
+        </Link>
         <input
           className="text-xl font-semibold truncate max-w-full"
           placeholder={"Title here..."}

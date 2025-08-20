@@ -43,7 +43,6 @@ export const runTestCase = async (
   code: string,
   testCaseId: number,
   token: string,
-  save: boolean = false,
 ): Promise<CheckCodeResponseType> => {
   try {
     const response = await instance.post<ApiResponse<CheckCodeResponseType>>(
@@ -53,8 +52,48 @@ export const runTestCase = async (
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        params: {
-          save,
+      },
+    );
+
+    const { data: responseData } = response.data;
+
+    return {
+      ...responseData,
+      error:
+        responseData.output &&
+        responseData.output.includes("[Execution timed out]")
+          ? "Execution timed out"
+          : responseData.error,
+    };
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.data?.data?.error) {
+      return {
+        output: null,
+        error: error.response.data.data.error,
+        status: TestCaseSubmissionStatusEnum.FAILED,
+      };
+    }
+
+    return {
+      output: null,
+      error: "Internal server error",
+      status: TestCaseSubmissionStatusEnum.FAILED,
+    };
+  }
+};
+
+export const runTestCaseAsAdmin = async (
+  code: string,
+  testCaseId: number,
+  token: string,
+): Promise<CheckCodeResponseType> => {
+  try {
+    const response = await instance.post<ApiResponse<CheckCodeResponseType>>(
+      `/run/${testCaseId}/admin`,
+      { code },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
       },
     );
