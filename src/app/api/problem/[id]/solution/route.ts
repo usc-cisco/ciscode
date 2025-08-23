@@ -3,6 +3,7 @@ import { requireRole } from "@/lib/require-role";
 import RoleEnum from "@/lib/types/enums/role.enum";
 import ProblemService from "@/services/problem.service";
 import SubmissionService from "@/services/submission.service";
+import UserService from "@/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = requireRole<[{ params: Promise<{ id: string }> }]>(
@@ -28,6 +29,16 @@ export const GET = requireRole<[{ params: Promise<{ id: string }> }]>(
           { status: 404 },
         );
       }
+
+      const author = await UserService.getUserById(problem.authorId);
+      if (!author) {
+        return NextResponse.json(
+          { error: "Author not found" },
+          { status: 404 },
+        );
+      }
+
+      problem.author = author.name;
 
       const count = await SubmissionService.getSubmissionCountByProblemId(
         Number(id),

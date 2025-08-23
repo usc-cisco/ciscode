@@ -20,12 +20,15 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import Link from "next/link";
+import { AddProblemSchemaType } from "@/dtos/problem.dto";
 
 interface AdminProblemBarProps {
   problem: {
     title: string;
     description: string;
     difficulty: string;
+    verified?: boolean;
+    author: string;
   };
   onProblemChange: (field: string, value: string | DifficultyEnum) => void;
   onSave: () => void;
@@ -40,7 +43,7 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({
   onDelete,
   canSubmit,
 }) => {
-  const { title, difficulty, description } = problem;
+  const { title, difficulty, description, verified, author } = problem;
   return (
     <ProblemCard className="overflow-hidden hide-scrollbar relative">
       <div className="p-6 max-h-full overflow-y-auto overflow-x-hidden pb-26">
@@ -57,6 +60,7 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({
           value={title}
           onChange={(e) => onProblemChange("title", e.target.value)}
         />
+        <p className="text-sm text-muted-foreground truncate">By {author}</p>
         <div className="flex justify-between gap-2 items-center py-2">
           <p className="text-sm font-semibold">Difficulty: </p>
           <div className="flex gap-2 items-center">
@@ -112,7 +116,7 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({
               className={`bg-primary py-2 rounded-lg cursor-pointer w-full ${canSubmit ? "opacity-100" : "opacity-40 pointer-events-none"}`}
               onClick={onSave}
             >
-              Save Problem
+              {verified ? "Save Problem" : "Verify Problem"}
             </Button>
           </HoverCardTrigger>
           {canSubmit || (

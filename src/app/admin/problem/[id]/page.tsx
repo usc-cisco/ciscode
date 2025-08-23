@@ -37,12 +37,16 @@ const UpdateProblem = () => {
   const [canSubmit, setCanSubmit] = useState(false);
   const [problemPage, setProblemPage] = useState(ProblemPageEnum.DETAILS);
 
-  const [problem, setProblem] = useState<AddProblemSchemaType>({
+  const [problem, setProblem] = useState<
+    AddProblemSchemaType & { author: string }
+  >({
     title: "",
     description: "",
     difficulty: DifficultyEnum.PROG1,
     defaultCode: "// Write your boilerplate code here...",
     solutionCode: "// Write your solution code here...",
+    verified: true,
+    author: "",
   });
 
   const [testCases, setTestCases] = useState<AddTestCaseSchemaType[]>([
@@ -213,6 +217,8 @@ const UpdateProblem = () => {
             difficulty: response.data.difficulty,
             defaultCode: response.data.defaultCode,
             solutionCode: response.data.solutionCode ?? "",
+            verified: response.data.verified ?? true,
+            author: response.data.author ?? "",
           });
           setTestCases(
             _testCases.map((testCase) => ({
@@ -277,7 +283,7 @@ const UpdateProblem = () => {
             onCodeChange={handleCodeChange}
             isSolution={isSolution}
             handleChangeIsSolution={handleChangeIsSolution}
-            submissionCount={submissionCount}
+            submissionCount={problem.verified ? submissionCount : undefined}
           />
         }
         TestCases={

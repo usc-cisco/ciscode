@@ -21,6 +21,7 @@ export const ProblemSchemaResponse = z.object({
   defaultCode: z.string().optional().nullable().default(null),
   solutionCode: z.string().optional().default("").optional(),
   answerCode: z.string().optional().nullable().default(null),
+  verified: z.boolean().optional(),
   authorId: z.number(),
   author: z.string().optional(),
   status: z.enum(SubmissionStatusEnum).optional(),
@@ -37,6 +38,7 @@ export const AddProblemSchema = z.object({
   difficulty: z.enum(DifficultyEnum),
   defaultCode: z.string().optional().nullable().default(null),
   solutionCode: z.string().optional().default(""),
+  verified: z.boolean().optional(),
   testCases: z
     .array(AddTestCaseSchema)
     .min(1, "At least one test case is required")

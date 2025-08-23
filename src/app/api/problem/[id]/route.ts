@@ -34,7 +34,7 @@ export async function GET(
 
   try {
     const problem = await ProblemService.getProblemById(Number(id));
-    if (!problem) {
+    if (!problem || !problem.verified) {
       return NextResponse.json({ error: "Problem not found" }, { status: 404 });
     }
 
@@ -109,6 +109,7 @@ export const PUT = requireRole<[{ params: Promise<{ id: string }> }]>(
 
       const body = await req.json();
       const parsedData = AddProblemSchema.parse(body);
+      parsedData.verified = true;
 
       const problemTestCases = await TestCaseService.getTestCasesByProblemId(
         Number(id),

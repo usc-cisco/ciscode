@@ -81,7 +81,7 @@ export const POST = requireRole(
       }
 
       const data = parsedData.data;
-      console.log(userId);
+
       const newProblem = await ProblemService.addProblem(data, userId);
 
       const testCases = await TestCaseService.addTestCases(
