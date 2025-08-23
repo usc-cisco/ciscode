@@ -15,6 +15,31 @@ export async function runCCode(
     mkdirSync(tmpDir);
   }
 
+  // Check if code contains forbidden functions
+  const forbidden = [
+    "popen",
+    "exec",
+    "fork",
+    "kill",
+    "socket",
+    "accept",
+    "chmod",
+    "unlink",
+    "ptrace",
+    "dlopen",
+    "mmap",
+  ];
+
+  for (const f of forbidden) {
+    const re = new RegExp(`\\b${f}\\s*\\(`);
+    if (re.test(code)) {
+      return {
+        output: null,
+        error: `Warning: Usage of '${f}()' is not allowed.`,
+      };
+    }
+  }
+
   const id = Date.now() + "-" + Math.random().toString(36).slice(2);
   const codePath = `${tmpDir}/${id}.c`;
   const binaryPath = `${tmpDir}/${id}.out`;
