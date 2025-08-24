@@ -278,9 +278,9 @@ const Submissions = () => {
                         key={submission.id}
                         className={`py-1 px-3 rounded-sm border flex justify-between items-center cursor-pointer transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-900 ${submissionIndex === index && "border-primary"}`}
                       >
-                        <div className="flex items-center gap-2">
-                          {Icon}
-                          <div className="flex flex-col">
+                        <div className="flex items-center gap-2 flex-1 overflow-hidden">
+                          <div>{Icon}</div>
+                          <div className="flex flex-col truncate">
                             <p className="text-sm font-semibold truncate">
                               {submission.user.username}
                             </p>
@@ -289,7 +289,7 @@ const Submissions = () => {
                             </p>
                           </div>
                         </div>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 w-16 text-end">
                           {new Date(submission.updatedAt).getMonth() +
                             "/" +
                             new Date(submission.updatedAt).getDate() +
