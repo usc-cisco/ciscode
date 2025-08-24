@@ -28,7 +28,7 @@ interface AdminProblemBarProps {
     description: string;
     difficulty: string;
     verified?: boolean;
-    author: string;
+    author?: string;
   };
   onProblemChange: (field: string, value: string | DifficultyEnum) => void;
   onSave: () => void;
