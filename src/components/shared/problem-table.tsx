@@ -45,7 +45,7 @@ const ProblemTable = ({
                 <TableHead className="w-8"></TableHead>
               )}
               <TableHead>Title</TableHead>
-              <TableHead className="w-32 hidden md:table-cell">
+              <TableHead className="w-56 hidden md:table-cell">
                 Author
               </TableHead>
               <TableHead className="w-24">Difficulty</TableHead>

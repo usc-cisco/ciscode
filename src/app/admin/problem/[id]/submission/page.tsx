@@ -152,9 +152,9 @@ const Submissions = () => {
   };
 
   const handleChangeStatus = (value: string) => {
-    setCurrentPage(1);
     setSubmissionIndex(0);
     setSubmissionStatus(value);
+    setCurrentPage(1);
 
     router.push(
       `${path}?${createQueryString([
@@ -311,6 +311,7 @@ const Submissions = () => {
                         currentPage={currentPage}
                         totalPages={totalPages}
                         onPageChange={(page: number) => () => {
+                          setSubmissionIndex(0);
                           setCurrentPage(page);
                         }}
                         createQueryString={createQueryString}
