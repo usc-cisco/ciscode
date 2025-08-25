@@ -1,0 +1,53 @@
+import { ActionTypeEnum } from "@/lib/types/enums/actiontype.enum";
+import { ActivityLog } from "@/models/activity-log.model";
+import { Op } from "sequelize";
+
+class ActivityLogService {
+  static async createLogEntry(
+    userId: number,
+    actionDescription: string,
+    actionType: ActionTypeEnum,
+  ) {
+    return ActivityLog.create({
+      userId,
+      actionDescription,
+      actionType,
+    });
+  }
+
+  static async getLogs(
+    verified: boolean = true,
+    offset: number = 0,
+    limit: number = 10,
+    search: string = "",
+    actionType?: ActionTypeEnum,
+  ) {
+    const where = {
+      ...(verified && { verified }),
+      ...(search && { actionDescription: { [Op.like]: `%${search}%` } }),
+      ...(actionType && { actionType }),
+    };
+
+    return ActivityLog.findAll({
+      where,
+      offset,
+      limit,
+      order: [["createdAt", "DESC"]],
+    });
+  }
+
+  static async getUserLogs(userId: number) {
+    return ActivityLog.findAll({
+      where: { userId },
+      order: [["createdAt", "DESC"]],
+    });
+  }
+
+  static async deleteLogEntry(logId: number) {
+    return ActivityLog.destroy({
+      where: { id: logId },
+    });
+  }
+}
+
+export default ActivityLogService;

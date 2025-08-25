@@ -8,8 +8,10 @@ import {
   UpdateSubmissionType,
 } from "@/dtos/submission.dto";
 import { PtyModule, runCCode } from "@/lib/code-runner";
+import { ActionTypeEnum } from "@/lib/types/enums/actiontype.enum";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
+import ActivityLogService from "@/services/activity-log.service";
 import ProblemService from "@/services/problem.service";
 import SubmissionService from "@/services/submission.service";
 import TestCaseSubmissionService from "@/services/testcase-submission.service";
@@ -120,6 +122,11 @@ export async function POST(
       return NextResponse.json({ error: "Code is required" }, { status: 400 });
     }
 
+    const problem = await ProblemService.getProblemById(Number(id));
+    if (!problem) {
+      return NextResponse.json({ error: "Problem not found" }, { status: 404 });
+    }
+
     // Save submission
     const submission = await SubmissionService.saveSubmission(
       Number(id),
@@ -180,6 +187,13 @@ export async function POST(
     }
 
     const nextProblemId = await ProblemService.getNextProblemId(Number(id));
+
+    const user = await UserService.getUserById(userId);
+    await ActivityLogService.createLogEntry(
+      userId,
+      `[${user.username} - ${user.name}] submitted solution for problem [${id} - ${problem.title}]. STATUS: ${submission.status.toUpperCase()}.`,
+      ActionTypeEnum.SUBMIT_CODE,
+    );
 
     // Return the results
     return NextResponse.json({

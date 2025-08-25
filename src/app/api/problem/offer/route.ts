@@ -2,6 +2,8 @@ export const runtime = "nodejs";
 
 import { AddProblemSchema } from "@/dtos/problem.dto";
 import { PtyModule } from "@/lib/code-runner";
+import { ActionTypeEnum } from "@/lib/types/enums/actiontype.enum";
+import ActivityLogService from "@/services/activity-log.service";
 import ProblemService from "@/services/problem.service";
 import TestCaseService from "@/services/testcase.service";
 import { NextRequest, NextResponse } from "next/server";
@@ -32,6 +34,12 @@ export const POST = async (req: NextRequest) => {
       data.testCases ?? [],
       newProblem,
       pty as PtyModule,
+    );
+
+    await ActivityLogService.createLogEntry(
+      userId,
+      `[${newProblem.authorId} - ${newProblem.author}] offered problem [${newProblem.id} - ${newProblem.title}].`,
+      ActionTypeEnum.CREATE,
     );
 
     return NextResponse.json(

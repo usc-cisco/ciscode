@@ -1,5 +1,7 @@
 import { requireRole } from "@/lib/require-role";
+import { ActionTypeEnum } from "@/lib/types/enums/actiontype.enum";
 import RoleEnum from "@/lib/types/enums/role.enum";
+import ActivityLogService from "@/services/activity-log.service";
 import ProblemService from "@/services/problem.service";
 import SubmissionService from "@/services/submission.service";
 import UserService from "@/services/user.service";
@@ -41,6 +43,13 @@ export const GET = requireRole<[{ params: Promise<{ id: string }> }]>(
 
       const count = await SubmissionService.getSubmissionCountByProblemId(
         Number(id),
+      );
+
+      const user = await UserService.getUserById(Number(userIdString));
+      await ActivityLogService.createLogEntry(
+        Number(userIdString),
+        `[${user.username} - ${user.name}] fetched problem [${id} - ${problem.title}] with solution.`,
+        ActionTypeEnum.READ,
       );
 
       return NextResponse.json(

@@ -1,6 +1,8 @@
 import { RegisterRequestSchema } from "@/dtos/user.dto";
 import { requireRole } from "@/lib/require-role";
+import { ActionTypeEnum } from "@/lib/types/enums/actiontype.enum";
 import RoleEnum from "@/lib/types/enums/role.enum";
+import ActivityLogService from "@/services/activity-log.service";
 import UserService from "@/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -53,6 +55,19 @@ export const POST = requireRole(
   async (req: NextRequest) => {
     try {
       const role = req.headers.get("x-user-role") as RoleEnum;
+      if (!role) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+      }
+
+      const adminId = await req.headers.get("x-user-id");
+      if (!adminId) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+      }
+
+      const admin = await UserService.getUserById(Number(adminId));
+      if (!admin) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+      }
 
       const body = await req.json();
       const parsedData = await RegisterRequestSchema.safeParseAsync(body);
@@ -86,6 +101,12 @@ export const POST = requireRole(
           { status: 500 },
         );
       }
+
+      await ActivityLogService.createLogEntry(
+        Number(adminId),
+        `[${admin.username} - ${admin.name}] registered user [${user.username} - ${user.name}].`,
+        ActionTypeEnum.CREATE,
+      );
 
       return NextResponse.json({ user }, { status: 201 });
     } catch (error) {

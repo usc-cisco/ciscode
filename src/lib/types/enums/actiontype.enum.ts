@@ -1,0 +1,9 @@
+export enum ActionTypeEnum {
+  SESSION_START = "SESSION START",
+  RUN_CODE = "RUN CODE",
+  SUBMIT_CODE = "SUBMIT CODE",
+  CREATE = "CREATE",
+  READ = "READ",
+  UPDATE = "UPDATE",
+  DELETE = "DELETE",
+}

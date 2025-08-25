@@ -8,12 +8,15 @@ import {
 import { TestCaseSubmissionResponseType } from "@/dtos/testcase-submission.dto";
 import { PtyModule } from "@/lib/code-runner";
 import { requireRole } from "@/lib/require-role";
+import { ActionTypeEnum } from "@/lib/types/enums/actiontype.enum";
 import RoleEnum from "@/lib/types/enums/role.enum";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
+import ActivityLogService from "@/services/activity-log.service";
 import ProblemService from "@/services/problem.service";
 import SubmissionService from "@/services/submission.service";
 import TestCaseSubmissionService from "@/services/testcase-submission.service";
 import TestCaseService from "@/services/testcase.service";
+import UserService from "@/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -51,6 +54,13 @@ export async function GET(
           submission.id,
         );
     }
+
+    const user = await UserService.getUserById(userId);
+    await ActivityLogService.createLogEntry(
+      userId,
+      `[${user.username} - ${user.name}] fetched problem [${id} - ${problem.title}].`,
+      ActionTypeEnum.READ,
+    );
 
     return NextResponse.json(
       {

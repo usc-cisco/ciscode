@@ -1,3 +1,5 @@
+import { ActionTypeEnum } from "@/lib/types/enums/actiontype.enum";
+import ActivityLogService from "@/services/activity-log.service";
 import UserService from "@/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -45,6 +47,12 @@ export const PATCH = async (
       password: newPassword,
       confirmPassword,
     });
+
+    await ActivityLogService.createLogEntry(
+      userId,
+      `[${user.username} - ${user.name}] updated password.`,
+      ActionTypeEnum.UPDATE,
+    );
 
     return NextResponse.json(
       {

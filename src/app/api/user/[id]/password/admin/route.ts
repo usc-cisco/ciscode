@@ -1,4 +1,6 @@
+import { ActionTypeEnum } from "@/lib/types/enums/actiontype.enum";
 import RoleEnum from "@/lib/types/enums/role.enum";
+import ActivityLogService from "@/services/activity-log.service";
 import UserService from "@/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -9,6 +11,16 @@ export const PATCH = async (
   try {
     const role = (await req.headers.get("x-user-role")) as RoleEnum;
     if (!role) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    const adminId = await req.headers.get("x-user-id");
+    if (!adminId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    const admin = await UserService.getUserById(Number(adminId));
+    if (!admin) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
@@ -43,6 +55,12 @@ export const PATCH = async (
       password: newPassword,
       confirmPassword,
     });
+
+    await ActivityLogService.createLogEntry(
+      Number(adminId),
+      `[${admin.username} - ${admin.name}] updated user [${user.username} - ${user.name}] password.`,
+      ActionTypeEnum.UPDATE,
+    );
 
     return NextResponse.json(
       {

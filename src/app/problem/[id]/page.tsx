@@ -18,6 +18,7 @@ import { submitCode } from "@/lib/fetchers/submission.fetchers";
 import { ProblemPageEnum } from "@/lib/types/enums/problempage.enum";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
+import { error } from "console";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -117,13 +118,24 @@ export default function Problem() {
       const response = await submitCode(code, Number(params.id), token);
       if (response) {
         console.log("Status: ", response.status);
+
         setTestCases((prev) => {
           const updatedTestCases = [...prev];
           response.testCaseSubmissions.forEach((testCase, index) => {
+            let actualOutput = "";
+            if (testCase.output) {
+              actualOutput = testCase.output;
+            } else if (testCase.error) {
+              actualOutput =
+                testCase.error || "An error occurred while checking the code.";
+            } else {
+              actualOutput = "";
+            }
+
             updatedTestCases[index] = {
               ...updatedTestCases[index],
               status: testCase.status,
-              actualOutput: testCase.output ?? "",
+              actualOutput,
             };
           });
           return updatedTestCases;

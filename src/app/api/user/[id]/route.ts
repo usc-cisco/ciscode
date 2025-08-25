@@ -1,5 +1,7 @@
 import { requireRole } from "@/lib/require-role";
+import { ActionTypeEnum } from "@/lib/types/enums/actiontype.enum";
 import RoleEnum from "@/lib/types/enums/role.enum";
+import ActivityLogService from "@/services/activity-log.service";
 import SubmissionService from "@/services/submission.service";
 import UserService from "@/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
@@ -42,6 +44,16 @@ export const PATCH = requireRole(
         return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
       }
 
+      const adminId = await req.headers.get("x-user-id");
+      if (!adminId) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+      }
+
+      const admin = await UserService.getUserById(Number(adminId));
+      if (!admin) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+      }
+
       const userId = parseInt((await params).id);
       if (isNaN(userId)) {
         return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
@@ -59,6 +71,12 @@ export const PATCH = requireRole(
       }
 
       const updatedUser = await UserService.updateUserById(userId, body);
+
+      await ActivityLogService.createLogEntry(
+        Number(adminId),
+        `[${admin.username} - ${admin.name}] updated user [${user.username} - ${user.name}] details.`,
+        ActionTypeEnum.UPDATE,
+      );
 
       return NextResponse.json(
         {

@@ -7,6 +7,9 @@ import TestCaseService from "@/services/testcase.service";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
 import SubmissionService from "@/services/submission.service";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
+import UserService from "@/services/user.service";
+import ActivityLogService from "@/services/activity-log.service";
+import { ActionTypeEnum } from "@/lib/types/enums/actiontype.enum";
 
 export async function POST(
   req: NextRequest,
@@ -61,6 +64,13 @@ export async function POST(
     if (result.error || result.output !== testCase.output) {
       status = TestCaseSubmissionStatusEnum.FAILED;
     }
+
+    const user = await UserService.getUserById(userId);
+    await ActivityLogService.createLogEntry(
+      userId,
+      `[${user.username} - ${user.name}] ran code for test case [${testCaseId} - Problem #${testCase.problemId}]. STATUS: ${status.toUpperCase()}.`,
+      ActionTypeEnum.RUN_CODE,
+    );
 
     return NextResponse.json({
       message: "Code executed successfully",

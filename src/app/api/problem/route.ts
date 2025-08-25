@@ -8,6 +8,8 @@ import { NextRequest, NextResponse } from "next/server";
 import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
 import TestCaseService from "@/services/testcase.service";
 import { PtyModule } from "@/lib/code-runner";
+import { ActionTypeEnum } from "@/lib/types/enums/actiontype.enum";
+import ActivityLogService from "@/services/activity-log.service";
 
 export const GET = async (req: NextRequest) => {
   try {
@@ -89,6 +91,12 @@ export const POST = requireRole(
         data.testCases ?? [],
         newProblem,
         pty as PtyModule,
+      );
+
+      await ActivityLogService.createLogEntry(
+        userId,
+        `[${newProblem.authorId} - ${newProblem.author}] created problem [${newProblem.id} - ${newProblem.title}].`,
+        ActionTypeEnum.CREATE,
       );
 
       return NextResponse.json(
