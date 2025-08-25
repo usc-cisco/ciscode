@@ -94,6 +94,7 @@ class ProblemService {
       return ProblemSchemaDisplayResponse.parse({
         ...problem.dataValues,
         success,
+        status: problem.status,
         author: problem.author,
         numOfSubmissions,
       });
