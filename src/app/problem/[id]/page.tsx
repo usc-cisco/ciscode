@@ -18,7 +18,6 @@ import { submitCode } from "@/lib/fetchers/submission.fetchers";
 import { ProblemPageEnum } from "@/lib/types/enums/problempage.enum";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
-import { error } from "console";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

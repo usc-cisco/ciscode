@@ -1,6 +1,7 @@
+import { ActivityLogResponseType } from "@/dtos/activity-log.dto";
 import { ActionTypeEnum } from "@/lib/types/enums/actiontype.enum";
 import { ActivityLog } from "@/models/activity-log.model";
-import { Op } from "sequelize";
+import { Model, Op } from "sequelize";
 
 class ActivityLogService {
   static async createLogEntry(
@@ -16,23 +17,34 @@ class ActivityLogService {
   }
 
   static async getLogs(
-    verified: boolean = true,
     offset: number = 0,
     limit: number = 10,
     search: string = "",
     actionType?: ActionTypeEnum,
   ) {
     const where = {
-      ...(verified && { verified }),
       ...(search && { actionDescription: { [Op.like]: `%${search}%` } }),
       ...(actionType && { actionType }),
     };
 
-    return ActivityLog.findAll({
+    const logs = (await ActivityLog.findAll({
       where,
       offset,
       limit,
       order: [["createdAt", "DESC"]],
+    })) as (Model & ActivityLogResponseType)[];
+
+    return logs;
+  }
+
+  static async getTotalCount(search: string = "", actionType?: ActionTypeEnum) {
+    const where = {
+      ...(search && { actionDescription: { [Op.like]: `%${search}%` } }),
+      ...(actionType && { actionType }),
+    };
+
+    return ActivityLog.count({
+      where,
     });
   }
 

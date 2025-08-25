@@ -9,7 +9,7 @@ import {
 } from "@/dtos/problem.dto";
 import { UserResponseSchema, UserResponseSchemaType } from "@/dtos/user.dto";
 import UserService from "./user.service";
-import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
+import { DifficultyEnum } from "@/lib/types/enums/difficulty.enum";
 import { Model, Op } from "sequelize";
 import TestCaseService from "./testcase.service";
 import { Problem } from "@/models/problem.model";

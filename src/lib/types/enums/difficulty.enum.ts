@@ -1,4 +1,4 @@
-enum DifficultyEnum {
+export enum DifficultyEnum {
   PROG1 = "Prog 1",
   PROG2 = "Prog 2",
   DSA = "DSA",
@@ -16,5 +16,3 @@ export const getDifficultyColor = (difficulty: DifficultyEnum): string => {
       return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
   }
 };
-
-export default DifficultyEnum;

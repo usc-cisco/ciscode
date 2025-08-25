@@ -10,6 +10,7 @@ const env = {
 
   PROBLEM_LIMIT_PER_PAGE: 10,
   SUBMISSION_LIMIT_PER_PAGE: 10,
+  ACTIVITY_LOG_LIMIT_PER_PAGE: 50,
 };
 
 export default env;

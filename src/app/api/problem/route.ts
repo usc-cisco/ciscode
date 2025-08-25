@@ -5,7 +5,7 @@ import RoleEnum from "@/lib/types/enums/role.enum";
 import { requireRole } from "@/lib/require-role";
 import ProblemService from "@/services/problem.service";
 import { NextRequest, NextResponse } from "next/server";
-import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
+import { DifficultyEnum } from "@/lib/types/enums/difficulty.enum";
 import TestCaseService from "@/services/testcase.service";
 import { PtyModule } from "@/lib/code-runner";
 import { ActionTypeEnum } from "@/lib/types/enums/actiontype.enum";

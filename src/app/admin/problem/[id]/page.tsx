@@ -16,7 +16,7 @@ import {
   updateProblem,
 } from "@/lib/fetchers/problem.fetchers";
 import { toastr } from "@/lib/toastr";
-import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
+import { DifficultyEnum } from "@/lib/types/enums/difficulty.enum";
 import { ProblemPageEnum } from "@/lib/types/enums/problempage.enum";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
 import { useParams, useRouter } from "next/navigation";

@@ -7,10 +7,11 @@ import { useAuth } from "@/contexts/auth.context";
 import { fetchProblemCount } from "@/lib/fetchers/problem.fetchers";
 import { fetchUserCount } from "@/lib/fetchers/user.fetchers";
 import AdminCount from "@/lib/types/interface/admin-count.interface";
-import { Code2, CodeIcon, User } from "lucide-react";
+import { ActivityIcon, Code2, CodeIcon, User } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loading from "../loading";
+import { Button } from "@/components/ui/button";
 
 enum AdminTableEnum {
   VERIFIED_PROBLEMS = "Verified Problems",
@@ -135,9 +136,19 @@ export default function Admin() {
   return (
     <section className="py-8">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="mb-8">
-          <h3 className="text-2xl font-bold">Admin Dashboard</h3>
-          <p>Overview of key metrics and statistics</p>
+        <div className="flex justify-between gap-4">
+          <div className="mb-8">
+            <h3 className="text-2xl font-bold">Admin Dashboard</h3>
+            <p>Overview of key metrics and statistics</p>
+          </div>
+
+          <Button
+            onClick={() => router.push("/admin/activity")}
+            className="cursor-pointer rounded-full size-10 md:rounded-md md:w-auto"
+          >
+            <ActivityIcon className="size-4" />
+            <p className="hidden md:block">View Activity</p>
+          </Button>
         </div>
 
         <div className="grid grid-rows-3 md:grid-cols-3 md:grid-rows-1 gap-2 mb-8">

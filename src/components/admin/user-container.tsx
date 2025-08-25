@@ -124,6 +124,13 @@ const UserContainer = () => {
     e.preventDefault();
     setPage(1); // Reset to first page on filter change
     setFilter(displayFilter);
+    router.push(
+      "/admin?" +
+        createQueryString([
+          { name: "page", value: "1" },
+          { name: "filter", value: displayFilter },
+        ]),
+    );
   };
 
   const handleValueChange = (value: string) => {

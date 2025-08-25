@@ -1,7 +1,8 @@
 import React from "react";
 import ProblemCard from "@/components/problem/problem-card";
 import { Button } from "@/components/ui/button";
-import DifficultyEnum, {
+import {
+  DifficultyEnum,
   getDifficultyColor,
 } from "@/lib/types/enums/difficulty.enum";
 import { Badge } from "@/components/ui/badge";

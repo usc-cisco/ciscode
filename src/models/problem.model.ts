@@ -1,5 +1,5 @@
 import { sequelize } from "@/db/sequelize";
-import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
+import { DifficultyEnum } from "@/lib/types/enums/difficulty.enum";
 import { DataTypes } from "sequelize";
 
 export const Problem = sequelize.define(

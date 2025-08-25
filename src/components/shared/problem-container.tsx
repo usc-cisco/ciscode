@@ -8,7 +8,7 @@ import { useAuth } from "@/contexts/auth.context";
 import { ProblemSchemaDisplayResponseType } from "@/dtos/problem.dto";
 import env from "@/lib/env";
 import { fetchProblems } from "@/lib/fetchers/problem.fetchers";
-import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
+import { DifficultyEnum } from "@/lib/types/enums/difficulty.enum";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, {
   FormEventHandler,

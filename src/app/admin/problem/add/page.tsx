@@ -11,7 +11,7 @@ import { AddTestCaseSchemaType } from "@/dtos/testcase.dto";
 import { runCode } from "@/lib/fetchers/code.fetchers";
 import { addProblem } from "@/lib/fetchers/problem.fetchers";
 import { toastr } from "@/lib/toastr";
-import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
+import { DifficultyEnum } from "@/lib/types/enums/difficulty.enum";
 import { ProblemPageEnum } from "@/lib/types/enums/problempage.enum";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
 import { useRouter } from "next/navigation";

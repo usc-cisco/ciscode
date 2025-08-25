@@ -1,4 +1,4 @@
-import DifficultyEnum from "@/lib/types/enums/difficulty.enum";
+import { DifficultyEnum } from "@/lib/types/enums/difficulty.enum";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import z from "zod";
 import { AddTestCaseSchema, TestCaseResponse } from "./testcase.dto";

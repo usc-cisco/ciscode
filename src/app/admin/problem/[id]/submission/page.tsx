@@ -16,7 +16,8 @@ import { TestCaseResponseType } from "@/dtos/testcase.dto";
 import env from "@/lib/env";
 import { runTestCaseAsAdmin } from "@/lib/fetchers/code.fetchers";
 import { fetchSubmissionsByProblemId } from "@/lib/fetchers/submission.fetchers";
-import DifficultyEnum, {
+import {
+  DifficultyEnum,
   getDifficultyColor,
 } from "@/lib/types/enums/difficulty.enum";
 import { ProblemPageEnum } from "@/lib/types/enums/problempage.enum";
