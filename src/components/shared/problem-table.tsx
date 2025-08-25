@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import { getDifficultyColor } from "@/lib/types/enums/difficulty.enum";
 import { CheckIcon } from "lucide-react";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
-import { formatNumberCompact } from "@/lib/utils";
+import { formatNumberCompact, formatPercentage } from "@/lib/utils";
 
 interface ProblemTableProps {
   problems: ProblemSchemaDisplayResponseType[];
@@ -89,12 +89,7 @@ const ProblemTable = ({
                   </TableCell>
                   <TableCell className="overflow-hidden hidden md:table-cell">
                     <Badge variant="outline">
-                      {problem.success !== 0 && problem.success !== 100
-                        ? problem.success?.toFixed(2)
-                        : problem.success === 100
-                          ? "100"
-                          : "0"}
-                      %
+                      {formatPercentage(problem.success ?? 0)}
                     </Badge>
                   </TableCell>
 

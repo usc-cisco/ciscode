@@ -26,3 +26,11 @@ export function formatNumberCompact(number: number) {
       : (number / 1000000).toFixed(1) + "M";
   }
 }
+
+export function formatPercentage(number: number) {
+  if (number % 1 === 0) {
+    return number + "%";
+  } else {
+    return number.toFixed(1) + "%";
+  }
+}
