@@ -5,8 +5,6 @@ import { CheckCodeResponseSchema } from "@/dtos/code.dto";
 import { NextRequest, NextResponse } from "next/server";
 import TestCaseService from "@/services/testcase.service";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
-import SubmissionService from "@/services/submission.service";
-import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import { requireRole } from "@/lib/require-role";
 import RoleEnum from "@/lib/types/enums/role.enum";
 

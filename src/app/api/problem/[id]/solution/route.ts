@@ -1,4 +1,3 @@
-import { sequelize } from "@/db/sequelize";
 import { requireRole } from "@/lib/require-role";
 import RoleEnum from "@/lib/types/enums/role.enum";
 import ProblemService from "@/services/problem.service";

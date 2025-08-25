@@ -1,8 +1,6 @@
 "use client";
 
 import Loading from "@/app/loading";
-import AdminCodeEditor from "@/components/admin/problem/admin-code-editor";
-import AdminTestCaseBar from "@/components/admin/problem/admin-test-case-bar";
 import DropDownSelect from "@/components/home/drop-down-select";
 import CodeEditor from "@/components/problem/code-editor";
 import ProblemCard from "@/components/problem/problem-card";
@@ -79,32 +77,37 @@ const Submissions = () => {
     [searchParams],
   );
 
-  const setFromSubmissions = (
-    _submissions: SubmissionResponseWithTestCaseSubmissionAndUserType[],
-  ) => {
-    if (_submissions.length === 0) return;
+  const updateFromSubmissions = useCallback(
+    (
+      _submissions: SubmissionResponseWithTestCaseSubmissionAndUserType[],
+      _submissionIndex: number,
+    ) => {
+      if (_submissions.length === 0) return;
 
-    setProblem((prev) => ({
-      ...prev,
-      answerCode: _submissions[submissionIndex]?.code || "",
-    }));
-    setTestCases((prev) => {
-      return prev.map((testCase) => {
-        const matchingTestCase = _submissions[
-          submissionIndex
-        ].testCaseSubmissions.find(
-          (testCaseSubmission) => testCaseSubmission.testCaseId === testCase.id,
-        );
-        return {
-          ...testCase,
-          status: matchingTestCase
-            ? matchingTestCase.status
-            : TestCaseSubmissionStatusEnum.PENDING,
-          actualOutput: matchingTestCase ? matchingTestCase.output : "",
-        };
+      setProblem((prev) => ({
+        ...prev,
+        answerCode: _submissions[_submissionIndex]?.code || "",
+      }));
+      setTestCases((prev) => {
+        return prev.map((testCase) => {
+          const matchingTestCase = _submissions[
+            _submissionIndex
+          ].testCaseSubmissions.find(
+            (testCaseSubmission) =>
+              testCaseSubmission.testCaseId === testCase.id,
+          );
+          return {
+            ...testCase,
+            status: matchingTestCase
+              ? matchingTestCase.status
+              : TestCaseSubmissionStatusEnum.PENDING,
+            actualOutput: matchingTestCase ? matchingTestCase.output : "",
+          };
+        });
       });
-    });
-  };
+    },
+    [],
+  );
 
   const handleEditTestCase =
     (index: number) => (field: string, value: string | boolean) => {
@@ -180,7 +183,7 @@ const Submissions = () => {
         setSubmissions(response.submissions);
         setProblem(response.problem);
         setTestCases(response.problem.testCases);
-        setFromSubmissions(response.submissions);
+        updateFromSubmissions(response.submissions, submissionIndex);
         setTotalPages(response.totalPages);
 
         if (response.submissions.length === 0 && currentPage !== 1) {
@@ -197,13 +200,23 @@ const Submissions = () => {
     };
 
     fetchSubmissions();
-  }, [params.id, submissionStatus, currentPage]);
+  }, [
+    params.id,
+    submissionStatus,
+    currentPage,
+    createQueryString,
+    path,
+    router,
+    submissionIndex,
+    token,
+    updateFromSubmissions,
+  ]);
 
   useEffect(() => {
     if (submissions.length > 0) {
-      setFromSubmissions(submissions);
+      updateFromSubmissions(submissions, submissionIndex);
     }
-  }, [submissionIndex]);
+  }, [submissions, submissionIndex, updateFromSubmissions]);
 
   if (loading) {
     return <Loading />;

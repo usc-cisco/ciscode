@@ -117,7 +117,7 @@ class UserService {
       throw new Error("User not found");
     }
 
-    const updatedUser = await User.update(data, {
+    await User.update(data, {
       where: { id: userId },
       returning: true,
     });

@@ -21,13 +21,11 @@ import {
 } from "@/components/ui/hover-card";
 import Link from "next/link";
 
-interface AdminProblemBarProps {
+interface OfferProblemBarProps {
   problem: {
     title: string;
     description: string;
     difficulty: string;
-    verified?: boolean;
-    author?: string;
   };
   onProblemChange: (field: string, value: string | DifficultyEnum) => void;
   onSave: () => void;
@@ -35,23 +33,23 @@ interface AdminProblemBarProps {
   canSubmit: boolean;
 }
 
-const AdminProblemBar: React.FC<AdminProblemBarProps> = ({
+const OfferProblemBar: React.FC<OfferProblemBarProps> = ({
   problem,
   onProblemChange,
   onSave,
   onDelete,
   canSubmit,
 }) => {
-  const { title, difficulty, description, verified, author } = problem;
+  const { title, difficulty, description } = problem;
   return (
     <ProblemCard className="overflow-hidden hide-scrollbar relative">
       <div className="p-6 max-h-full overflow-y-auto overflow-x-hidden pb-26">
         <Link
-          href={`/admin`}
+          href={`/home`}
           className="flex items-center gap-1 hover:underline mb-2"
         >
           <ArrowLeft className="size-3" />
-          <p className="text-xs">Back to Dashboard</p>
+          <p className="text-xs">Back to Home</p>
         </Link>
         <input
           className="text-xl font-semibold truncate max-w-full"
@@ -59,9 +57,6 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({
           value={title}
           onChange={(e) => onProblemChange("title", e.target.value)}
         />
-        {author && (
-          <p className="text-sm text-muted-foreground truncate">By {author}</p>
-        )}
         <div className="flex justify-between gap-2 items-center py-2">
           <p className="text-sm font-semibold">Difficulty: </p>
           <div className="flex gap-2 items-center">
@@ -117,7 +112,7 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({
               className={`bg-primary py-2 rounded-lg cursor-pointer w-full ${canSubmit ? "opacity-100" : "opacity-40 pointer-events-none"}`}
               onClick={onSave}
             >
-              {verified === false ? "Verify Problem" : "Save Problem"}
+              Offer Problem
             </Button>
           </HoverCardTrigger>
           {canSubmit || (
@@ -161,4 +156,4 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({
   );
 };
 
-export default AdminProblemBar;
+export default OfferProblemBar;

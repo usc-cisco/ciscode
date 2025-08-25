@@ -139,6 +139,29 @@ export const addProblem = async (data: AddProblemSchemaType, token: string) => {
   }
 };
 
+export const offerProblem = async (
+  data: AddProblemSchemaType,
+  token: string,
+) => {
+  try {
+    if (token) {
+      instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+
+    const response = await instance.post("/problem/offer", data);
+
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error adding problem:", error);
+      throw new Error(error.response?.data?.error || "Failed to add problem");
+    }
+
+    console.error("Error adding problem:", error);
+    throw error;
+  }
+};
+
 export const updateProblem = async (
   problemId: string,
   data: AddProblemSchemaType,

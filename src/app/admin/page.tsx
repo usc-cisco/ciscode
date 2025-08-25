@@ -9,7 +9,7 @@ import { fetchUserCount } from "@/lib/fetchers/user.fetchers";
 import AdminCount from "@/lib/types/interface/admin-count.interface";
 import { Code2, CodeIcon, User } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Loading from "../loading";
 
 enum AdminTableEnum {
@@ -82,6 +82,7 @@ export default function Admin() {
         setLoading(false);
       } catch (error) {
         setLoading(false);
+        console.error("Error fetching admin data:", error);
       }
     };
 

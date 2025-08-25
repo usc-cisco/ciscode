@@ -3,7 +3,6 @@
 import Loading from "@/app/loading";
 import DropDownSelect from "@/components/home/drop-down-select";
 import Info from "@/components/shared/info";
-import ProtectedRoute from "@/components/shared/protected-route";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";

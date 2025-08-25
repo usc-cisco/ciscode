@@ -81,6 +81,7 @@ export const POST = requireRole(
       }
 
       const data = parsedData.data;
+      data.verified = true;
 
       const newProblem = await ProblemService.addProblem(data, userId);
 

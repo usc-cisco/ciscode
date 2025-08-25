@@ -157,7 +157,6 @@ class ProblemService {
 
     const newProblem = await Problem.create({
       ...data,
-      verified: true,
       authorId: userId,
       createdAt: new Date(),
       updatedAt: new Date(),

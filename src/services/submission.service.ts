@@ -1,11 +1,10 @@
 import {
   SubmissionActivityType,
-  SubmissionResponse,
   SubmissionResponseType,
   UpdateSubmissionType,
 } from "@/dtos/submission.dto";
 import { Submission } from "@/models/submission.model";
-import { Model, Op } from "sequelize";
+import { Model } from "sequelize";
 import ProblemService from "./problem.service";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 

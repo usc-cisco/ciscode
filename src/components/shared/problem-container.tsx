@@ -158,13 +158,17 @@ const ProblemContainer = ({
             { value: DifficultyEnum.DSA, label: "DSA" },
           ]}
         />
-        {inAdmin && verified && (
+        {verified && (
           <Button
             type="button"
             className="cursor-pointer flex-1 md:flex-0 md:w-32"
-            onClick={() => router.push("/admin/problem/add")}
+            onClick={() =>
+              inAdmin
+                ? router.push("/admin/problem/add")
+                : router.push("/problem/offer")
+            }
           >
-            Add Problem
+            {inAdmin ? "Add Problem" : "Offer Problem"}
           </Button>
         )}
       </form>
