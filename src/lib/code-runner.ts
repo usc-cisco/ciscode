@@ -15,6 +15,15 @@ export async function runCCode(
     mkdirSync(tmpDir);
   }
 
+  // Does not support void main()
+  if (new RegExp("\\bvoid\\s+main\\s*\\(\\s*\\)").test(code)) {
+    return {
+      output: null,
+      error:
+        "Error: 'void main()' is not supported. Please use 'int main()' instead.",
+    };
+  }
+
   // Check if code contains forbidden functions
   const forbidden = [
     "popen",
