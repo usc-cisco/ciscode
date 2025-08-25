@@ -87,7 +87,16 @@ class ProblemService {
           : undefined;
       }
 
-      return ProblemSchemaDisplayResponse.parse(problem);
+      const success = await SubmissionService.getSuccessPercentage(problem.id);
+      const numOfSubmissions =
+        await SubmissionService.getSubmissionCountByProblemId(problem.id);
+
+      return ProblemSchemaDisplayResponse.parse({
+        ...problem.dataValues,
+        success,
+        author: problem.author,
+        numOfSubmissions,
+      });
     });
 
     return Promise.all(parsedProblems);

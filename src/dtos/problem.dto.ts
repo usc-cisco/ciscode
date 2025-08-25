@@ -11,6 +11,8 @@ export const ProblemSchemaDisplayResponse = z.object({
   acceptance: z.number().min(0).max(100).optional(),
   status: z.enum(SubmissionStatusEnum).optional(),
   verified: z.boolean().optional(),
+  success: z.number().min(0).max(100).optional(),
+  numOfSubmissions: z.number().min(0).default(0),
 });
 
 export const ProblemSchemaResponse = z.object({

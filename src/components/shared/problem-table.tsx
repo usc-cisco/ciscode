@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { getDifficultyColor } from "@/lib/types/enums/difficulty.enum";
 import { CheckIcon } from "lucide-react";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
+import { formatNumberCompact } from "@/lib/utils";
 
 interface ProblemTableProps {
   problems: ProblemSchemaDisplayResponseType[];
@@ -48,6 +49,12 @@ const ProblemTable = ({
               <TableHead className="w-56 hidden md:table-cell">
                 Author
               </TableHead>
+              <TableHead className="w-32 hidden md:table-cell">
+                Submissions
+              </TableHead>
+              <TableHead className="w-24 hidden md:table-cell">
+                Success
+              </TableHead>
               <TableHead className="w-24">Difficulty</TableHead>
             </TableRow>
           </TableHeader>
@@ -70,9 +77,27 @@ const ProblemTable = ({
                   <TableCell className="truncate w-full">
                     <div className="font-medium">{problem.title}</div>
                   </TableCell>
-                  <TableCell className="truncate hidden md:block">
+                  <TableCell className="truncate hidden md:table-cell">
                     <Badge variant="outline">{problem.author}</Badge>
                   </TableCell>
+
+                  <TableCell className="overflow-hidden hidden md:table-cell">
+                    <Badge variant="outline">
+                      {formatNumberCompact(problem.numOfSubmissions)}{" "}
+                      {problem.numOfSubmissions === 1 ? "student" : "students"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="overflow-hidden hidden md:table-cell">
+                    <Badge variant="outline">
+                      {problem.success !== 0 && problem.success !== 100
+                        ? problem.success?.toFixed(2)
+                        : problem.success === 100
+                          ? "100"
+                          : "0"}
+                      %
+                    </Badge>
+                  </TableCell>
+
                   <TableCell className="truncate">
                     <Badge className={getDifficultyColor(problem.difficulty)}>
                       {problem.difficulty}

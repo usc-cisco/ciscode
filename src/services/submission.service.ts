@@ -106,6 +106,20 @@ class SubmissionService {
     );
   }
 
+  static async getSuccessPercentage(problemId: number): Promise<number> {
+    const submissions = (await Submission.findAll({
+      where: {
+        problemId,
+      },
+    })) as (Model & SubmissionResponseType)[];
+
+    const successfulSubmissions = submissions.filter(
+      (submission) => submission.status === SubmissionStatusEnum.SOLVED,
+    );
+
+    return (successfulSubmissions.length / submissions.length) * 100 || 0;
+  }
+
   static async addSubmission(
     problemId: number,
     userId: number,
