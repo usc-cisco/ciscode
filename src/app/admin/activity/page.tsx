@@ -163,12 +163,12 @@ const ActivityPage = () => {
 
           {/* Problems Table */}
           <div className="bg-vscode-light dark:bg-vscode-dark rounded-lg shadow overflow-hidden">
-            <Table className="table-fixed w-full">
+            <Table className="table-auto md:table-fixed w-full">
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-48">Timestamp</TableHead>
                   <TableHead className="w-20">Actor</TableHead>
-                  <TableHead>Description</TableHead>
+                  <TableHead className="min-w-52">Description</TableHead>
                   <TableHead className="w-32">Action Type</TableHead>
                 </TableRow>
               </TableHeader>
