@@ -25,7 +25,7 @@ export async function POST(req: Request) {
 
     await ActivityLogService.createLogEntry(
       user.id,
-      `[${user.username} - ${user.name}] Logged in.`,
+      `[${user.username} - ${user.name}] logged in.`,
       ActionTypeEnum.SESSION_START,
     );
 
