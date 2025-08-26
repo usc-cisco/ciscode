@@ -29,7 +29,7 @@ class ActivityLogService {
 
     const logs = (await ActivityLog.findAll({
       where,
-      offset,
+      offset: offset * limit,
       limit,
       order: [["createdAt", "DESC"]],
     })) as (Model & ActivityLogResponseType)[];
