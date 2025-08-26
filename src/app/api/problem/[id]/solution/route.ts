@@ -45,13 +45,6 @@ export const GET = requireRole<[{ params: Promise<{ id: string }> }]>(
         Number(id),
       );
 
-      const user = await UserService.getUserById(Number(userIdString));
-      await ActivityLogService.createLogEntry(
-        Number(userIdString),
-        `[${user.username} - ${user.name}] fetched problem [${id} - ${problem.title}] with solution.`,
-        ActionTypeEnum.READ,
-      );
-
       return NextResponse.json(
         {
           message: "Problem fetched successfully",
