@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    image: ciscode-app:latest
+    environment:
+      - NODE_ENV=production
+      - PORT=3049
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - JWT_SECRET=${JWT_SECRET}
+    ports:
+      - "3049:3049"
+    restart: unless-stopped
+    env_file:
+      - .env
+    network_mode: "host"  # This gives access to host network
