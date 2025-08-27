@@ -21,7 +21,7 @@ jobs:
           script: |
             cd ~/ciscode.dcism.org
             git reset --hard && git clean -fd && git pull origin main
-            npm i
+            npm install --build-from-source
             pm2 stop ciscode || true
             npm run build
             pm2 reload ciscode
