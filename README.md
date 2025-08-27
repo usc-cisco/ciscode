@@ -49,6 +49,28 @@ App will be running on [http://localhost:3000](http://localhost:3000).
 
 ---
 
+#### Docker support
+
+**Build and Run**
+   ```bash
+   # Build the Docker image
+   docker build -t ciscode-app:latest .
+   
+   # Or use docker-compose (recommended)
+   docker compose up -d --build
+   ```
+**Database Connection**
+
+    If you are locally hosting your database, it is recommended that you also use a container for mysql. 
+    in the docker-compose.yml...
+
+    ```
+    network_mode: "host"
+    ```
+
+    ...denotes that the database must be locally hosted. it would still also use the db credentials that you input in the .env
+
+
 ## 🤝 Contributing
 Contributions are welcome! Feel free to fork the repo, submit issues, or open pull requests.
 
