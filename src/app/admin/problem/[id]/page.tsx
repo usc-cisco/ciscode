@@ -111,6 +111,8 @@ const UpdateProblem = () => {
       return;
     }
 
+    setCanSubmit(false);
+
     try {
       await updateProblem(
         params.id as string,
@@ -133,6 +135,8 @@ const UpdateProblem = () => {
     } catch (error) {
       toastr.error("Error saving problem");
       console.error("Error saving problem:", error);
+    } finally {
+      setCanSubmit(true);
     }
   };
 
