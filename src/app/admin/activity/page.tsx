@@ -113,7 +113,7 @@ const ActivityPage = () => {
       "/admin/activity?" +
         createQueryString([
           { name: "page", value: "1" },
-          { name: "roles", value },
+          { name: "actionType", value },
         ]),
     );
     setPage(1);
