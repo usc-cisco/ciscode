@@ -62,7 +62,7 @@ export async function runCCode(
   await writeFile(codePath, modifiedCode);
 
   try {
-    await exec(`gcc ${codePath} -o ${binaryPath}`);
+    await exec(`gcc ${codePath} -o ${binaryPath} -lm`);
     await chmod(binaryPath, 0o755);
   } catch (err) {
     return {
