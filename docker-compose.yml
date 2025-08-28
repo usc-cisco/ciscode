@@ -1,11 +1,10 @@
-version: "3.9"
 services:
   app:
     build: .
     image: ciscode-app:latest
     environment:
       - NODE_ENV=production
-      - PORT=3049
+      - PORT=${PORT}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_USER=${DB_USER}
@@ -13,8 +12,10 @@ services:
       - DB_NAME=${DB_NAME}
       - JWT_SECRET=${JWT_SECRET}
     ports:
-      - "3049:3049"
+      - "${PORT}:${PORT}"
     restart: unless-stopped
     env_file:
       - .env
-    network_mode: "host"  # This gives access to host network
+    # Using bridge network instead of host network for better port accessibility
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

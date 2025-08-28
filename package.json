@@ -7,9 +7,9 @@
     "build": "next build",
     "start": "dotenv -- next start",
     "lint": "next lint",
-    "db:sync": "bun run src/db/sync.ts",
-    "db:seed": "bun run src/db/seed.ts",
-    "db:reset": "bun run src/db/sync.ts && bun run src/db/seed.ts",
+    "db:sync": "bun build src/db/sync.ts --target=node --outfile=/tmp/sync.mjs && node /tmp/sync.mjs",
+    "db:seed": "bun build src/db/seed.ts --target=node --outfile=/tmp/seed.mjs && node /tmp/seed.mjs",
+    "db:reset": "bun build src/db/sync.ts --target=node --outfile=/tmp/sync.mjs && node /tmp/sync.mjs && bun build src/db/seed.ts --target=node --outfile=/tmp/seed.mjs && node /tmp/seed.mjs",
     "prepare": "husky install"
   },
   "dependencies": {

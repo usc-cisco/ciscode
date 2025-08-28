@@ -9,10 +9,6 @@ yarn-error.log*
 .next
 out
 
-# env
-.env
-.env.*
-
 # misc
 .DS_Store
 .git
