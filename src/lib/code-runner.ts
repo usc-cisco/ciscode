@@ -71,12 +71,19 @@ export async function runCCode(
     };
   }
 
+  const safeEnv: NodeJS.ProcessEnv = {
+    PATH: "/usr/bin:/bin",
+    LANG: "C",
+    NODE_ENV: process.env.NODE_ENV ?? "production",
+  };
+
   return new Promise((resolve) => {
     const ptyProcess = pty.spawn(`./${id}.out`, [], {
       name: "xterm-color",
       cols: 80,
       rows: 30,
       cwd: tmpDir,
+      env: safeEnv,
     });
 
     let output = "";
