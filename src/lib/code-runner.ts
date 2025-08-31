@@ -77,7 +77,6 @@ export async function runCCode(
       cols: 80,
       rows: 30,
       cwd: tmpDir,
-      env: process.env,
     });
 
     let output = "";
