@@ -185,7 +185,7 @@ export const PUT = requireRole<[{ params: Promise<{ id: string }> }]>(
         `[${user.username} - ${user.name}] ` +
           (problem.verified ? `updated` : `verified`) +
           ` problem [${id} - ${problem.title}].`,
-        ActionTypeEnum.READ,
+        ActionTypeEnum.UPDATE,
       );
 
       return NextResponse.json(
@@ -204,8 +204,13 @@ export const PUT = requireRole<[{ params: Promise<{ id: string }> }]>(
 );
 
 export const DELETE = requireRole<[{ params: Promise<{ id: string }> }]>(
-  async (_: NextRequest, context: { params: Promise<{ id: string }> }) => {
+  async (req: NextRequest, context: { params: Promise<{ id: string }> }) => {
     const { id } = await context.params;
+
+    const userIdString = req.headers.get("x-user-id");
+    if (!userIdString || isNaN(Number(userIdString))) {
+      return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
+    }
 
     try {
       const problem = await ProblemService.getProblemById(Number(id));
@@ -217,6 +222,14 @@ export const DELETE = requireRole<[{ params: Promise<{ id: string }> }]>(
       }
 
       await ProblemService.deleteProblem(Number(id));
+
+      const user = await UserService.getUserById(Number(userIdString));
+      await ActivityLogService.createLogEntry(
+        Number(userIdString),
+        `[${user.username} - ${user.name}] deleted problem [${id} - ${problem.title}].`,
+        ActionTypeEnum.DELETE,
+      );
+
       return NextResponse.json(
         { message: "Problem deleted successfully" },
         { status: 200 },
