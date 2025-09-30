@@ -178,6 +178,16 @@ export const PUT = requireRole<[{ params: Promise<{ id: string }> }]>(
         Number(id),
         parsedData,
       );
+
+      const user = await UserService.getUserById(Number(userIdString));
+      await ActivityLogService.createLogEntry(
+        Number(userIdString),
+        `[${user.username} - ${user.name}] ` +
+          (problem.verified ? `updated` : `verified`) +
+          ` problem [${id} - ${problem.title}].`,
+        ActionTypeEnum.READ,
+      );
+
       return NextResponse.json(
         { message: "Problem updated successfully", data: updatedProblem },
         { status: 200 },
