@@ -1,0 +1,21 @@
+services:
+  app:
+    build: .
+    image: ciscode-app:latest
+    environment:
+      - NODE_ENV=production
+      - PORT=${PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - JWT_SECRET=${JWT_SECRET}
+    ports:
+      - "${PORT}:${PORT}"
+    restart: unless-stopped
+    env_file:
+      - .env
+    # Using bridge network instead of host network for better port accessibility
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
