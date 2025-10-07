@@ -1,5 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "@fontsource/jetbrains-mono";
+@import "@fontsource/fira-code";
+@import "@fontsource/source-code-pro";
+@import "@fontsource/roboto-mono";
+@import "@fontsource/ubuntu-mono";
+@import "@fontsource/inconsolata";
 
 @custom-variant dark (&:is(.dark *));
 
