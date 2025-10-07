@@ -34,7 +34,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   };
 
   return (
-    <ProblemCard className="flex flex-col h-full">
+    <ProblemCard className="flex flex-col h-full relative">
       <div className="flex-shrink-0 px-2 py-2 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-vscode-light dark:bg-vscode-dark rounded-t-2xl sticky top-0 z-10">
         <div className="py-1 px-2 bg-gray-100 dark:bg-gray-800 flex items-center gap-1 rounded-lg hover:brightness-90 dark:hover:brightness-110 cursor-pointer">
           <CodeXml className="size-4 text-primary" />
