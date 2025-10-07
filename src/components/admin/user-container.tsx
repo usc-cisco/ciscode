@@ -1,7 +1,7 @@
 "use client";
 
-import DropDownSelect from "@/components/home/drop-down-select";
-import SearchBar from "@/components/home/search-bar";
+import DropDownSelect from "@/components/shared/drop-down-select";
+import SearchBar from "@/components/shared/search-bar";
 import CustomPagination from "@/components/shared/custom-pagination";
 import { useAuth } from "@/contexts/auth.context";
 import env from "@/lib/env";

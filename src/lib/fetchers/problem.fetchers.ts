@@ -60,6 +60,7 @@ export const fetchProblems = async (
   limit: number = 10,
   search: string = "",
   difficulty: string | null = null,
+  categoryFilter: string[] | null = null,
   verified: boolean = true,
 ) => {
   try {
@@ -69,9 +70,13 @@ export const fetchProblems = async (
       search: string;
       verified: boolean;
       difficulty?: string | null;
+      categoryFilter?: string | null;
     } = { offset: page - 1, limit, search, verified };
     if (difficulty) {
       params.difficulty = difficulty;
+    }
+    if (categoryFilter && categoryFilter.length > 0) {
+      params.categoryFilter = categoryFilter.join(",");
     }
 
     if (token) {

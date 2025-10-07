@@ -1,7 +1,7 @@
 "use client";
 
 import Loading from "@/app/loading";
-import DropDownSelect from "@/components/home/drop-down-select";
+import DropDownSelect from "@/components/shared/drop-down-select";
 import Info from "@/components/shared/info";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

@@ -2,6 +2,7 @@ import { DifficultyEnum } from "@/lib/types/enums/difficulty.enum";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import z from "zod";
 import { AddTestCaseSchema, TestCaseResponse } from "./testcase.dto";
+import { CategoryEnum } from "@/lib/types/enums/category.enum";
 
 export const ProblemSchemaDisplayResponse = z.object({
   id: z.int(),
@@ -20,6 +21,7 @@ export const ProblemSchemaResponse = z.object({
   title: z.string(),
   description: z.string(),
   difficulty: z.enum(DifficultyEnum),
+  categories: z.string().optional().default(""),
   defaultCode: z.string().optional().nullable().default(null),
   solutionCode: z.string().optional().default("").optional(),
   answerCode: z.string().optional().nullable().default(null),
@@ -38,6 +40,7 @@ export const AddProblemSchema = z.object({
   title: z.string(),
   description: z.string(),
   difficulty: z.enum(DifficultyEnum),
+  categories: z.array(z.string()),
   defaultCode: z.string().optional().nullable().default(null),
   solutionCode: z.string().optional().default(""),
   verified: z.boolean().optional(),

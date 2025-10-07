@@ -1,8 +1,8 @@
 "use client";
 
-import DropDownSelect from "@/components/home/drop-down-select";
+import DropDownSelect from "@/components/shared/drop-down-select";
 import ProblemTable from "@/components/shared/problem-table";
-import SearchBar from "@/components/home/search-bar";
+import SearchBar from "@/components/shared/search-bar";
 import CustomPagination from "@/components/shared/custom-pagination";
 import { useAuth } from "@/contexts/auth.context";
 import { ProblemSchemaDisplayResponseType } from "@/dtos/problem.dto";
@@ -17,6 +17,8 @@ import React, {
   useState,
 } from "react";
 import { Button } from "../ui/button";
+import DropDownMultiSelect from "./drop-down-multi-select";
+import { CategoryEnum } from "@/lib/types/enums/category.enum";
 
 interface ProblemContainerProps {
   inAdmin?: boolean;
@@ -41,6 +43,9 @@ const ProblemContainer = ({
   const [filter, setFilter] = useState<string>(params.get("filter") || "");
   const [displayFilter, setDisplayFilter] = useState<string>(
     params.get("filter") || "",
+  );
+  const [topicsFilter, setTopicsFilter] = useState<string[]>(
+    params.get("topics") ? params.get("topics")!.split(",") : [],
   );
   const [problems, setProblems] = useState<ProblemSchemaDisplayResponseType[]>(
     [],
@@ -72,6 +77,7 @@ const ProblemContainer = ({
           env.PROBLEM_LIMIT_PER_PAGE,
           filter,
           difficultyFilter !== "all" ? difficultyFilter : null,
+          topicsFilter.length > 0 ? topicsFilter : null,
           verified,
         );
         setProblems(response.data.problems || []);
@@ -117,7 +123,7 @@ const ProblemContainer = ({
     );
   };
 
-  const handleValueChange = (value: string) => {
+  const handleDifficultyChange = (value: string) => {
     router.push(
       path +
         "?" +
@@ -130,6 +136,19 @@ const ProblemContainer = ({
     setDifficultyFilter(value);
   };
 
+  const handleTopicsChange = (values: string[]) => {
+    router.push(
+      path +
+        "?" +
+        createQueryString([
+          { name: "page", value: "1" },
+          { name: "topics", value: values.join(",") },
+        ]),
+    );
+    setPage(1);
+    setTopicsFilter(values);
+  };
+
   const handlePageChange = (newPage: number) => {
     return () => {
       setPage(newPage);
@@ -139,7 +158,7 @@ const ProblemContainer = ({
   return (
     <>
       <form
-        className="flex flex-col sm:flex-row gap-4 mb-6"
+        className="flex flex-col sm:flex-row flex-wrap gap-4 mb-6"
         onSubmit={handleSubmit}
       >
         <SearchBar
@@ -149,14 +168,24 @@ const ProblemContainer = ({
         />
         <DropDownSelect
           value={difficultyFilter}
-          handleValueChange={handleValueChange}
+          handleValueChange={handleDifficultyChange}
           placeholder="Difficulty"
           pairs={[
             { value: "all", label: "All Difficulties" },
-            { value: DifficultyEnum.PROG1, label: "Prog 1" },
-            { value: DifficultyEnum.PROG2, label: "Prog 2" },
-            { value: DifficultyEnum.DSA, label: "DSA" },
+            ...Object.values(DifficultyEnum).map((difficulty) => ({
+              value: difficulty,
+              label: difficulty,
+            })),
           ]}
+        />
+        <DropDownMultiSelect
+          values={topicsFilter}
+          handleValueChange={handleTopicsChange}
+          placeholder="Categories"
+          pairs={Object.values(CategoryEnum).map((category) => ({
+            value: category,
+            label: category,
+          }))}
         />
         {verified && (
           <Button

@@ -26,6 +26,11 @@ export const Problem = sequelize.define(
       ),
       allowNull: false,
     },
+    categories: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      defaultValue: "",
+    },
     defaultCode: {
       type: DataTypes.TEXT,
       allowNull: true,

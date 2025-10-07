@@ -49,8 +49,10 @@ class ProblemService {
     limit: number = 10,
     search: string = "",
     difficulty: DifficultyEnum | null = null,
+    categories: string[] | null = null,
     userId?: number,
   ): Promise<ProblemSchemaDisplayResponseType[]> {
+    console.log("\n\n\nCategories: ", categories, "\n\n\n");
     const problems = (await Problem.findAll({
       order: [["id", "ASC"]],
       offset: offset * limit,
@@ -58,6 +60,12 @@ class ProblemService {
       where: {
         verified,
         ...(difficulty && { difficulty }),
+        ...(categories && {
+          [Op.or]: categories.map((category) => {
+            console.log("\n\n\nCategory: ", category, "\n\n\n");
+            return { categories: { [Op.like]: `%${category}%` } };
+          }),
+        }),
         ...(search && {
           [Op.or]: [
             // Title search
@@ -184,6 +192,7 @@ class ProblemService {
 
     const newProblem = await Problem.create({
       ...data,
+      categories: data.categories ? data.categories.join(",") : "",
       authorId: userId,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -204,7 +213,10 @@ class ProblemService {
       throw new Error("Problem not found");
     }
 
-    const updatedProblem = await problem.update(data);
+    const updatedProblem = await problem.update({
+      ...data,
+      categories: data.categories ? data.categories.join(",") : "",
+    });
     return ProblemSchemaResponse.parse(updatedProblem);
   }
 
