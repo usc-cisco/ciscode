@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/hover-card";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
+import { useEditorSettings } from "@/hooks/use-editor-settings";
 
 interface AdminCodeEditorProps {
   defaultCode?: string;
@@ -28,6 +29,14 @@ const AdminCodeEditor: React.FC<AdminCodeEditorProps> = ({
   handleChangeIsSolution,
   submissionCount,
 }) => {
+  const { settings, update_setting, get_extensions, reset_settings } =
+    useEditorSettings();
+
+  const handle_change = (val: string) => {
+    if (onCodeChange) {
+      onCodeChange(val);
+    }
+  };
   const { resolvedTheme } = useTheme();
   const router = useRouter();
   const path = usePathname();
