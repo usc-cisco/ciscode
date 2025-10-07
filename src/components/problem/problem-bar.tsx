@@ -6,6 +6,11 @@ import { getDifficultyColor } from "@/lib/types/enums/difficulty.enum";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "../ui/hover-card";
 
 interface ProblemBarProps {
   problem: ProblemSchemaResponseType;
@@ -13,7 +18,20 @@ interface ProblemBarProps {
 }
 
 const ProblemBar: React.FC<ProblemBarProps> = ({ problem, className }) => {
-  const { title, difficulty, author, description } = problem;
+  const { title, difficulty, author, description, categories } = problem;
+
+  const categoryList = categories
+    ? categories
+        .split(",")
+        .map((c) => c.trim())
+        .filter((c) => c.length > 0)
+    : [];
+
+  const maxVisible = 1;
+  const extraCategories =
+    categoryList.length > maxVisible ? categoryList.slice(maxVisible) : [];
+  const extraCount = extraCategories.length;
+
   return (
     <ProblemCard
       className={cn("p-6 overflow-y-auto hide-scrollbar", className)}
@@ -38,6 +56,56 @@ const ProblemBar: React.FC<ProblemBarProps> = ({ problem, className }) => {
             {difficulty}
           </Badge>
         </div>
+      </div>
+
+      <div className="flex items-center justify-between gap-2 my-2">
+        <p className="text-xs">Categories:</p>
+        {categoryList.length > 0 ? (
+          <div className="flex gap-1">
+            {/* Show the first N categories */}
+            {categoryList.slice(0, maxVisible).map((category, idx) => (
+              <Badge
+                key={idx}
+                variant="outline"
+                className="rounded-xl text-xs text-muted-foreground"
+              >
+                {category}
+              </Badge>
+            ))}
+
+            {/* Show +N with hover */}
+            {extraCount > 0 && (
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <Badge
+                    variant="outline"
+                    className="rounded-xl text-xs text-muted-foreground cursor-pointer"
+                  >
+                    +{extraCount}
+                  </Badge>
+                </HoverCardTrigger>
+                <HoverCardContent className="flex flex-wrap gap-1 max-w-xs">
+                  {extraCategories.map((cat, i) => (
+                    <Badge
+                      key={i}
+                      variant="outline"
+                      className="rounded-xl text-xs text-muted-foreground cursor-pointer"
+                    >
+                      {cat}
+                    </Badge>
+                  ))}
+                </HoverCardContent>
+              </HoverCard>
+            )}
+          </div>
+        ) : (
+          <Badge
+            variant="outline"
+            className="rounded-xl text-xs text-muted-foreground"
+          >
+            None
+          </Badge>
+        )}
       </div>
 
       <div className="mt-4 text-sm">
