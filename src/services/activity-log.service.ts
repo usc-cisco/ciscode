@@ -1,6 +1,6 @@
 import { ActivityLogResponseType } from "@/dtos/activity-log.dto";
 import { ActionTypeEnum } from "@/lib/types/enums/actiontype.enum";
-import { ActivityLog } from "@/models/activity-log.model";
+import { ActivityLog } from "@/models";
 import { Model, Op } from "sequelize";
 
 class ActivityLogService {

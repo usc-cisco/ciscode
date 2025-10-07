@@ -10,10 +10,10 @@ import {
 import { UserResponseSchema, UserResponseSchemaType } from "@/dtos/user.dto";
 import UserService from "./user.service";
 import { DifficultyEnum } from "@/lib/types/enums/difficulty.enum";
-import { Model, Op } from "sequelize";
+import { col, fn, Model, Op, where } from "sequelize";
 import TestCaseService from "./testcase.service";
-import { Problem } from "@/models/problem.model";
 import SubmissionService from "./submission.service";
+import { User, Problem } from "@/models";
 
 class ProblemService {
   static async getProblemById(
@@ -56,16 +56,33 @@ class ProblemService {
       offset: offset * limit,
       limit,
       where: {
-        verified: verified,
-        [Op.or]: [
-          {
-            title: {
-              [Op.like]: `%${search}%`,
-            },
-          },
-        ],
+        verified,
         ...(difficulty && { difficulty }),
+        ...(search && {
+          [Op.or]: [
+            // Title search
+            { title: { [Op.like]: `%${search}%` } },
+
+            // Author name search
+            where(fn("LOWER", col("author.name")), {
+              [Op.like]: `%${search.toLowerCase()}%`,
+            }),
+
+            // Author username search
+            where(fn("LOWER", col("author.username")), {
+              [Op.like]: `%${search.toLowerCase()}%`,
+            }),
+          ],
+        }),
       },
+      include: [
+        {
+          model: User,
+          as: "author",
+          required: false,
+          attributes: ["id", "name", "username"],
+        },
+      ],
     })) as (Model & ProblemSchemaResponseType)[];
 
     const parsedProblems = problems.map(async (problem) => {

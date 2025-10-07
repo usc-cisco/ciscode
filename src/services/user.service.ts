@@ -7,7 +7,7 @@ import {
   UserResponseSchemaWithPassword,
 } from "@/dtos/user.dto";
 import RoleEnum from "@/lib/types/enums/role.enum";
-import { User } from "@/models/user.model";
+import { User } from "@/models";
 import * as bcrypt from "bcryptjs";
 import { Model, Op } from "sequelize";
 

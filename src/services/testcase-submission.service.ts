@@ -1,6 +1,6 @@
 import { CheckCodeResponseType } from "@/dtos/code.dto";
 import { TestCaseSubmissionResponseType } from "@/dtos/testcase-submission.dto";
-import { TestCaseSubmission } from "@/models/testcase-submission.model";
+import { TestCaseSubmission } from "@/models";
 import { Model } from "sequelize";
 
 class TestCaseSubmissionService {

@@ -5,7 +5,7 @@ import {
   TestCaseResponseType,
 } from "@/dtos/testcase.dto";
 import { PtyModule, runCCode } from "@/lib/code-runner";
-import { TestCase } from "@/models/testcase.model";
+import { TestCase } from "@/models";
 import { Model } from "sequelize";
 
 class TestCaseService {

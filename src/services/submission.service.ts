@@ -3,7 +3,7 @@ import {
   SubmissionResponseType,
   UpdateSubmissionType,
 } from "@/dtos/submission.dto";
-import { Submission } from "@/models/submission.model";
+import { Submission } from "@/models";
 import { Model } from "sequelize";
 import ProblemService from "./problem.service";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
