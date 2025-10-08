@@ -186,7 +186,7 @@ const default_settings: EditorSettings = {
   font_size: 14,
   line_height: 1.6,
   theme: "light",
-  font_family: "jetbrains-mono",
+  font_family: "source-code-pro",
   show_line_nums: true,
   word_wrap: false,
   tab_size: 2,
@@ -210,6 +210,7 @@ export function useEditorSettings() {
         return githubLight;
       case "github-dark":
         return githubDark;
+      case "dark":
       case "vscode-dark":
         return vscodeDark;
       case "one-dark":
@@ -228,8 +229,6 @@ export function useEditorSettings() {
         return materialDark;
       case "monokai":
         return monokai;
-      case "dark":
-        return oneDark;
       case "light":
       default:
         return undefined; // use default light theme
