@@ -16,6 +16,7 @@ import {
   updateProblem,
 } from "@/lib/fetchers/problem.fetchers";
 import { toastr } from "@/lib/toastr";
+import { CategoryEnum } from "@/lib/types/enums/category.enum";
 import { DifficultyEnum } from "@/lib/types/enums/difficulty.enum";
 import { ProblemPageEnum } from "@/lib/types/enums/problempage.enum";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
@@ -221,7 +222,11 @@ const UpdateProblem = () => {
             description: response.data.description,
             difficulty: response.data.difficulty,
             categories: response.data.categories
-              ? response.data.categories.split(",")
+              ? response.data.categories
+                  .split(",")
+                  .filter((cat) =>
+                    Object.values(CategoryEnum).includes(cat as CategoryEnum),
+                  )
               : [],
             defaultCode: response.data.defaultCode,
             solutionCode: response.data.solutionCode ?? "",

@@ -47,6 +47,7 @@ export const GET = async (req: NextRequest) => {
       verified,
       search,
       difficulty ? (difficulty as DifficultyEnum) : null,
+      categories,
     );
 
     return NextResponse.json(

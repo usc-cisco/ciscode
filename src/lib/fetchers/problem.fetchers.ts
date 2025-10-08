@@ -83,7 +83,9 @@ export const fetchProblems = async (
       instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     }
 
-    const response = await instance.get("/problem", { params });
+    const response = await instance.get<
+      ApiResponse<ProblemSchemaResponseWithTestCasesType[]>
+    >("/problem", { params });
 
     return response.data;
   } catch (error: unknown) {

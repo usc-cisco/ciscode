@@ -37,8 +37,8 @@ const DropDownMultiSelect: React.FC<DropDownMultiSelectProps> = ({
       <MultiSelectContent className="bg-vscode-light dark:bg-vscode-dark">
         <MultiSelectGroup>
           {pairs.map(({ value, label }) => (
-            <MultiSelectItem key={value} value={value} badgeLabel={value}>
-              {label}
+            <MultiSelectItem key={value} value={value}>
+              {label.startsWith(".") ? label.slice(1) : label}
             </MultiSelectItem>
           ))}
         </MultiSelectGroup>
