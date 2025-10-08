@@ -44,8 +44,8 @@ const ProblemContainer = ({
   const [displayFilter, setDisplayFilter] = useState<string>(
     params.get("filter") || "",
   );
-  const [topicsFilter, setTopicsFilter] = useState<string[]>(
-    params.get("topics") ? params.get("topics")!.split(",") : [],
+  const [categoriesFilter, setCategoriesFilter] = useState<string[]>(
+    params.get("categories") ? params.get("categories")!.split(",") : [],
   );
   const [problems, setProblems] = useState<ProblemSchemaDisplayResponseType[]>(
     [],
@@ -77,7 +77,7 @@ const ProblemContainer = ({
           env.PROBLEM_LIMIT_PER_PAGE,
           filter,
           difficultyFilter !== "all" ? difficultyFilter : null,
-          topicsFilter.length > 0 ? topicsFilter : null,
+          categoriesFilter.length > 0 ? categoriesFilter : null,
           verified,
         );
         setProblems(response.data.problems || []);
@@ -142,11 +142,11 @@ const ProblemContainer = ({
         "?" +
         createQueryString([
           { name: "page", value: "1" },
-          { name: "topics", value: values.join(",") },
+          { name: "categories", value: values.join(",") },
         ]),
     );
     setPage(1);
-    setTopicsFilter(values);
+    setCategoriesFilter(values);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -179,7 +179,7 @@ const ProblemContainer = ({
           ]}
         />
         <DropDownMultiSelect
-          values={topicsFilter}
+          values={categoriesFilter}
           handleValueChange={handleTopicsChange}
           placeholder="Categories"
           pairs={Object.values(CategoryEnum).map((category) => ({
