@@ -23,7 +23,7 @@ const ProblemBar: React.FC<ProblemBarProps> = ({ problem, className }) => {
   const categoryList = categories
     ? categories
         .split(",")
-        .map((c) => c.trim())
+        .map((c) => (c.startsWith(".") ? c.slice(1) : c))
         .filter((c) => c.length > 0)
     : [];
 
