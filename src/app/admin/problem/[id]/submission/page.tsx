@@ -49,6 +49,7 @@ const Submissions = () => {
     title: "",
     difficulty: DifficultyEnum.PROG1,
     description: "",
+    categories: "",
     defaultCode: "",
     answerCode: "",
     authorId: -1,
