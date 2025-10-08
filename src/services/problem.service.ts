@@ -52,7 +52,6 @@ class ProblemService {
     categories: string[] | null = null,
     userId?: number,
   ): Promise<ProblemSchemaDisplayResponseType[]> {
-    console.log("\n\n\nCategories: ", categories, "\n\n\n");
     const problems = (await Problem.findAll({
       order: [["id", "ASC"]],
       offset: offset * limit,
@@ -61,10 +60,9 @@ class ProblemService {
         verified,
         ...(difficulty && { difficulty }),
         ...(categories && {
-          [Op.or]: categories.map((category) => {
-            console.log("\n\n\nCategory: ", category, "\n\n\n");
-            return { categories: { [Op.like]: `%${category}%` } };
-          }),
+          [Op.and]: categories.map((category) => ({
+            categories: { [Op.like]: `%${category}%` },
+          })),
         }),
         ...(search && {
           [Op.or]: [
@@ -146,6 +144,7 @@ class ProblemService {
     verified: boolean = true,
     search: string = "",
     difficulty: DifficultyEnum | null = null,
+    categories: string[] | null = null,
   ): Promise<number> {
     const count = await Problem.count({
       where: {
@@ -158,6 +157,11 @@ class ProblemService {
           },
         ],
         ...(difficulty && { difficulty }),
+        ...(categories && {
+          [Op.and]: categories.map((category) => ({
+            categories: { [Op.like]: `%${category}%` },
+          })),
+        }),
       },
     });
 
