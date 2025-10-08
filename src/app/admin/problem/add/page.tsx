@@ -26,9 +26,10 @@ const AddProblemPage = () => {
   const [canSubmit, setCanSubmit] = useState(false);
   const [problemPage, setProblemPage] = useState(ProblemPageEnum.DETAILS);
 
-  const [problem, setProblem] = useState({
+  const [problem, setProblem] = useState<AddProblemSchemaType>({
     title: "",
     description: "",
+    categories: [],
     difficulty: DifficultyEnum.PROG1,
     defaultCode: "// Write your boilerplate code here...",
     solutionCode: "// Write your solution code here...",
@@ -53,7 +54,7 @@ const AddProblemPage = () => {
 
   const handleProblemChange = (
     field: string,
-    value: string | DifficultyEnum,
+    value: string | DifficultyEnum | string[],
   ) => {
     setProblem((prev) => ({
       ...prev,
@@ -198,8 +199,8 @@ const AddProblemPage = () => {
         }
         Code={
           <AdminCodeEditor
-            defaultCode={problem.defaultCode}
-            solutionCode={problem.solutionCode}
+            defaultCode={problem.defaultCode ?? undefined}
+            solutionCode={problem.solutionCode ?? undefined}
             onCodeChange={handleCodeChange}
             isSolution={isSolution}
             handleChangeIsSolution={handleChangeIsSolution}

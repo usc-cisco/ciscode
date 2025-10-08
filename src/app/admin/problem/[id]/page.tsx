@@ -42,6 +42,7 @@ const UpdateProblem = () => {
   >({
     title: "",
     description: "",
+    categories: [],
     difficulty: DifficultyEnum.PROG1,
     defaultCode: "// Write your boilerplate code here...",
     solutionCode: "// Write your solution code here...",
@@ -70,7 +71,7 @@ const UpdateProblem = () => {
 
   const handleProblemChange = (
     field: string,
-    value: string | DifficultyEnum,
+    value: string | DifficultyEnum | string[],
   ) => {
     setProblem((prev) => ({
       ...prev,
@@ -219,6 +220,9 @@ const UpdateProblem = () => {
             title: response.data.title,
             description: response.data.description,
             difficulty: response.data.difficulty,
+            categories: response.data.categories
+              ? response.data.categories.split(",")
+              : [],
             defaultCode: response.data.defaultCode,
             solutionCode: response.data.solutionCode ?? "",
             verified: response.data.verified ?? true,

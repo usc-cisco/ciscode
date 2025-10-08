@@ -30,6 +30,9 @@ export const GET = async (req: NextRequest) => {
       : 10;
     const search = searchParams.get("search") || "";
     const difficulty = searchParams.get("difficulty") || null;
+    const categories = searchParams.get("categoryFilter")
+      ? searchParams.get("categoryFilter")!.split(",")
+      : null;
 
     const problems = await ProblemService.getProblems(
       verified,
@@ -37,6 +40,7 @@ export const GET = async (req: NextRequest) => {
       limit,
       search,
       difficulty ? (difficulty as DifficultyEnum) : null,
+      categories,
       userId,
     );
     const totalCount = await ProblemService.getTotalCount(

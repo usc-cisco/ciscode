@@ -21,16 +21,22 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import Link from "next/link";
+import DropDownMultiSelect from "@/components/shared/drop-down-multi-select";
+import { CategoryEnum } from "@/lib/types/enums/category.enum";
 
 interface AdminProblemBarProps {
   problem: {
     title: string;
     description: string;
     difficulty: string;
+    categories: string[];
     verified?: boolean;
     author?: string;
   };
-  onProblemChange: (field: string, value: string | DifficultyEnum) => void;
+  onProblemChange: (
+    field: string,
+    value: string | DifficultyEnum | string[],
+  ) => void;
   onSave: () => void;
   onDelete?: () => void;
   canSubmit: boolean;
@@ -99,6 +105,17 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({
             </Badge>
           </div>
         </div>
+
+        <DropDownMultiSelect
+          className="md:w-full my-2 px-0"
+          values={problem.categories}
+          handleValueChange={(values) => onProblemChange("categories", values)}
+          placeholder="Select Categories"
+          pairs={Object.values(CategoryEnum).map((category) => ({
+            value: category,
+            label: category,
+          }))}
+        />
 
         <div className="mt-4 text-sm h-full">
           {/* Maybe add a markdown renderer */}

@@ -1,7 +1,7 @@
 "use client";
 
 import Loading from "@/app/loading";
-import DropDownSelect from "@/components/home/drop-down-select";
+import DropDownSelect from "@/components/shared/drop-down-select";
 import CodeEditor from "@/components/problem/code-editor";
 import ProblemCard from "@/components/problem/problem-card";
 import TestCaseBar from "@/components/problem/test-case-bar";

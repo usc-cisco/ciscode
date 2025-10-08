@@ -10,10 +10,10 @@ import {
 import { UserResponseSchema, UserResponseSchemaType } from "@/dtos/user.dto";
 import UserService from "./user.service";
 import { DifficultyEnum } from "@/lib/types/enums/difficulty.enum";
-import { Model, Op } from "sequelize";
+import { col, fn, Model, Op, where } from "sequelize";
 import TestCaseService from "./testcase.service";
-import { Problem } from "@/models/problem.model";
 import SubmissionService from "./submission.service";
+import { User, Problem } from "@/models";
 
 class ProblemService {
   static async getProblemById(
@@ -49,23 +49,48 @@ class ProblemService {
     limit: number = 10,
     search: string = "",
     difficulty: DifficultyEnum | null = null,
+    categories: string[] | null = null,
     userId?: number,
   ): Promise<ProblemSchemaDisplayResponseType[]> {
+    console.log("\n\n\nCategories: ", categories, "\n\n\n");
     const problems = (await Problem.findAll({
       order: [["id", "ASC"]],
       offset: offset * limit,
       limit,
       where: {
-        verified: verified,
-        [Op.or]: [
-          {
-            title: {
-              [Op.like]: `%${search}%`,
-            },
-          },
-        ],
+        verified,
         ...(difficulty && { difficulty }),
+        ...(categories && {
+          [Op.or]: categories.map((category) => {
+            console.log("\n\n\nCategory: ", category, "\n\n\n");
+            return { categories: { [Op.like]: `%${category}%` } };
+          }),
+        }),
+        ...(search && {
+          [Op.or]: [
+            // Title search
+            { title: { [Op.like]: `%${search}%` } },
+
+            // Author name search
+            where(fn("LOWER", col("author.name")), {
+              [Op.like]: `%${search.toLowerCase()}%`,
+            }),
+
+            // Author username search
+            where(fn("LOWER", col("author.username")), {
+              [Op.like]: `%${search.toLowerCase()}%`,
+            }),
+          ],
+        }),
       },
+      include: [
+        {
+          model: User,
+          as: "author",
+          required: false,
+          attributes: ["id", "name", "username"],
+        },
+      ],
     })) as (Model & ProblemSchemaResponseType)[];
 
     const parsedProblems = problems.map(async (problem) => {
@@ -167,6 +192,7 @@ class ProblemService {
 
     const newProblem = await Problem.create({
       ...data,
+      categories: data.categories ? data.categories.join(",") : "",
       authorId: userId,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -187,7 +213,10 @@ class ProblemService {
       throw new Error("Problem not found");
     }
 
-    const updatedProblem = await problem.update(data);
+    const updatedProblem = await problem.update({
+      ...data,
+      categories: data.categories ? data.categories.join(",") : "",
+    });
     return ProblemSchemaResponse.parse(updatedProblem);
   }
 
