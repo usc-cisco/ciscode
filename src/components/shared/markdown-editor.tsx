@@ -1,4 +1,4 @@
-import MDEditor from "@uiw/react-md-editor";
+import MDEditor, { commands } from "@uiw/react-md-editor";
 import { useTheme } from "next-themes";
 import React, { useEffect, useState } from "react";
 
@@ -28,6 +28,10 @@ const MarkdownEditor = ({
     onChange?.(next);
   };
 
+  const customCommands = commands
+    .getCommands()
+    .filter((cmd) => !["image"].includes(cmd.name || ""));
+
   return (
     <div
       className={`w-full h-full ${className} border-0 rounded-lg`}
@@ -36,12 +40,18 @@ const MarkdownEditor = ({
       <MDEditor
         value={internalValue}
         onChange={handleChange}
-        preview="edit" // only show editor
-        hideToolbar // hide formatting toolbar
+        preview="edit"
+        commands={customCommands}
         className="h-full"
         textareaProps={{
           placeholder,
           className: `w-full h-full text-sm bg-vscode-light dark:bg-vscode-dark text-black dark:text-white outline-none focus:ring-0 border-none shadow-none resize-none`,
+        }}
+      />
+      <style
+        dangerouslySetInnerHTML={{
+          __html:
+            ".w-md-editor .w-md-editor-bar-right { display: none !important; }",
         }}
       />
     </div>

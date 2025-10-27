@@ -33,6 +33,9 @@ const Markdown = ({ children }: MarkdownProps) => {
       className="markdown"
       style={{
         background: "none",
+        wordWrap: "break-word",
+        overflowWrap: "break-word",
+        maxWidth: "100%",
       }}
       source={children}
       {...DEFAULT_PREVIEW_OPTIONS}

@@ -116,6 +116,9 @@ class ProblemService {
 
       return ProblemSchemaDisplayResponse.parse({
         ...problem.dataValues,
+        categories: problem.categories
+          ? problem.categories.split(",").filter((c) => c.trim())
+          : [],
         success,
         status: problem.status,
         author: problem.author,
