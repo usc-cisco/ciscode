@@ -11,6 +11,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "../ui/hover-card";
+import Markdown from "@/components/shared/markdown";
 
 interface ProblemBarProps {
   problem: ProblemSchemaResponseType;
@@ -34,7 +35,10 @@ const ProblemBar: React.FC<ProblemBarProps> = ({ problem, className }) => {
 
   return (
     <ProblemCard
-      className={cn("p-6 overflow-y-auto hide-scrollbar", className)}
+      className={cn(
+        "p-6 overflow-auto scrollbar scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800",
+        className,
+      )}
     >
       <Link
         href={`/home`}
@@ -109,8 +113,7 @@ const ProblemBar: React.FC<ProblemBarProps> = ({ problem, className }) => {
       </div>
 
       <div className="mt-4 text-sm">
-        {/* Maybe add a markdown renderer */}
-        <p className="whitespace-pre-wrap">{description}</p>
+        <Markdown>{description}</Markdown>
       </div>
     </ProblemCard>
   );

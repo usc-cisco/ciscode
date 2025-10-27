@@ -155,6 +155,7 @@
   body {
     @apply bg-background text-foreground;
   }
+
   /* Customizes screen */
   min-h-csreen {
     @apply min-h-[calc(100vh-4rem)];
