@@ -384,9 +384,9 @@ const ProblemTable = ({
           <AccordionItem
             key={category}
             value={category}
-            className="border rounded-lg"
+            className="border rounded-lg bg-vscode-light dark:bg-vscode-dark"
           >
-            <AccordionTrigger className="px-6 py-4 hover:no-underline">
+            <AccordionTrigger className="px-6 py-4 hover:no-underline dark:bg-vscode-dark">
               <div className="flex items-center justify-between w-full mr-4">
                 <span className="font-medium">
                   {category.replace(/^\./, "")}
