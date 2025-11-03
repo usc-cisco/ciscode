@@ -15,9 +15,9 @@ export default function SplitView({
 }: SplitViewProps) {
   return (
     <Split
-      className={cn(`flex h-cscreen`, classList)}
+      className={cn(`flex h-cscreen overflow-hidden`, classList)}
       minSize={300}
-      gutterSize={8}
+      gutterSize={4}
       sizes={sizes}
     >
       {children}

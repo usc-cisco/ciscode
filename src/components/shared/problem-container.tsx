@@ -1,12 +1,9 @@
 "use client";
 
-import DropDownSelect from "@/components/shared/drop-down-select";
 import ProblemTable from "@/components/shared/problem-table";
 import SearchBar from "@/components/shared/search-bar";
-import CustomPagination from "@/components/shared/custom-pagination";
 import { useAuth } from "@/contexts/auth.context";
 import { ProblemSchemaDisplayResponseType } from "@/dtos/problem.dto";
-import env from "@/lib/env";
 import { fetchProblems } from "@/lib/fetchers/problem.fetchers";
 import { DifficultyEnum } from "@/lib/types/enums/difficulty.enum";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -19,6 +16,7 @@ import React, {
 import { Button } from "../ui/button";
 import DropDownMultiSelect from "./drop-down-multi-select";
 import { CategoryEnum } from "@/lib/types/enums/category.enum";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface ProblemContainerProps {
   inAdmin?: boolean;
@@ -35,8 +33,7 @@ const ProblemContainer = ({
   const path = inAdmin ? "/admin" : "/home";
 
   const [loading, setLoading] = useState<boolean>(true);
-  const [page, setPage] = useState<number>(Number(params.get("page")) || 1);
-  const [totalPages, setTotalPages] = useState<number>(1);
+
   const [difficultyFilter, setDifficultyFilter] = useState<string>(
     params.get("difficulty") || "all",
   );
@@ -73,23 +70,14 @@ const ProblemContainer = ({
       try {
         const response = await fetchProblems(
           token ?? "",
-          page,
-          env.PROBLEM_LIMIT_PER_PAGE,
+          1, // Always fetch first page
+          1000, // Fetch all problems for accordion view
           filter,
           difficultyFilter !== "all" ? difficultyFilter : null,
           categoriesFilter.length > 0 ? categoriesFilter : null,
           verified,
         );
         setProblems(response.data.problems || []);
-        setTotalPages(response.data.totalPages || 1);
-
-        if (page !== 1 && response.data.problems.length === 0) {
-          setPage(1);
-          setTotalPages(1);
-          router.push(
-            path + "?" + createQueryString([{ name: "page", value: "1" }]),
-          );
-        }
       } catch (error) {
         console.error("Error fetching problems:", error);
       } finally {
@@ -98,41 +86,22 @@ const ProblemContainer = ({
     };
 
     getProblems();
-  }, [
-    token,
-    page,
-    filter,
-    difficultyFilter,
-    verified,
-    createQueryString,
-    path,
-    router,
-  ]);
+  }, [token, filter, difficultyFilter, categoriesFilter, verified]);
 
   const handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
-    setPage(1); // Reset to first page on filter change
     setFilter(displayFilter);
     router.push(
       path +
         "?" +
-        createQueryString([
-          { name: "page", value: "1" },
-          { name: "filter", value: displayFilter },
-        ]),
+        createQueryString([{ name: "filter", value: displayFilter }]),
     );
   };
 
   const handleDifficultyChange = (value: string) => {
     router.push(
-      path +
-        "?" +
-        createQueryString([
-          { name: "page", value: "1" },
-          { name: "difficulty", value },
-        ]),
+      path + "?" + createQueryString([{ name: "difficulty", value }]),
     );
-    setPage(1);
     setDifficultyFilter(value);
   };
 
@@ -140,19 +109,9 @@ const ProblemContainer = ({
     router.push(
       path +
         "?" +
-        createQueryString([
-          { name: "page", value: "1" },
-          { name: "categories", value: values.join(",") },
-        ]),
+        createQueryString([{ name: "categories", value: values.join(",") }]),
     );
-    setPage(1);
     setCategoriesFilter(values);
-  };
-
-  const handlePageChange = (newPage: number) => {
-    return () => {
-      setPage(newPage);
-    };
   };
 
   return (
@@ -165,18 +124,6 @@ const ProblemContainer = ({
           searchTerm={displayFilter}
           handleChange={setDisplayFilter}
           placeholder="Search problems..."
-        />
-        <DropDownSelect
-          value={difficultyFilter}
-          handleValueChange={handleDifficultyChange}
-          placeholder="Difficulty"
-          pairs={[
-            { value: "all", label: "All Difficulties" },
-            ...Object.values(DifficultyEnum).map((difficulty) => ({
-              value: difficulty,
-              label: difficulty,
-            })),
-          ]}
         />
         <DropDownMultiSelect
           values={categoriesFilter}
@@ -202,19 +149,27 @@ const ProblemContainer = ({
         )}
       </form>
 
+      <Tabs
+        value={difficultyFilter}
+        onValueChange={handleDifficultyChange}
+        className="mb-6"
+      >
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="all">All</TabsTrigger>
+          <TabsTrigger value={DifficultyEnum.PROG1}>
+            {DifficultyEnum.PROG1}
+          </TabsTrigger>
+          <TabsTrigger value={DifficultyEnum.PROG2}>
+            {DifficultyEnum.PROG2}
+          </TabsTrigger>
+          <TabsTrigger value={DifficultyEnum.DSA}>
+            {DifficultyEnum.DSA}
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+
       {/* Problems Table */}
       <ProblemTable problems={problems} inAdmin={inAdmin} loading={loading} />
-      {totalPages > 1 && (
-        <div className="mt-8">
-          <CustomPagination
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-            createQueryString={createQueryString}
-            path={path}
-          />
-        </div>
-      )}
     </>
   );
 };
