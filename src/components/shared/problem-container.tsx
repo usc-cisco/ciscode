@@ -14,8 +14,6 @@ import React, {
   useState,
 } from "react";
 import { Button } from "../ui/button";
-import DropDownMultiSelect from "./drop-down-multi-select";
-import { CategoryEnum } from "@/lib/types/enums/category.enum";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface ProblemContainerProps {
@@ -105,15 +103,6 @@ const ProblemContainer = ({
     setDifficultyFilter(value);
   };
 
-  const handleTopicsChange = (values: string[]) => {
-    router.push(
-      path +
-        "?" +
-        createQueryString([{ name: "categories", value: values.join(",") }]),
-    );
-    setCategoriesFilter(values);
-  };
-
   return (
     <>
       <form
@@ -124,15 +113,6 @@ const ProblemContainer = ({
           searchTerm={displayFilter}
           handleChange={setDisplayFilter}
           placeholder="Search problems..."
-        />
-        <DropDownMultiSelect
-          values={categoriesFilter}
-          handleValueChange={handleTopicsChange}
-          placeholder="Categories"
-          pairs={Object.values(CategoryEnum).map((category) => ({
-            value: category,
-            label: category,
-          }))}
         />
         {verified && (
           <Button
@@ -154,7 +134,7 @@ const ProblemContainer = ({
         onValueChange={handleDifficultyChange}
         className="mb-6"
       >
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-4 vscode-light dark:bg-vscode-dark">
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value={DifficultyEnum.PROG1}>
             {DifficultyEnum.PROG1}
