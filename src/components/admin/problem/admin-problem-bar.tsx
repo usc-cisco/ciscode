@@ -52,17 +52,17 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({
   canSubmit,
 }) => {
   const [isPreview, setIsPreview] = useState<boolean>(false);
-  const { title, difficulty, description, verified, author } = problem;
+  const { title, difficulty, description } = problem;
   return (
     <ProblemCard className="overflow-hidden hide-scrollbar relative">
       {isPreview ? (
         <div className="p-6 max-h-full overflow-y-auto overflow-x-hidden pb-20">
           <Link
-            href={`/home`}
+            href={`/admin`}
             className="flex items-center gap-1 hover:underline mb-2"
           >
             <ArrowLeft className="size-3" />
-            <p className="text-xs">Back to Home</p>
+            <p className="text-xs">Back to Dashboard</p>
           </Link>
           <h1 className="text-xl font-semibold">{title || "Untitled"}</h1>
           <div className="flex gap-2 justify-between">
@@ -134,7 +134,7 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({
       ) : (
         <div className="p-6 max-h-full overflow-y-auto overflow-x-hidden pb-26">
           <Link
-            href={`/home`}
+            href={`/admin`}
             className="flex items-center gap-1 hover:underline mb-2"
           >
             <ArrowLeft className="size-3" />
