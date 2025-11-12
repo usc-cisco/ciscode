@@ -53,12 +53,12 @@ interface ProblemTableProps {
 
 const ITEMS_PER_PAGE = 10;
 
-interface CategoryTableProps {
+export interface CategoryTableProps {
   problems: ProblemSchemaDisplayResponseType[];
   inAdmin?: boolean;
 }
 
-const CategoryTable = ({ problems, inAdmin }: CategoryTableProps) => {
+export const CategoryTable = ({ problems, inAdmin }: CategoryTableProps) => {
   const router = useRouter();
   const [sortColumn, setSortColumn] = useState<string>("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
