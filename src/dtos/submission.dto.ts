@@ -1,4 +1,5 @@
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
+import { DifficultyEnum } from "@/lib/types/enums/difficulty.enum";
 import z from "zod";
 import { TestCaseSubmissionResponse } from "./testcase-submission.dto";
 import { UserResponseSchema } from "./user.dto";
@@ -30,6 +31,7 @@ export const SubmissionActivitySchema = z.object({
   userId: z.number().int().positive(),
   problemId: z.number().int().positive(),
   title: z.string(),
+  difficulty: z.enum(DifficultyEnum),
   status: z.enum(SubmissionStatusEnum).default(SubmissionStatusEnum.ATTEMPTED),
   updatedAt: z.date().optional().default(new Date()),
 });
