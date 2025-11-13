@@ -29,7 +29,7 @@ import {
   EyeOff,
 } from "lucide-react";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
-import { formatNumberCompact, formatPercentage } from "@/lib/utils";
+import { formatNumberCompact, formatPercentage, cn } from "@/lib/utils";
 
 import {
   Accordion,
@@ -39,12 +39,6 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 
-const getSuccessColor = (success: number) => {
-  if (success < 0.4) return "text-red-500";
-  if (success < 0.7) return "text-yellow-500";
-  return "text-green-500";
-};
-
 interface ProblemTableProps {
   problems: ProblemSchemaDisplayResponseType[];
   inAdmin?: boolean;
@@ -53,12 +47,12 @@ interface ProblemTableProps {
 
 const ITEMS_PER_PAGE = 10;
 
-interface CategoryTableProps {
+export interface CategoryTableProps {
   problems: ProblemSchemaDisplayResponseType[];
   inAdmin?: boolean;
 }
 
-const CategoryTable = ({ problems, inAdmin }: CategoryTableProps) => {
+export const CategoryTable = ({ problems, inAdmin }: CategoryTableProps) => {
   const router = useRouter();
   const [sortColumn, setSortColumn] = useState<string>("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
@@ -251,7 +245,13 @@ const CategoryTable = ({ problems, inAdmin }: CategoryTableProps) => {
                 <TableCell className="overflow-hidden hidden md:table-cell opacity-90">
                   <Badge
                     variant="outline"
-                    className={getSuccessColor(problem.success ?? 0)}
+                    className={cn(
+                      (problem.success ?? 0) < 0.4 && "text-red-500",
+                      (problem.success ?? 0) >= 0.4 &&
+                        (problem.success ?? 0) < 0.7 &&
+                        "text-yellow-500",
+                      (problem.success ?? 0) >= 0.7 && "text-green-500",
+                    )}
                   >
                     {formatPercentage(problem.success ?? 0)}
                   </Badge>

@@ -15,7 +15,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/auth.context";
 import { SubmissionActivityType } from "@/dtos/submission.dto";
-import { fetchUserInfo, updatePassword } from "@/lib/fetchers/user.fetchers";
+import {
+  fetchUserInfo,
+  fetchUserStatistics,
+  updatePassword,
+} from "@/lib/fetchers/user.fetchers";
 import { toastr } from "@/lib/toastr";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import RoleEnum, { getRoleColor } from "@/lib/types/enums/role.enum";
@@ -25,6 +29,11 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { UserStatisticsType } from "@/dtos/user-statistics.dto";
+import SolvedCircle from "@/components/profile/solved-circle";
+import DifficultyStats from "@/components/profile/difficulty-stats";
+import SubmissionCalendar from "@/components/profile/submission-calendar";
+import { getDifficultyColor } from "@/lib/types/enums/difficulty.enum";
 
 const Profile = () => {
   const { token, userInfo } = useAuth();
@@ -42,6 +51,8 @@ const Profile = () => {
 
   const [loading, setLoading] = useState(true);
   const [submissions, setSubmissions] = useState<SubmissionActivityType[]>([]);
+  const [statistics, setStatistics] = useState<UserStatisticsType | null>(null);
+  const [statisticsLoading, setStatisticsLoading] = useState(true);
   const [open, setOpen] = useState(false);
 
   const handleChangePassword = async (data: {
@@ -76,7 +87,24 @@ const Profile = () => {
       }
     }
 
+    async function getUserStatistics() {
+      try {
+        const response = await fetchUserStatistics(
+          token as string,
+          userInfo.id,
+        );
+        if (response.data) {
+          setStatistics(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching user statistics:", error);
+      } finally {
+        setStatisticsLoading(false);
+      }
+    }
+
     getUserInfo();
+    getUserStatistics();
   }, [token, userInfo.id]);
 
   return (
@@ -180,53 +208,111 @@ const Profile = () => {
 
             <Info text="Incorrect details? Contact CISCO." />
           </Card>
-          <Card className="w-full p-6 autoflow-y-auto">
-            <CardTitle className="text-lg font-semibold">
-              Recent Submissions
-            </CardTitle>
-            <CardContent className="p-0">
-              <div className="w-full flex flex-col gap-2">
-                {loading ? (
-                  <p className="text-gray-500 text-sm">Loading...</p>
-                ) : submissions.length === 0 ? (
-                  <p className="text-gray-500 text-sm">
-                    No submissions so far...
-                  </p>
-                ) : (
-                  submissions.map((submission) => {
-                    const Icon =
-                      submission.status === SubmissionStatusEnum.SOLVED ? (
-                        <Check className="text-green-500 size-4" />
-                      ) : (
-                        <X className="text-red-500 size-4" />
-                      );
 
-                    return (
-                      <div
-                        onClick={() =>
-                          router.push(`/problem/${submission.problemId}`)
-                        }
-                        key={submission.id}
-                        className={`py-4 px-4 rounded-sm border flex justify-between gap-4 items-center cursor-pointer transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-900`}
-                      >
-                        <div className="flex items-center gap-2 flex-1 w-0">
-                          <div>{Icon}</div>
-                          <p className="truncate">{submission.title}</p>
-                        </div>
-                        <p className="text-xs text-gray-500">
-                          {new Date(submission.updatedAt).getMonth() +
-                            "/" +
-                            new Date(submission.updatedAt).getDate() +
-                            "/" +
-                            new Date(submission.updatedAt).getFullYear()}
-                        </p>
+          <div className="w-full flex flex-col gap-4">
+            {statisticsLoading ? (
+              <Card className="w-full p-6">
+                <p className="text-gray-500 text-sm">Loading statistics...</p>
+              </Card>
+            ) : statistics ? (
+              <>
+                <Card className="w-full p-6 gap-0">
+                  <CardTitle className="text-lg font-semibold mb-6">
+                    Solved Problems
+                  </CardTitle>
+                  <CardContent className="p-0">
+                    <div className="flex flex-col md:flex-row gap-8 items-center">
+                      <SolvedCircle
+                        totalSolved={statistics.totalSolved}
+                        totalProblems={statistics.totalProblems}
+                      />
+                      <div className="flex-1 w-full">
+                        <DifficultyStats
+                          solvedByDifficulty={statistics.solvedByDifficulty}
+                          totalByDifficulty={statistics.totalByDifficulty}
+                        />
                       </div>
-                    );
-                  })
-                )}
-              </div>
-            </CardContent>
-          </Card>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Submission Calendar */}
+                <Card className="w-full p-6 gap-0">
+                  <CardTitle className="text-lg font-semibold mb-4">
+                    Submission Activity
+                  </CardTitle>
+                  <CardContent className="p-0">
+                    <SubmissionCalendar
+                      submissionCalendar={statistics.submissionCalendar}
+                      totalSubmissions={statistics.totalSubmissions}
+                      activeDays={statistics.activeDays}
+                      maxStreak={statistics.maxStreak}
+                    />
+                  </CardContent>
+                </Card>
+              </>
+            ) : null}
+
+            {/* Recent Submissions */}
+            <Card className="w-full p-6 autoflow-y-auto gap-4">
+              <CardTitle className="text-lg font-semibold">
+                Recent Submissions
+              </CardTitle>
+              <CardContent className="p-0">
+                <div className="w-full flex flex-col gap-2">
+                  {loading ? (
+                    <p className="text-gray-500 text-sm">Loading...</p>
+                  ) : submissions.length === 0 ? (
+                    <p className="text-gray-500 text-sm">
+                      No submissions so far...
+                    </p>
+                  ) : (
+                    submissions.map((submission) => {
+                      const Icon =
+                        submission.status === SubmissionStatusEnum.SOLVED ? (
+                          <Check className="text-green-500 size-4" />
+                        ) : (
+                          <X className="text-red-500 size-4" />
+                        );
+
+                      return (
+                        <div
+                          onClick={() =>
+                            router.push(`/problem/${submission.problemId}`)
+                          }
+                          key={submission.id}
+                          className={`py-4 px-4 rounded-sm border flex justify-between gap-4 items-center cursor-pointer transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-900`}
+                        >
+                          <div className="flex items-center gap-2 flex-1 w-0">
+                            <div>{Icon}</div>
+                            <p className="truncate">{submission.title}</p>
+                            {submission.difficulty && (
+                              <Badge
+                                className={cn(
+                                  "ml-2",
+                                  getDifficultyColor(submission.difficulty),
+                                )}
+                              >
+                                {submission.difficulty}
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="text-xs text-gray-500 whitespace-nowrap">
+                            {new Date(submission.updatedAt).getMonth() +
+                              1 +
+                              "/" +
+                              new Date(submission.updatedAt).getDate() +
+                              "/" +
+                              new Date(submission.updatedAt).getFullYear()}
+                          </p>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
     </ProtectedRoute>

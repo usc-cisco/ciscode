@@ -10,6 +10,7 @@ import ApiResponse from "../types/interface/api-response.interface";
 import AdminCount from "../types/interface/admin-count.interface";
 import axios from "axios";
 import { SubmissionActivityType } from "@/dtos/submission.dto";
+import { UserStatisticsType } from "@/dtos/user-statistics.dto";
 
 export const loginUser = async (payload: LoginRequestSchemaType) => {
   try {
@@ -235,6 +236,29 @@ export const updatePasswordAsAdmin = async (
     }
 
     console.error("Error updating password:", error);
+    throw error;
+  }
+};
+
+export const fetchUserStatistics = async (token: string, userId: number) => {
+  try {
+    if (token) {
+      instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+
+    const response = await instance.get<ApiResponse<UserStatisticsType>>(
+      `/user/${userId}/statistics`,
+    );
+
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(
+        error.response?.data?.error || "Failed to fetch user statistics",
+      );
+    }
+
+    console.error("Error fetching user statistics:", error);
     throw error;
   }
 };

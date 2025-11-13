@@ -1,6 +1,6 @@
 "use client";
 
-import ProblemTable from "@/components/shared/problem-table";
+import { CategoryTable } from "@/components/shared/problem-table";
 import SearchBar from "@/components/shared/search-bar";
 import { useAuth } from "@/contexts/auth.context";
 import { ProblemSchemaDisplayResponseType } from "@/dtos/problem.dto";
@@ -15,6 +15,13 @@ import React, {
 } from "react";
 import { Button } from "../ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 
 interface ProblemContainerProps {
   inAdmin?: boolean;
@@ -103,6 +110,24 @@ const ProblemContainer = ({
     setDifficultyFilter(value);
   };
 
+  const getUniqueCategories = () => {
+    const categoriesSet = new Set<string>();
+    problems.forEach((problem) => {
+      if (problem.categories) {
+        problem.categories.forEach((cat) => categoriesSet.add(cat));
+      }
+    });
+    return Array.from(categoriesSet).sort();
+  };
+
+  const getProblemsByCategory = (category: string) => {
+    return problems.filter(
+      (problem) => problem.categories && problem.categories.includes(category),
+    );
+  };
+
+  const uniqueCategories = getUniqueCategories();
+
   return (
     <>
       <form
@@ -148,8 +173,68 @@ const ProblemContainer = ({
         </TabsList>
       </Tabs>
 
-      {/* Problems Table */}
-      <ProblemTable problems={problems} inAdmin={inAdmin} loading={loading} />
+      {loading ? (
+        <p className="text-center text-gray-500 py-8">Loading...</p>
+      ) : problems.length === 0 ? (
+        <p className="text-center text-gray-500 py-8">
+          No problems found matching your criteria.
+        </p>
+      ) : (
+        <Accordion
+          type="multiple"
+          defaultValue={["all"]}
+          className="w-full space-y-4"
+        >
+          {/* All Problems accordion - As requested by someone in the GDGoC Data Science Tech Space lol. */}
+          <AccordionItem
+            value="all"
+            className="border rounded-lg bg-vscode-light dark:bg-vscode-dark"
+          >
+            <AccordionTrigger className="px-6 py-4 hover:no-underline dark:bg-vscode-dark">
+              <div className="flex items-center justify-between w-full mr-4">
+                <span className="font-medium">All Problems</span>
+                <Badge variant="outline" className="ml-2">
+                  {problems.length} problem
+                  {problems.length !== 1 ? "s" : ""}
+                </Badge>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="pb-0">
+              <CategoryTable problems={problems} inAdmin={inAdmin} />
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* The rest of the category accordions */}
+          {uniqueCategories.map((category) => {
+            const categoryProblems = getProblemsByCategory(category);
+            return (
+              <AccordionItem
+                key={category}
+                value={category}
+                className="border rounded-lg bg-vscode-light dark:bg-vscode-dark"
+              >
+                <AccordionTrigger className="px-6 py-4 hover:no-underline dark:bg-vscode-dark">
+                  <div className="flex items-center justify-between w-full mr-4">
+                    <span className="font-medium">
+                      {category.replace(/^\./, "")}
+                    </span>
+                    <Badge variant="outline" className="ml-2">
+                      {categoryProblems.length} problem
+                      {categoryProblems.length !== 1 ? "s" : ""}
+                    </Badge>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="pb-0">
+                  <CategoryTable
+                    problems={categoryProblems}
+                    inAdmin={inAdmin}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
+      )}
     </>
   );
 };
