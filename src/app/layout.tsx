@@ -2,7 +2,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/shared/theme-provider";
 import Navbar from "@/components/shared/navbar";
-import Footer from "@/components/shared/footer";
+import ConditionalFooter from "@/components/shared/conditional-footer";
 import { AuthProvider } from "@/contexts/auth.context";
 import { Toaster } from "@/components/ui/sonner";
 import { Metadata } from "next";
@@ -45,7 +45,7 @@ export default function RootLayout({
               duration={1500}
               closeButton
             />
-            <Footer />
+            <ConditionalFooter />
           </ThemeProvider>
         </AuthProvider>
       </body>

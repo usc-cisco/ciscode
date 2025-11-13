@@ -33,7 +33,7 @@ const OfferCodeEditor: React.FC<OfferCodeEditorProps> = ({
 
   return (
     <ProblemCard className="flex flex-col h-full">
-      <div className="flex-shrink-0 px-2 py-2 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-vscode-light dark:bg-vscode-dark rounded-t-2xl sticky top-0 z-10">
+      <div className="shrink-0 px-2 py-2 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-vscode-light dark:bg-vscode-dark rounded-t-2xl sticky top-0 z-10">
         <div className="flex items-center gap-1">
           <button
             onClick={handleChangeIsSolution(true)}
