@@ -25,6 +25,7 @@ import DropDownMultiSelect from "@/components/shared/drop-down-multi-select";
 import { CategoryEnum } from "@/lib/types/enums/category.enum";
 import Markdown from "@/components/shared/markdown";
 import MarkdownEditor from "@/components/shared/markdown-editor";
+import { unknown } from "zod";
 
 interface AdminProblemBarProps {
   problem: {
@@ -52,7 +53,7 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({
   canSubmit,
 }) => {
   const [isPreview, setIsPreview] = useState<boolean>(false);
-  const { title, difficulty, description } = problem;
+  const { title, author, difficulty, description } = problem;
   return (
     <ProblemCard className="overflow-hidden hide-scrollbar relative">
       {isPreview ? (
@@ -66,7 +67,9 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({
           </Link>
           <h1 className="text-xl font-semibold">{title || "Untitled"}</h1>
           <div className="flex gap-2 justify-between">
-            <p className="text-sm text-muted-foreground truncate">By You</p>
+            <p className="text-sm text-muted-foreground truncate">
+              By {author || "System"}
+            </p>
             <div className="flex items-center">
               <Badge
                 className={cn(
@@ -224,7 +227,7 @@ const AdminProblemBar: React.FC<AdminProblemBarProps> = ({
                 className={`bg-primary py-2 rounded-lg cursor-pointer w-full ${canSubmit ? "opacity-100" : "opacity-40 pointer-events-none"}`}
                 onClick={onSave}
               >
-                Offer Problem
+                {problem.verified ? "Update" : "Approve"} Problem
               </Button>
             </HoverCardTrigger>
             {canSubmit || (

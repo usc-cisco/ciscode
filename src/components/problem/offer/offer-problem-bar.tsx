@@ -25,6 +25,7 @@ import DropDownMultiSelect from "@/components/shared/drop-down-multi-select";
 import { CategoryEnum } from "@/lib/types/enums/category.enum";
 import MarkdownEditor from "@/components/shared/markdown-editor";
 import Markdown from "@/components/shared/markdown";
+import { useAuth } from "@/contexts/auth.context";
 
 interface OfferProblemBarProps {
   problem: {
@@ -49,6 +50,7 @@ const OfferProblemBar: React.FC<OfferProblemBarProps> = ({
   onDelete,
   canSubmit,
 }) => {
+  const { userInfo } = useAuth();
   const [isPreview, setIsPreview] = useState(false);
   const { title, difficulty, description } = problem;
   return (
@@ -70,7 +72,9 @@ const OfferProblemBar: React.FC<OfferProblemBarProps> = ({
           </Link>
           <h1 className="text-xl font-semibold">{title || "Untitled"}</h1>
           <div className="flex gap-2 justify-between">
-            <p className="text-sm text-muted-foreground truncate">By You</p>
+            <p className="text-sm text-muted-foreground truncate">
+              By {userInfo?.name || "System"}
+            </p>
             <div className="flex items-center">
               <Badge
                 className={cn(
