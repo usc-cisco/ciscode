@@ -3,11 +3,11 @@ import UserStatisticsService from "@/services/user-statistics.service";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } },
+  _: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const userId = parseInt(params.id);
+    const userId = parseInt((await params).id);
 
     if (isNaN(userId)) {
       return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
