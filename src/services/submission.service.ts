@@ -95,6 +95,7 @@ class SubmissionService {
           problemId: submission.problemId,
           status: submission.status,
           title: problem?.title || "Unknown",
+          difficulty: problem?.difficulty,
           updatedAt: submission.updatedAt,
         };
       }),
