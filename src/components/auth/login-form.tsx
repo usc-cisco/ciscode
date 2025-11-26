@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { useAuth } from "@/contexts/auth.context";
 import { toastr } from "@/lib/toastr";
 import Info from "../shared/info";
+import { Eye, EyeClosed } from "lucide-react";
 
 type LoginFormInputs = {
   username: string;
@@ -24,6 +25,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleSuccess }) => {
     formState: { errors },
   } = useForm<LoginFormInputs>();
 
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data: LoginFormInputs) => {
@@ -54,12 +56,25 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleSuccess }) => {
         {...register("username", { required: "Username is required" })}
       />
       <p className="text-red-500 text-xs">{errors.username?.message}</p>
-      <Input
-        className="py-5"
-        placeholder="Password"
-        type="password"
-        {...register("password", { required: "Password is required" })}
-      />
+      <div className="relative">
+        <Input
+          className="py-5"
+          placeholder="Password"
+          type={showPassword ? "text" : "password"}
+          {...register("password", { required: "Password is required" })}
+        />
+        <button
+          type="button"
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500 cursor-pointer"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? (
+            <EyeClosed className="size-4" />
+          ) : (
+            <Eye className="size-4" />
+          )}
+        </button>
+      </div>
       <p className="text-red-500 text-xs">{errors.password?.message}</p>
       <Button className="py-5 cursor-pointer" type="submit" disabled={loading}>
         {loading ? "Logging In..." : "Log In"}
