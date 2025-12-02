@@ -1,4 +1,4 @@
-name: Clean up
+name: Daily CRON job 
 
 on: 
   schedule:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Clean up tmp
+    name: Clean up tmp .c files & backup database
     runs-on: ubuntu-latest
     steps:
       - name: Clean up tmp .c files
@@ -19,4 +19,5 @@ jobs:
           port: ${{secrets.DCISM_PORT}}
           script: |
             cd ~/ciscode.dcism.org
-            rm -rf tmp/
+            npm run tmp:cleanup
+            npm run db:backup

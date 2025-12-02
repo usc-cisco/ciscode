@@ -20,6 +20,7 @@ jobs:
           port: ${{secrets.DCISM_PORT}}
           script: |
             cd ~/ciscode.dcism.org
+            git fetch origin main
             git reset --hard && git clean -fd && git pull origin main
             npm install --build-from-source
             npm rebuild
