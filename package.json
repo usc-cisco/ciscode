@@ -64,7 +64,7 @@
     "lucide-react": "^0.525.0",
     "mysql2": "^3.15.3",
     "mysqldump": "^3.2.0",
-    "next": "15.4.3",
+    "next": "^15.5.7",
     "next-themes": "^0.4.6",
     "node-pty": "^1.0.0",
     "pg-hstore": "^2.3.4",
