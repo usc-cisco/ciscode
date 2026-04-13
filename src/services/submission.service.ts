@@ -4,7 +4,7 @@ import {
   UpdateSubmissionType,
 } from "@/dtos/submission.dto";
 import { Submission } from "@/models";
-import { Model } from "sequelize";
+import { col, fn, literal, Model, Op } from "sequelize";
 import ProblemService from "./problem.service";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 
@@ -119,6 +119,65 @@ class SubmissionService {
     );
 
     return (successfulSubmissions.length / submissions.length) * 100 || 0;
+  }
+
+  static async getSubmissionStatsByProblemIds(
+    problemIds: number[],
+  ): Promise<Map<number, { count: number; successPercentage: number }>> {
+    const map = new Map<number, { count: number; successPercentage: number }>();
+    if (problemIds.length === 0) return map;
+
+    const rows = (await Submission.findAll({
+      attributes: [
+        "problemId",
+        [fn("COUNT", col("id")), "total"],
+        [
+          literal(
+            `SUM(CASE WHEN status = '${SubmissionStatusEnum.SOLVED}' THEN 1 ELSE 0 END)`,
+          ),
+          "solved",
+        ],
+      ],
+      where: { problemId: { [Op.in]: problemIds } },
+      group: ["problemId"],
+      raw: true,
+    })) as unknown as {
+      problemId: number;
+      total: string | number;
+      solved: string | number;
+    }[];
+
+    for (const row of rows) {
+      const total = Number(row.total) || 0;
+      const solved = Number(row.solved) || 0;
+      map.set(row.problemId, {
+        count: total,
+        successPercentage: total > 0 ? (solved / total) * 100 : 0,
+      });
+    }
+    return map;
+  }
+
+  static async getUserStatusByProblemIds(
+    userId: number,
+    problemIds: number[],
+  ): Promise<Map<number, SubmissionStatusEnum>> {
+    const map = new Map<number, SubmissionStatusEnum>();
+    if (problemIds.length === 0) return map;
+
+    const rows = (await Submission.findAll({
+      attributes: ["problemId", "status"],
+      where: { userId, problemId: { [Op.in]: problemIds } },
+      raw: true,
+    })) as unknown as { problemId: number; status: SubmissionStatusEnum }[];
+
+    for (const row of rows) {
+      const existing = map.get(row.problemId);
+      if (!existing || row.status === SubmissionStatusEnum.SOLVED) {
+        map.set(row.problemId, row.status);
+      }
+    }
+    return map;
   }
 
   static async addSubmission(

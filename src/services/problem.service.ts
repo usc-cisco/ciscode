@@ -7,9 +7,10 @@ import {
   ProblemSchemaResponseWithTestCases,
   ProblemSchemaResponseWithTestCasesType,
 } from "@/dtos/problem.dto";
-import { UserResponseSchema, UserResponseSchemaType } from "@/dtos/user.dto";
+import { UserResponseSchema } from "@/dtos/user.dto";
 import UserService from "./user.service";
 import { DifficultyEnum } from "@/lib/types/enums/difficulty.enum";
+import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import { col, fn, Model, Op, where } from "sequelize";
 import TestCaseService from "./testcase.service";
 import SubmissionService from "./submission.service";
@@ -91,42 +92,33 @@ class ProblemService {
       ],
     })) as (Model & ProblemSchemaResponseType)[];
 
-    const parsedProblems = problems.map(async (problem) => {
-      const author = (await UserService.getUserById(
-        problem.authorId,
-      )) as Model & UserResponseSchemaType;
-      problem.author = author
-        ? UserResponseSchema.parse(author).name
-        : "Unknown";
+    const problemIds = problems.map((p) => p.id);
 
-      if (userId) {
-        const existingSubmission =
-          await SubmissionService.getSubmissionByProblemIdAndUserId(
-            problem.id,
-            userId,
-          );
-        problem.status = existingSubmission
-          ? existingSubmission.status
-          : undefined;
-      }
+    const [statsMap, userStatusMap] = await Promise.all([
+      SubmissionService.getSubmissionStatsByProblemIds(problemIds),
+      userId
+        ? SubmissionService.getUserStatusByProblemIds(userId, problemIds)
+        : Promise.resolve(new Map<number, SubmissionStatusEnum>()),
+    ]);
 
-      const success = await SubmissionService.getSuccessPercentage(problem.id);
-      const numOfSubmissions =
-        await SubmissionService.getSubmissionCountByProblemId(problem.id);
+    return problems.map((problem) => {
+      const includedAuthor = (
+        problem.dataValues as { author?: { name?: string } }
+      ).author;
+      const authorName = includedAuthor?.name ?? "Unknown";
+      const stats = statsMap.get(problem.id);
 
       return ProblemSchemaDisplayResponse.parse({
         ...problem.dataValues,
         categories: problem.categories
           ? problem.categories.split(",").filter((c) => c.trim())
           : [],
-        success,
-        status: problem.status,
-        author: problem.author,
-        numOfSubmissions,
+        success: stats?.successPercentage ?? 0,
+        status: userStatusMap.get(problem.id),
+        author: authorName,
+        numOfSubmissions: stats?.count ?? 0,
       });
     });
-
-    return Promise.all(parsedProblems);
   }
 
   static async getNextProblemId(problemId: number): Promise<number | null> {
