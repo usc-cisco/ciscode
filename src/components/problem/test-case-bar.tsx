@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import TestCase from "./test-case";
 import { TestCaseResponseType } from "@/dtos/testcase.dto";
 import { CheckCodeResponseType } from "@/dtos/code.dto";
+import { StudyHubTraceContext } from "./test-case";
 
 interface TestCaseBarProps {
   testCases: TestCaseResponseType[];
@@ -17,6 +18,7 @@ interface TestCaseBarProps {
   submitted?: boolean;
   sending: boolean;
   overrideHidden?: boolean;
+  studyHubTrace?: StudyHubTraceContext;
 }
 
 const TestCaseBar: React.FC<TestCaseBarProps> = ({
@@ -27,6 +29,7 @@ const TestCaseBar: React.FC<TestCaseBarProps> = ({
   submitted,
   sending,
   overrideHidden = false,
+  studyHubTrace,
 }) => {
   return (
     <ProblemCard className="relative overflow-hidden">
@@ -46,6 +49,7 @@ const TestCaseBar: React.FC<TestCaseBarProps> = ({
               submitted={submitted ?? false}
               sending={sending}
               overrideHidden={overrideHidden}
+              studyHubTrace={studyHubTrace}
             />
           ))}
         </div>

@@ -15,6 +15,7 @@ import { TestCaseResponseType } from "@/dtos/testcase.dto";
 import { runTestCase } from "@/lib/fetchers/code.fetchers";
 import { fetchProblem } from "@/lib/fetchers/problem.fetchers";
 import { submitCode } from "@/lib/fetchers/submission.fetchers";
+import { studyHubTraceUrl } from "@/lib/studyhub";
 import { ProblemPageEnum } from "@/lib/types/enums/problempage.enum";
 import SubmissionStatusEnum from "@/lib/types/enums/problemstatus.enum";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
@@ -278,6 +279,11 @@ export default function Problem() {
               code={code}
               onCodeChange={handleCodeChange}
               handleReset={handleReset}
+              studyHubTraceUrl={studyHubTraceUrl({
+                problemId: problem.id,
+                title: problem.title,
+                code,
+              })}
             />
           }
           TestCases={
@@ -288,6 +294,11 @@ export default function Problem() {
               onCheckCode={handleCheckCode}
               submitted={submitted}
               sending={!code || sending}
+              studyHubTrace={{
+                problemId: problem.id,
+                title: problem.title,
+                code,
+              }}
             />
           }
         />

@@ -5,7 +5,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { useEditorSettings } from "@/hooks/use-editor-settings";
 import ProblemCard from "./problem-card";
 import EditorSettings from "./editor-settings";
-import { CodeXml, RefreshCcw } from "lucide-react";
+import { CodeXml, Footprints, RefreshCcw } from "lucide-react";
 import {
   HoverCard,
   HoverCardContent,
@@ -17,12 +17,14 @@ interface CodeEditorProps {
   code: string;
   onCodeChange?: (value: string | undefined) => void;
   handleReset?: () => void;
+  studyHubTraceUrl?: string;
 }
 
 const CodeEditor: React.FC<CodeEditorProps> = ({
   code,
   onCodeChange,
   handleReset,
+  studyHubTraceUrl,
 }) => {
   const { settings, update_setting, get_extensions, reset_settings } =
     useEditorSettings();
@@ -41,12 +43,35 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           <p className="text-sm font-semibold">main.c</p>
         </div>
 
-        {/* editor settings */}
-        <EditorSettings
-          settings={settings}
-          update_setting={update_setting}
-          reset_settings={reset_settings}
-        />
+        <div className="flex items-center gap-2">
+          {studyHubTraceUrl && (
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="h-8 bg-background/90 shadow-lg hover:bg-background"
+            >
+              <a
+                href={studyHubTraceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="See your code run step by step, with its variables and data structures drawn, in Study Hub"
+              >
+                <Footprints className="size-4 text-primary" />
+                <span className="text-xs">
+                  Visualize and trace in Study Hub
+                </span>
+              </a>
+            </Button>
+          )}
+
+          {/* editor settings */}
+          <EditorSettings
+            settings={settings}
+            update_setting={update_setting}
+            reset_settings={reset_settings}
+          />
+        </div>
       </div>
 
       <div className="flex-1 min-h-0 relative">
