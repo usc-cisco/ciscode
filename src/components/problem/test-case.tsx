@@ -2,7 +2,7 @@ import { CheckCodeResponseType } from "@/dtos/code.dto";
 import { TestCaseResponseType } from "@/dtos/testcase.dto";
 import TestCaseSubmissionStatusEnum from "@/lib/types/enums/submissionstatus.enum";
 import { cn } from "@/lib/utils";
-import { Circle, CircleCheck, CircleX } from "lucide-react";
+import { Circle, CircleCheck, CircleX, Footprints } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { FaPlay } from "react-icons/fa";
 import { ClipLoader } from "react-spinners";
@@ -11,6 +11,13 @@ import { Button } from "../ui/button";
 import { getHighlightedDiff } from "../shared/diff";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import Info from "../shared/info";
+import { studyHubTraceUrl } from "@/lib/studyhub";
+
+export interface StudyHubTraceContext {
+  problemId: number;
+  title: string;
+  code: string;
+}
 
 interface TestCaseProps {
   testCaseNumber: number;
@@ -22,6 +29,7 @@ interface TestCaseProps {
   submitted: boolean;
   sending: boolean;
   overrideHidden?: boolean;
+  studyHubTrace?: StudyHubTraceContext;
 }
 
 const TestCase: React.FC<TestCaseProps> = ({
@@ -32,6 +40,7 @@ const TestCase: React.FC<TestCaseProps> = ({
   submitted,
   sending,
   overrideHidden,
+  studyHubTrace,
 }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [checking, setChecking] = useState(submitted);
@@ -82,6 +91,17 @@ const TestCase: React.FC<TestCaseProps> = ({
     setChecking(false);
   };
 
+  // Only visible test cases may be sent to the Study Hub, never hidden ones.
+  const traceUrl =
+    studyHubTrace && !testCase.hidden
+      ? studyHubTraceUrl({
+          ...studyHubTrace,
+          input: testCase.input ?? "",
+          expected: testCase.output ?? "",
+        })
+      : null;
+  const failed = testCase.status === TestCaseSubmissionStatusEnum.FAILED;
+
   useEffect(() => {
     setChecking(submitted);
   }, [submitted]);
@@ -100,6 +120,24 @@ const TestCase: React.FC<TestCaseProps> = ({
           {testCase.hidden && <p className="text-xs text-gray-500">Hidden</p>}
         </div>
       </button>
+
+      {traceUrl && (
+        <a
+          href={traceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Visualize and trace this test case in Study Hub"
+          aria-label={`Visualize and trace test case #${testCaseNumber} in Study Hub`}
+          className={cn(
+            "absolute top-4 right-10 rounded-full flex items-center justify-center border size-6 transition-colors",
+            failed
+              ? "border-red-500 text-red-500 hover:bg-red-100 dark:hover:bg-red-900"
+              : "border-primary text-primary hover:bg-blue-100 dark:hover:bg-blue-900",
+          )}
+        >
+          <Footprints className="size-3" />
+        </a>
+      )}
 
       {checking ? (
         <ClipLoader
@@ -146,7 +184,19 @@ const TestCase: React.FC<TestCaseProps> = ({
               </p>
             )}
           </div>
-          {testCase.status === TestCaseSubmissionStatusEnum.FAILED && (
+          {failed && traceUrl && (
+            <Button
+              asChild
+              variant="outline"
+              className="mt-2 w-full border-red-500 text-red-600 dark:text-red-400"
+            >
+              <a href={traceUrl} target="_blank" rel="noopener noreferrer">
+                <Footprints className="size-4" />
+                Visualize and trace in Study Hub
+              </a>
+            </Button>
+          )}
+          {failed && (
             <Dialog>
               <DialogTrigger asChild>
                 <Button className="mt-2 cursor-pointer w-full bg-red-500 dark:bg-red-900 hover:dark:bg-red-800 text-white hover:bg-red-600">
